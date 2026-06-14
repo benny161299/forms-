@@ -1,0 +1,38 @@
+services:
+
+  mongodb:
+    image: mongo:8.0
+    container_name: forms_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db  
+
+
+  backend:
+    build: ./backend
+    container_name: forms_backend
+    ports:
+      - "3000:3000"
+    env_file:
+        - ./backend/.env 
+    volumes:
+      - ./backend:/app
+      - /app/node_modules 
+    depends_on:
+      - mongodb 
+
+  frontend:
+    build: ./frontend
+    container_name: forms_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app 
+      - /app/node_modules 
+    depends_on:
+      - backend
+
+
+volumes:
+  mongo-data:
