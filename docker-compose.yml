@@ -2,7 +2,7 @@ services:
 
   mongodb:
     image: mongo:8.0
-    container_name: forms_db
+    container_name: forms_mongo
     ports:
       - "27017:27017"
     volumes:
