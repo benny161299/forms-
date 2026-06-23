@@ -2,7 +2,8 @@
   "name": "backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon -L --exec tsx src/index.ts"
+    "dev": "nodemon -L --exec tsx src/index.ts",
+    "build": "tsc"
   },
   "type": "module",
   "dependencies": {

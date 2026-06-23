@@ -8,14 +8,15 @@ services:
     volumes:
       - mongo-data:/data/db  
 
-
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: dev
     container_name: forms_backend
     ports:
       - "3000:3000"
     env_file:
-        - ./backend/.env 
+      - ./backend/.env 
     volumes:
       - ./backend:/app
       - /app/node_modules 
@@ -23,16 +24,17 @@ services:
       - mongodb 
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: dev 
     container_name: forms_frontend
     ports:
-      - "5173:5173"
+      - "5173:5173" 
     volumes:
       - ./frontend:/app 
       - /app/node_modules 
     depends_on:
       - backend
-
 
 volumes:
   mongo-data:
