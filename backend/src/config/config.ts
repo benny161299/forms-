@@ -5,16 +5,7 @@ const schema = z.object({
   MONGO_URI: z.string().default("mongodb://localhost:27017/forms")
 });
 
-
-
 export const config = envSchema({
   schema: z.toJSONSchema(schema, { target: "draft-07" }),
   dotenv: true
 }); 
-
-
-
-
-
-
-
