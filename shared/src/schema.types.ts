@@ -4,7 +4,7 @@ const textQuestionSchema = z.object({
   id: z.string(),
   title: z.string(),
   required: z.boolean(),
-  type: z.enum(["text", "short_answer", "paragraph", "time", "date"]),
+  type: z.enum(["short_answer", "paragraph", "time", "date"]),
 });
 
 
@@ -37,6 +37,8 @@ const tableQuestionSchema = z.object({
   required: z.boolean(),
   type: z.enum(["radio_grid", "checkbox_grid"]),
   options: z.object({
+
+    
     choices: z.array(z.string()),
     rows: z.array(z.string())
   })
