@@ -25,8 +25,8 @@ const scaleQuestionSchema = z.object({
   required: z.boolean(),
   type: z.literal("linear_scale"),
   options: z.object({
-    min: z.number(),
-    max: z.number()
+    min: z.number().int().min(0).max(1),
+    max: z.number().int().min(5).max(10)
   })
 });
 
