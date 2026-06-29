@@ -1,17 +1,18 @@
 import { z } from 'zod';
 
-const textQuestionSchema = z.object({
+
+const baseQuestionSchema = z.object({
   id: z.string(),
   title: z.string(),
   required: z.boolean(),
+});
+
+const textQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(["short_answer", "paragraph", "time", "date"]),
 });
 
 
-const choiceQuestionSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  required: z.boolean(),
+const choiceQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(["radio", "checkbox", "dropdown"]),
   options: z.object({
     choices: z.array(z.string()) 
@@ -19,10 +20,7 @@ const choiceQuestionSchema = z.object({
 });
 
 
-const scaleQuestionSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  required: z.boolean(),
+const scaleQuestionSchema = baseQuestionSchema.extend({
   type: z.literal("linear_scale"),
   options: z.object({
     min: z.number().int().min(0).max(1),
@@ -31,19 +29,13 @@ const scaleQuestionSchema = z.object({
 });
 
 
-const tableQuestionSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  required: z.boolean(),
+const tableQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(["radio_grid", "checkbox_grid"]),
   options: z.object({
-
-    
     choices: z.array(z.string()),
     rows: z.array(z.string())
   })
 });
-
 
 export const questionSchema = z.discriminatedUnion('type', [
   textQuestionSchema,
