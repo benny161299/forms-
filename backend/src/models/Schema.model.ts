@@ -11,3 +11,11 @@ const QuestionMongooseSchema = new Schema<IQuestion>({
   required: { type: Boolean, required: true },
   options: { type: Schema.Types.Mixed }       
 }, { _id: false });
+
+
+
+const SectionMongooseSchema = new Schema<ISection>({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  questions: [QuestionMongooseSchema]         
+}, { _id: false });
