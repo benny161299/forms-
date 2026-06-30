@@ -19,3 +19,12 @@ const SectionMongooseSchema = new Schema<ISection>({
   description: { type: String, required: true },
   questions: [QuestionMongooseSchema]         
 }, { _id: false });
+
+
+const SchemaMongooseSchema = new Schema<Ischema>({
+  title: { type: String, required: true },
+  isDraft: { type: Boolean, required: true },    
+  sections: [SectionMongooseSchema]           
+}, {
+  timestamps: true                          
+});
