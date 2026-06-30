@@ -19,6 +19,7 @@ services:
       - ./backend/.env 
     volumes:
       - ./backend:/app
+      - ./shared:/shared
       - /app/node_modules 
     depends_on:
       - mongodb 
@@ -32,6 +33,7 @@ services:
       - "5173:5173" 
     volumes:
       - ./frontend:/app 
+      - ./shared:/shared
       - /app/node_modules 
     depends_on:
       - backend
