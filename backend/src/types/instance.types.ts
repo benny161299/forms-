@@ -12,7 +12,7 @@ export type AnswerValue = z.infer<typeof answerValueSchema>;
 
 
 export const instanceSchema = z.object({
-  _id: z.string(),
+  _id: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
   schemaId: z.string(),
   isDraft: z.boolean(),
   answers: z.record(z.string(), answerValueSchema)
