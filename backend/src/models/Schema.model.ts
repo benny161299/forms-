@@ -28,3 +28,5 @@ const SchemaMongooseSchema = new Schema<Ischema>({
 }, {
   timestamps: true                          
 });
+
+export const SchemaModel = mongoose.model<Ischema>('Schema', SchemaMongooseSchema);
