@@ -51,3 +51,25 @@ export const getSchemaById = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const updateSchema = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const updatedSchema = await SchemaModel.findOneAndUpdate(
+      { _id: id, isDraft: true }, 
+      req.body,
+    );
+
+    if (!updatedSchema) {
+      return res.status(404).json({ 
+        error: 'Schema not found, or it is not a draft' 
+      });
+    }
+
+    return res.status(200).json(updatedSchema);
+  } catch (error) {
+    console.error('Error updating schema:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
