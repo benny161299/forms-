@@ -23,3 +23,14 @@ export const getSchemas = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+export const getSchemaDrafts = async (req: Request, res: Response) => {
+  try {
+    const drafts = await SchemaModel.find({ isDraft: true });
+    return res.status(200).json(drafts);
+  } catch (error) {
+    console.error('Error fetching schemas:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
