@@ -1,14 +1,12 @@
 import express from 'express';
 import { config } from './config/config.js'
 import { connectDB } from './config/db.js';
+import schemaRoutes from './routes/schema.routes.js';
 
 const app = express();
 
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+app.use('/api/schemas', schemaRoutes);
 
 async function startServer() {
   try {
