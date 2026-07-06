@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { SchemaModel } from '../models/Schema.model.js';
-import { Ischema } from '../types/schema.types.js';
 
 export const createSchema = async (req: Request, res: Response) => {
   try {
