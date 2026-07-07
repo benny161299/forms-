@@ -42,7 +42,43 @@ export const getInstancesBySchemaId = async (req: Request, res: Response) => {
     }
     return res.status(200).json(instance);
   } catch (error) {
-    console.error('Error fetching instances by schemaId:', error);
+    console.error('Error fetching instance by schemaId:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const getInstanceById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const instance = await InstanceModel.findById(id);
+
+    if (!instance) {
+      return res.status(404).json({ error: 'Instance not found' });
+    }
+    return res.status(200).json(instance);
+  } catch (error) {
+    console.error('Error fetching instance by id:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateInstance = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const updatedInstance = await InstanceModel.findOneAndUpdate(
+      { _id: id, isDraft: true },
+      req.body);
+
+    if (!updatedInstance) {
+      return res.status(404).json({ 
+        error: 'Instance not found, or it is not a draft' 
+      });
+    }
+
+    return res.status(200).json(updatedInstance);
+  } catch (error) {
+    console.error('Error updating instance:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
