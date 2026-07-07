@@ -70,3 +70,13 @@ router.get(
   }),
   getInstanceById
 );
+
+router.put(
+  '/:id',
+  validateRequest({
+    params: idSchema,
+    body: instanceSchema,
+    query: emptyObj
+  }),
+  updateInstance
+);
