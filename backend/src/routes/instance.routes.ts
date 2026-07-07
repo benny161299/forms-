@@ -19,7 +19,9 @@ const emptyObj = z.object({});
 const idSchema = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/)
 });
-
+const schemaIdParamSchema = z.object({
+  schemaId: z.string().regex(/^[0-9a-fA-F]{24}$/)
+}).strict();
 
 router.post(
   '/',
@@ -54,7 +56,7 @@ router.get(
 router.get(
   '/schema/:schemaId',
   validateRequest({
-    params: idSchema,
+    params: schemaIdParamSchema,
     body: emptyObj,
     query: emptyObj
   }),

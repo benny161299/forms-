@@ -1,8 +1,27 @@
 import { Request, Response } from 'express';
 import { InstanceModel } from '../models/Instance.model.js';
+import { SchemaModel } from '../models/Schema.model.js';
 
 export const createInstance = async (req: Request, res: Response) => {
   try {
+    const { schemaId } = req.body;
+
+    const targetSchema = await SchemaModel.findById(schemaId).lean();
+    
+    if (!targetSchema) {
+      return res.status(404).json({ 
+        status: 'error',
+        error: 'schema does not exist' 
+      });
+    }
+
+    if (targetSchema.isDraft) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'The schema is still a draft'
+      });
+    }
+
     const newInstance = await InstanceModel.create(req.body);
     return res.status(201).json(newInstance);
   } catch (error) {

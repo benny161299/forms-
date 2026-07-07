@@ -2,11 +2,12 @@ import express from 'express';
 import { config } from './config/config.js'
 import { connectDB } from './config/db.js';
 import schemaRoutes from './routes/schema.routes.js';
-
+import instanceRoutes from './routes/instance.routes.js';
 const app = express();
 
 app.use(express.json());
 app.use('/api/schemas', schemaRoutes);
+app.use('/api/instances', instanceRoutes);
 
 async function startServer() {
   try {
