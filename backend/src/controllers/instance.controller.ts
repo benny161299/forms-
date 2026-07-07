@@ -82,3 +82,18 @@ export const updateInstance = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const deleteInstance = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const deletedInstance = await InstanceModel.findByIdAndDelete(id);
+
+    if (!deletedInstance) {
+      return res.status(404).json({ error: 'Instance not found' });
+    }
+    return res.status(200).json({message: 'Instance deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting instance:', error);
+    return res.status(500).json({error: 'Internal server error' });
+  }
+};
