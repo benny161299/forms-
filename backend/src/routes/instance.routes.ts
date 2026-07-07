@@ -80,3 +80,15 @@ router.put(
   }),
   updateInstance
 );
+
+router.delete(
+  '/:id',
+  validateRequest({
+    params: idSchema,
+    body: emptyObj,
+    query: emptyObj
+  }),
+  deleteInstance
+);
+
+export default router;
