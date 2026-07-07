@@ -50,3 +50,13 @@ router.get(
   }),
   getInstancesDrafts
 );
+
+router.get(
+  '/schema/:schemaId',
+  validateRequest({
+    params: idSchema,
+    body: emptyObj,
+    query: emptyObj
+  }),
+  getInstancesBySchemaId
+);
