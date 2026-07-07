@@ -40,3 +40,13 @@ router.get(
   }),
   getInstances
 );
+
+router.get(
+  '/drafts',
+  validateRequest({
+    body: emptyObj,
+    query: emptyObj,
+    params: emptyObj
+  }),
+  getInstancesDrafts
+);
