@@ -31,3 +31,15 @@ export const getInstancesDrafts = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+export const getInstancesBySchemaId = async (req: Request, res: Response) => {
+  try {
+    const { schemaId } = req.params;
+    const instances = await InstanceModel.find({ schemaId});
+    return res.status(200).json(instances);
+  } catch (error) {
+    console.error('Error fetching instances by schemaId:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
