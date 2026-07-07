@@ -12,4 +12,14 @@ export const createInstance = async (req: Request, res: Response) => {
 };
 
 
+export const getInstances = async (req: Request, res: Response) => {
+  try {
+    const instances = await InstanceModel.find({ isDraft: false });
+    return res.status(200).json(instances);
+  } catch (error) {
+    console.error('Error fetching instances:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
