@@ -16,12 +16,12 @@ const router = Router();
 
 const emptyObj = z.object({});
 
-const idSchema = z.object({
+const instanceId = z.object({
   id: z.string().regex(/^[0-9a-fA-F]{24}$/)
 });
-const schemaIdParamSchema = z.object({
+const schemaId = z.object({
   schemaId: z.string().regex(/^[0-9a-fA-F]{24}$/)
-}).strict();
+});
 
 router.post(
   '/',
@@ -56,7 +56,7 @@ router.get(
 router.get(
   '/schema/:schemaId',
   validateRequest({
-    params: schemaIdParamSchema,
+    params: schemaId,
     body: emptyObj,
     query: emptyObj
   }),
@@ -66,7 +66,7 @@ router.get(
 router.get(
   '/:id',
   validateRequest({
-    params: idSchema,
+    params: instanceId,
     body: emptyObj,
     query: emptyObj
   }),
@@ -76,7 +76,7 @@ router.get(
 router.put(
   '/:id',
   validateRequest({
-    params: idSchema,
+    params: instanceId,
     body: instanceSchema,
     query: emptyObj
   }),
@@ -86,7 +86,7 @@ router.put(
 router.delete(
   '/:id',
   validateRequest({
-    params: idSchema,
+    params: instanceId,
     body: emptyObj,
     query: emptyObj
   }),
