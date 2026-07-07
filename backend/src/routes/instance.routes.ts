@@ -30,3 +30,13 @@ router.post(
   }),
   createInstance
 );
+
+router.get(
+  '/',
+  validateRequest({
+    body: emptyObj,
+    query: emptyObj,
+    params: emptyObj
+  }),
+  getInstances
+);
