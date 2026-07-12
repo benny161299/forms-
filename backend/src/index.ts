@@ -1,8 +1,8 @@
 import express from 'express';
 import { config } from './config/config.js'
 import { connectDB } from './config/db.js';
-import schemaRoutes from './routes/schema.routes.js';
-import instanceRoutes from './routes/instance.routes.js';
+import schemaRoutes from './services/schemas/schema.routes.js';
+import instanceRoutes from './services/instances/instance.routes.js';
 const app = express();
 
 app.use(express.json());

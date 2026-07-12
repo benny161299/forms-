@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
 import { InstanceModel } from '../models/Instance.model.js';
-import { SchemaModel } from '../models/Schema.model.js';
+import { SchemaModel } from '../schemas/Schema.model.js';
 
 export const createInstance = async (req: Request, res: Response) => {
   try {
     const { schemaId } = req.body;
 
     const targetSchema = await SchemaModel.findById(schemaId).lean();
-    
+
     if (!targetSchema) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         status: 'error',
-        error: 'schema does not exist' 
+        error: 'schema does not exist'
       });
     }
 
@@ -55,7 +55,7 @@ export const getInstancesDrafts = async (req: Request, res: Response) => {
 export const getInstancesBySchemaId = async (req: Request, res: Response) => {
   try {
     const { schemaId } = req.params;
-    const instance = await InstanceModel.find({schemaId});
+    const instance = await InstanceModel.find({ schemaId });
     if (!instance) {
       return res.status(404).json({ error: 'Instance not found' });
     }
@@ -90,8 +90,8 @@ export const updateInstance = async (req: Request, res: Response) => {
       req.body);
 
     if (!updatedInstance) {
-      return res.status(404).json({ 
-        error: 'Instance not found, or it is not a draft' 
+      return res.status(404).json({
+        error: 'Instance not found, or it is not a draft'
       });
     }
 
@@ -110,9 +110,9 @@ export const deleteInstance = async (req: Request, res: Response) => {
     if (!deletedInstance) {
       return res.status(404).json({ error: 'Instance not found' });
     }
-    return res.status(200).json({message: 'Instance deleted successfully' });
+    return res.status(200).json({ message: 'Instance deleted successfully' });
   } catch (error) {
     console.error('Error deleting instance:', error);
-    return res.status(500).json({error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };

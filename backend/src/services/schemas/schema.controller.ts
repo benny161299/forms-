@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { SchemaModel } from '../models/Schema.model.js';
+import { SchemaModel } from './Schema.model.js';
 
 export const createSchema = async (req: Request, res: Response) => {
   try {
@@ -43,7 +43,7 @@ export const getSchemaById = async (req: Request, res: Response) => {
     if (!schema) {
       return res.status(404).json({ error: 'Schema not found' });
     }
-    
+
     return res.status(200).json(schema);
   } catch (error) {
     console.error('Error fetching schema by id:', error);
@@ -56,13 +56,13 @@ export const updateSchema = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const updatedSchema = await SchemaModel.findOneAndUpdate(
-      { _id: id, isDraft: true }, 
+      { _id: id, isDraft: true },
       req.body,
     );
 
     if (!updatedSchema) {
-      return res.status(404).json({ 
-        error: 'Schema not found, or it is not a draft' 
+      return res.status(404).json({
+        error: 'Schema not found, or it is not a draft'
       });
     }
 
@@ -77,11 +77,11 @@ export const deleteSchema = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedSchema = await SchemaModel.findByIdAndDelete(id);
-    
+
     if (!deletedSchema) {
       return res.status(404).json({ error: 'Schema not found' });
     }
-    
+
     return res.status(200).json({ message: 'Schema deleted successfully' });
   } catch (error) {
     console.error('Error deleting schema:', error);

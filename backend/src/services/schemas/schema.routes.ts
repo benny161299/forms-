@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { validateRequest } from '../middlewares/validation.middleware.js';
-import { schemaSchema } from '../types/schema.types.js';
+import { validateRequest } from '../../middlewares/validation.middleware.js';
+import { schemaSchema } from './schema.types.js';
 import {
   createSchema,
   getSchemas,
@@ -9,7 +9,7 @@ import {
   getSchemaById,
   updateSchema,
   deleteSchema,
-} from '../controllers/schema.controller.js';
+} from './schema.controller.js';
 
 const router = Router();
 

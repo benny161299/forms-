@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IInstance } from '../types/instance.types.js';
+import { IInstance } from './instance.types.js';
 
 const InstanceMongooseSchema = new Schema<IInstance>({
  

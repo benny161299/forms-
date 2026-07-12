@@ -1,15 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
-import { Ischema, ISection, IQuestion } from '../types/schema.types.js';
+import { Ischema, ISection, IQuestion } from './schema.types.js';
 
 const QuestionMongooseSchema = new Schema<IQuestion>({
-  id: { type: String, required: true },    
+  id: { type: String, required: true },
   title: { type: String, required: true },
-  type: { 
-    type: String, 
-    required: true 
+  type: {
+    type: String,
+    required: true
   },
   required: { type: Boolean, required: true },
-  options: { type: Schema.Types.Mixed }       
+  options: { type: Schema.Types.Mixed }
 }, { _id: false });
 
 
@@ -17,16 +17,16 @@ const QuestionMongooseSchema = new Schema<IQuestion>({
 const SectionMongooseSchema = new Schema<ISection>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  questions: [QuestionMongooseSchema]         
+  questions: [QuestionMongooseSchema]
 }, { _id: false });
 
 
 const SchemaMongooseSchema = new Schema<Ischema>({
   title: { type: String, required: true },
-  isDraft: { type: Boolean, required: true },    
-  sections: [SectionMongooseSchema]           
+  isDraft: { type: Boolean, required: true },
+  sections: [SectionMongooseSchema]
 }, {
-  timestamps: true                          
+  timestamps: true
 });
 
 export const SchemaModel = mongoose.model<Ischema>('Schema', SchemaMongooseSchema);

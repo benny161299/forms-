@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { validateRequest } from '../middlewares/validation.middleware.js';
-import { instanceSchema } from '../types/instance.types.js';
+import { validateRequest } from '../../middlewares/validation.middleware.js';
+import { instanceSchema } from './instance.types.js';
 import {
   createInstance,
   getInstances,
-  getInstancesDrafts, 
+  getInstancesDrafts,
   getInstancesBySchemaId,
   getInstanceById,
   updateInstance,
   deleteInstance,
-} from '../controllers/instance.controller.js';
+} from './instance.controller.js';
 
 const router = Router();
 
