@@ -1,7 +1,15 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import { validateRequest } from '../../middlewares/validation.middleware.js';
-import { schemaSchema } from './schema.types.js';
+import { catchAsync } from '../../middlewares/error.middleware.js'; 
+
+import {
+  createSchemaValidation,
+  getSchemasValidation,
+  getSchemaByIdValidation,
+  updateSchemaValidation,
+  deleteSchemaValidation
+} from './schema.validations.js';
+
 import {
   createSchema,
   getSchemas,
@@ -13,70 +21,40 @@ import {
 
 const router = Router();
 
-const emptyObj = z.object({});
-
-const idSchema = z.object({
-  id: z.string().regex(/^[0-9a-fA-F]{24}$/)
-});
-
 router.post(
-  '/',
-  validateRequest({
-    body: schemaSchema,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  createSchema
+  '/', 
+  validateRequest(createSchemaValidation), 
+  catchAsync(createSchema)
 );
 
 router.get(
-  '/',
-  validateRequest({
-    body: emptyObj,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  getSchemas
+  '/', 
+  validateRequest(getSchemasValidation), 
+  catchAsync(getSchemas)
 );
 
 router.get(
-  '/drafts',
-  validateRequest({
-    body: emptyObj,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  getSchemaDrafts
+  '/drafts', 
+  validateRequest(getSchemasValidation), 
+  catchAsync(getSchemaDrafts)
 );
 
 router.get(
-  '/:id',
-  validateRequest({
-    params: idSchema,
-    body: emptyObj,
-    query: emptyObj
-  }),
-  getSchemaById
+  '/:id', 
+  validateRequest(getSchemaByIdValidation), 
+  catchAsync(getSchemaById)
 );
 
 router.put(
-  '/:id',
-  validateRequest({
-    params: idSchema,
-    body: schemaSchema,
-    query: emptyObj
-  }),
-  updateSchema
+  '/:id', 
+  validateRequest(updateSchemaValidation), 
+  catchAsync(updateSchema)
 );
 
 router.delete(
-  '/:id',
-  validateRequest({
-    params: idSchema,
-    body: emptyObj,
-    query: emptyObj
-  }),
-  deleteSchema
+  '/:id', 
+  validateRequest(deleteSchemaValidation), 
+  catchAsync(deleteSchema)
 );
 
 export default router;
