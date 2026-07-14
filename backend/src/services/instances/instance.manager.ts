@@ -42,7 +42,7 @@ export const fetchInstanceById = async (id: string) => {
   return instance;
 };
 
-export const updateInstance = async (id: string, updateData: IInstance) => {
+export const updateInstanceManager = async (id: string, updateData: IInstance) => {
   const updatedInstance = await InstanceModel.findOneAndUpdate(
     { _id: id, isDraft: true },
     updateData

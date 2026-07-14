@@ -1,118 +1,51 @@
+
 import { Request, Response } from 'express';
-import { InstanceModel } from '../models/Instance.model.js';
-import { SchemaModel } from '../schemas/Schema.model.js';
+import { StatusCodes } from 'http-status-codes';
+import { 
+  createNewInstance, 
+  fetchAllInstances, 
+  fetchAllInstancesDrafts, 
+  fetchInstancesBySchemaId, 
+  fetchInstanceById, 
+  updateInstanceManager,
+  removeInstance 
+} from './instance.manager.js';
 
 export const createInstance = async (req: Request, res: Response) => {
-  try {
-    const { schemaId } = req.body;
-
-    const targetSchema = await SchemaModel.findById(schemaId).lean();
-
-    if (!targetSchema) {
-      return res.status(404).json({
-        status: 'error',
-        error: 'schema does not exist'
-      });
-    }
-
-    if (targetSchema.isDraft) {
-      return res.status(400).json({
-        status: 'error',
-        error: 'The schema is still a draft'
-      });
-    }
-
-    const newInstance = await InstanceModel.create(req.body);
-    return res.status(201).json(newInstance);
-  } catch (error) {
-    console.error('Error creating instance:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const newInstance = await createNewInstance(req.body);
+  return res.status(StatusCodes.CREATED).json(newInstance);
 };
 
-
 export const getInstances = async (req: Request, res: Response) => {
-  try {
-    const instances = await InstanceModel.find({ isDraft: false });
-    return res.status(200).json(instances);
-  } catch (error) {
-    console.error('Error fetching instances:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const instances = await fetchAllInstances();
+  return res.status(StatusCodes.OK).json(instances);
 };
 
 export const getInstancesDrafts = async (req: Request, res: Response) => {
-  try {
-    const instances = await InstanceModel.find({ isDraft: true });
-    return res.status(200).json(instances);
-  } catch (error) {
-    console.error('Error fetching instances drafts:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const instances = await fetchAllInstancesDrafts();
+  return res.status(StatusCodes.OK).json(instances);
 };
 
-
 export const getInstancesBySchemaId = async (req: Request, res: Response) => {
-  try {
-    const { schemaId } = req.params;
-    const instance = await InstanceModel.find({ schemaId });
-    if (!instance) {
-      return res.status(404).json({ error: 'Instance not found' });
-    }
-    return res.status(200).json(instance);
-  } catch (error) {
-    console.error('Error fetching instance by schemaId:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const schemaId = req.params.schemaId as string;
+  const instances = await fetchInstancesBySchemaId(schemaId);
+  return res.status(StatusCodes.OK).json(instances);
 };
 
 export const getInstanceById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const instance = await InstanceModel.findById(id);
-
-    if (!instance) {
-      return res.status(404).json({ error: 'Instance not found' });
-    }
-    return res.status(200).json(instance);
-  } catch (error) {
-    console.error('Error fetching instance by id:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const id = req.params.id as string;
+  const instance = await fetchInstanceById(id);
+  return res.status(StatusCodes.OK).json(instance);
 };
 
 export const updateInstance = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const updatedInstance = await InstanceModel.findOneAndUpdate(
-      { _id: id, isDraft: true },
-      req.body);
-
-    if (!updatedInstance) {
-      return res.status(404).json({
-        error: 'Instance not found, or it is not a draft'
-      });
-    }
-
-    return res.status(200).json(updatedInstance);
-  } catch (error) {
-    console.error('Error updating instance:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const id = req.params.id as string;
+  const updatedInstance = await updateInstanceManager(id, req.body);
+  return res.status(StatusCodes.OK).json(updatedInstance);
 };
 
 export const deleteInstance = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const deletedInstance = await InstanceModel.findByIdAndDelete(id);
-
-    if (!deletedInstance) {
-      return res.status(404).json({ error: 'Instance not found' });
-    }
-    return res.status(200).json({ message: 'Instance deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting instance:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+  const id = req.params.id as string;
+  await removeInstance(id);
+  return res.status(StatusCodes.OK).json({ message: 'Instance deleted' });
 };
