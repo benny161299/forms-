@@ -1,7 +1,16 @@
 import { Router } from 'express';
-import { z } from 'zod';
 import { validateRequest } from '../../middlewares/validation.middleware.js';
-import { instanceSchema } from './instance.types.js';
+import { catchAsync } from '../../middlewares/error.middleware.js'; 
+
+import {
+  createInstanceValidation,
+  getInstancesValidation,
+  getInstanceByIdValidation,
+  getInstancesBySchemaIdValidation,
+  updateInstanceValidation,
+  deleteInstanceValidation
+} from './instance.validations.js';
+
 import {
   createInstance,
   getInstances,
@@ -14,83 +23,46 @@ import {
 
 const router = Router();
 
-const emptyObj = z.object({});
-
-const instanceId = z.object({
-  id: z.string().regex(/^[0-9a-fA-F]{24}$/)
-});
-const schemaId = z.object({
-  schemaId: z.string().regex(/^[0-9a-fA-F]{24}$/)
-});
-
 router.post(
-  '/',
-  validateRequest({
-    body: instanceSchema,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  createInstance
+  '/', 
+  validateRequest(createInstanceValidation), 
+  catchAsync(createInstance)
 );
 
 router.get(
-  '/',
-  validateRequest({
-    body: emptyObj,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  getInstances
+  '/', 
+  validateRequest(getInstancesValidation), 
+  catchAsync(getInstances)
 );
 
 router.get(
-  '/drafts',
-  validateRequest({
-    body: emptyObj,
-    query: emptyObj,
-    params: emptyObj
-  }),
-  getInstancesDrafts
+  '/drafts', 
+  validateRequest(getInstancesValidation), 
+  catchAsync(getInstancesDrafts)
 );
 
 router.get(
-  '/schema/:schemaId',
-  validateRequest({
-    params: schemaId,
-    body: emptyObj,
-    query: emptyObj
-  }),
-  getInstancesBySchemaId
+  '/schema/:schemaId', 
+  validateRequest(getInstancesBySchemaIdValidation), 
+  catchAsync(getInstancesBySchemaId)
 );
 
 router.get(
-  '/:id',
-  validateRequest({
-    params: instanceId,
-    body: emptyObj,
-    query: emptyObj
-  }),
-  getInstanceById
+  '/:id', 
+  validateRequest(getInstanceByIdValidation), 
+  catchAsync(getInstanceById)
 );
 
 router.put(
-  '/:id',
-  validateRequest({
-    params: instanceId,
-    body: instanceSchema,
-    query: emptyObj
-  }),
-  updateInstance
+  '/:id', 
+  validateRequest(updateInstanceValidation), 
+  catchAsync(updateInstance)
 );
 
 router.delete(
-  '/:id',
-  validateRequest({
-    params: instanceId,
-    body: emptyObj,
-    query: emptyObj
-  }),
-  deleteInstance
+  '/:id', 
+  validateRequest(deleteInstanceValidation), 
+  catchAsync(deleteInstance)
 );
 
 export default router;
