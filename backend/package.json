@@ -1,9 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "scripts": {
+ "scripts": {
     "dev": "nodemon -L --exec tsx src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "biome": "biome",
+    "lint": "biome check ./src",
+    "lint:fix": "biome check --write ./src"
   },
   "type": "module",
   "dependencies": {
@@ -14,6 +17,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.4",
     "@types/express": "^5.0.6",
     "@types/node": "^20.19.43",
     "nodemon": "^3.1.14",

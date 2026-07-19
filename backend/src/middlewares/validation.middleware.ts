@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { ZodType, z } from 'zod';
-import { StatusCodes } from 'http-status-codes';
-import { AppError } from './error.middleware.js';
+import type { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { type ZodType, z } from "zod";
+import { AppError } from "./error.middleware.js";
 
 interface RequestValidationSchemas {
   body?: ZodType;
@@ -10,17 +10,12 @@ interface RequestValidationSchemas {
 }
 
 export const validateRequest = (schemas: RequestValidationSchemas) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-
+  return (req: Request, _res: Response, next: NextFunction) => {
     if (schemas.params) {
       const result = schemas.params.safeParse(req.params);
       if (!result.success) {
         return next(
-          new AppError(
-            'Invalid Params',
-            StatusCodes.BAD_REQUEST,
-            z.treeifyError(result.error)
-          )
+          new AppError("Invalid Params", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
         );
       }
     }
@@ -29,11 +24,7 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
       const result = schemas.query.safeParse(req.query);
       if (!result.success) {
         return next(
-          new AppError(
-            'Invalid Query',
-            StatusCodes.BAD_REQUEST,
-            z.treeifyError(result.error)
-          )
+          new AppError("Invalid Query", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
         );
       }
     }
@@ -42,11 +33,7 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
       const result = schemas.body.safeParse(req.body);
       if (!result.success) {
         return next(
-          new AppError(
-            'Invalid Body',
-            StatusCodes.BAD_REQUEST,
-            z.treeifyError(result.error)
-          )
+          new AppError("Invalid Body", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
         );
       }
       req.body = result.data;

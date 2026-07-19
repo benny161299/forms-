@@ -1,32 +1,38 @@
-import mongoose, { Schema } from 'mongoose';
-import { Ischema, ISection, IQuestion } from './schema.types.js';
+import mongoose, { Schema } from "mongoose";
+import type { IQuestion, ISection, Ischema } from "./schema.types.js";
 
-const QuestionMongooseSchema = new Schema<IQuestion>({
-  id: { type: String, required: true },
-  title: { type: String, required: true },
-  type: {
-    type: String,
-    required: true
+const QuestionMongooseSchema = new Schema<IQuestion>(
+  {
+    id: { type: String, required: true },
+    title: { type: String, required: true },
+    type: {
+      type: String,
+      required: true,
+    },
+    required: { type: Boolean, required: true },
+    options: { type: Schema.Types.Mixed },
   },
-  required: { type: Boolean, required: true },
-  options: { type: Schema.Types.Mixed }
-}, { _id: false });
+  { _id: false },
+);
 
+const SectionMongooseSchema = new Schema<ISection>(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    questions: [QuestionMongooseSchema],
+  },
+  { _id: false },
+);
 
+const SchemaMongooseSchema = new Schema<Ischema>(
+  {
+    title: { type: String, required: true },
+    isDraft: { type: Boolean, required: true },
+    sections: [SectionMongooseSchema],
+  },
+  {
+    timestamps: true,
+  },
+);
 
-const SectionMongooseSchema = new Schema<ISection>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  questions: [QuestionMongooseSchema]
-}, { _id: false });
-
-
-const SchemaMongooseSchema = new Schema<Ischema>({
-  title: { type: String, required: true },
-  isDraft: { type: Boolean, required: true },
-  sections: [SectionMongooseSchema]
-}, {
-  timestamps: true
-});
-
-export const SchemaModel = mongoose.model<Ischema>('Schema', SchemaMongooseSchema);
+export const SchemaModel = mongoose.model<Ischema>("Schema", SchemaMongooseSchema);
