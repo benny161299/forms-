@@ -24,7 +24,7 @@ export const catchAsync = (
 export const errorMiddleware = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
-      status: 'error',
+      status: "error",
       message: err.message,
       ...(err.errors && { errors: err.errors }),
     });

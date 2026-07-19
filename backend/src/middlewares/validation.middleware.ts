@@ -1,43 +1,30 @@
 import type { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import { type ZodType, z } from "zod";
-import { AppError } from "./error.middleware.js";
 
 interface RequestValidationSchemas {
-  body?: ZodType;
-  query?: ZodType;
-  params?: ZodType;
+  body: ZodType;
+  query: ZodType;
+  params: ZodType;
 }
 
 export const validateRequest = (schemas: RequestValidationSchemas) => {
   return (req: Request, _res: Response, next: NextFunction) => {
-    if (schemas.params) {
-      const result = schemas.params.safeParse(req.params);
-      if (!result.success) {
-        return next(
-          new AppError("Invalid Params", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
-        );
-      }
-    }
+    const validateSchema = z.object({
+      body: schemas.body,
+      query: schemas.query,
+      params: schemas.params,
+    });
 
-    if (schemas.query) {
-      const result = schemas.query.safeParse(req.query);
-      if (!result.success) {
-        return next(
-          new AppError("Invalid Query", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
-        );
-      }
-    }
+    const result = validateSchema.safeParse({
+      body: req.body,
+      query: req.query,
+      params: req.params,
+    });
 
-    if (schemas.body) {
-      const result = schemas.body.safeParse(req.body);
-      if (!result.success) {
-        return next(
-          new AppError("Invalid Body", StatusCodes.BAD_REQUEST, z.treeifyError(result.error)),
-        );
-      }
-      req.body = result.data;
+    if (!result.success) {
+      return next(result.error);
     }
+    req.body = result.data.body;
 
     return next();
   };

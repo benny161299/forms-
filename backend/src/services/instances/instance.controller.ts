@@ -45,6 +45,6 @@ export const updateInstance = async (req: Request, res: Response) => {
 
 export const deleteInstance = async (req: Request, res: Response) => {
   const id = req.params.id as string;
-  await removeInstance(id);
-  res.status(StatusCodes.OK).json({ message: "Instance deleted" });
+const deletedInstance = await removeInstance(id);
+res.status(StatusCodes.OK).json(deletedInstance);
 };
