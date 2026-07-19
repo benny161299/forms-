@@ -7,10 +7,9 @@ import { IInstance } from './instance.types.js';
 export const createNewInstance = async (instanceData: IInstance) => {
   const { schemaId } = instanceData;
 
-  const targetSchema = await SchemaModel.findById(schemaId);
-  if (!targetSchema) {
-    throw new AppError('schema not exist', StatusCodes.NOT_FOUND);
-  }
+  const targetSchema = await SchemaModel.findById(schemaId)
+  .orFail(() => new AppError('schema not exist', StatusCodes.NOT_FOUND));
+  
   if (targetSchema.isDraft) {
     throw new AppError('schema is still a draft', StatusCodes.BAD_REQUEST);
   }
@@ -19,45 +18,35 @@ export const createNewInstance = async (instanceData: IInstance) => {
 };
 
 export const fetchAllInstances = async () => {
-  return await InstanceModel.find({ isDraft: false });
+  return InstanceModel.find({ isDraft: false });
 };
 
 export const fetchAllInstancesDrafts = async () => {
-  return await InstanceModel.find({ isDraft: true });
+  return InstanceModel.find({ isDraft: true });
 };
 
 export const fetchInstancesBySchemaId = async (schemaId: string) => {
-    const instance = await InstanceModel.find({ schemaId })
-    if(!instance){
-        throw new AppError('instances not found', StatusCodes.NOT_FOUND)
-    }
-  return instance;
+  await SchemaModel.findById(schemaId)
+   .orFail(() => new AppError('The requested schema does not exist', StatusCodes.NOT_FOUND));
+  
+  return InstanceModel.find({ schemaId });
 };
 
+
+
 export const fetchInstanceById = async (id: string) => {
-  const instance = await InstanceModel.findById(id);
-  if (!instance) {
-    throw new AppError('Instance not found', StatusCodes.NOT_FOUND);
-  }
-  return instance;
+  return InstanceModel.findById(id)
+    .orFail(() => new AppError('Instance not found', StatusCodes.NOT_FOUND));
 };
 
 export const updateInstanceManager = async (id: string, updateData: IInstance) => {
-  const updatedInstance = await InstanceModel.findOneAndUpdate(
+  return InstanceModel.findOneAndUpdate(
     { _id: id, isDraft: true },
     updateData
-  );
-
-  if (!updatedInstance) {
-    throw new AppError('Instance not found, or it is not a draft', StatusCodes.NOT_FOUND);
-  }
-
-  return updatedInstance;
+  ).orFail(() => new AppError('Instance not found, or it is not a draft', StatusCodes.NOT_FOUND));
 };
 
-export const removeInstance = async (id: string) => {
-  const deletedInstance = await InstanceModel.findByIdAndDelete(id).lean();
-  if (!deletedInstance) {
-    throw new AppError('Instance not found', StatusCodes.NOT_FOUND);
-  }
+export const removeInstance = async (id: string): Promise<IInstance> => {
+  return InstanceModel.findByIdAndDelete(id)
+    .orFail(() => new AppError('Instance not found', StatusCodes.NOT_FOUND));
 };
