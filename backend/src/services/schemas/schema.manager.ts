@@ -21,7 +21,8 @@ export const fetchSchemaById = async (id: string) => {
 };
 
 export const updateSchemaManager = async (id: string, updateData: Ischema) => {
-  return SchemaModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData).orFail(
+  return SchemaModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData,
+    { returnDocument: 'after'}).orFail(
     () => new AppError("Schema not found, or it is not a draft", StatusCodes.NOT_FOUND),
   );
 };

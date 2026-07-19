@@ -7,15 +7,11 @@ import type { IInstance } from "./instance.types.js";
 export const createNewInstance = async (instanceData: IInstance) => {
   const { schemaId } = instanceData;
 
-  const targetSchema = await SchemaModel.findById(schemaId).orFail(
-    () => new AppError("schema not exist", StatusCodes.NOT_FOUND),
+  await SchemaModel.findOne({ _id: schemaId, isDraft: false }).orFail(
+    () => new AppError("Schema not found or is still a draft", StatusCodes.NOT_FOUND),
   );
 
-  if (targetSchema.isDraft) {
-    throw new AppError("schema is still a draft", StatusCodes.BAD_REQUEST);
-  }
-
-  return await InstanceModel.create(instanceData);
+  return InstanceModel.create(instanceData);
 };
 
 export const fetchAllInstances = async () => {
@@ -41,7 +37,8 @@ export const fetchInstanceById = async (id: string) => {
 };
 
 export const updateInstanceManager = async (id: string, updateData: IInstance) => {
-  return InstanceModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData).orFail(
+  return InstanceModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData,
+    { returnDocument: 'after' }).orFail(
     () => new AppError("Instance not found, or it is not a draft", StatusCodes.NOT_FOUND),
   );
 };
