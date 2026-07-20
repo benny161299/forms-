@@ -1,11 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 import type { IInstance } from "./instance.types.js";
-
+import { config } from "../../config/config.js";
 const InstanceMongooseSchema = new Schema<IInstance>(
   {
     schemaId: {
       type: String,
       required: true,
+      ref: config.SCHEMA_MODEL_NAME,
     },
 
     isDraft: {
@@ -23,4 +24,4 @@ const InstanceMongooseSchema = new Schema<IInstance>(
   },
 );
 
-export const InstanceModel = mongoose.model<IInstance>("Instance", InstanceMongooseSchema);
+export const InstanceModel = mongoose.model<IInstance>(config.INSTANCE_MODEL_NAME, InstanceMongooseSchema);

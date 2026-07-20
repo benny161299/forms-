@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import type { IQuestion, ISection, Ischema } from "./schema.types.js";
-
+import { config } from "../../config/config.js";
 const QuestionMongooseSchema = new Schema<IQuestion>(
   {
     id: { type: String, required: true },
@@ -35,4 +35,4 @@ const SchemaMongooseSchema = new Schema<Ischema>(
   },
 );
 
-export const SchemaModel = mongoose.model<Ischema>("Schema", SchemaMongooseSchema);
+export const SchemaModel = mongoose.model<Ischema>(config.SCHEMA_MODEL_NAME, SchemaMongooseSchema);
