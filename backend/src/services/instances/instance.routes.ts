@@ -21,12 +21,9 @@ import {
 
 const router = Router();
 
-router.post("/", validateRequest(createInstanceValidation), catchAsync(createInstance));
-
 router.get("/", validateRequest(getInstancesValidation), catchAsync(getInstances));
 
 router.get("/drafts", validateRequest(getInstancesValidation), catchAsync(getInstancesDrafts));
-
 router.get(
   "/schema/:schemaId",
   validateRequest(getInstancesBySchemaIdValidation),
@@ -34,6 +31,8 @@ router.get(
 );
 
 router.get("/:id", validateRequest(getInstanceByIdValidation), catchAsync(getInstanceById));
+
+router.post("/", validateRequest(createInstanceValidation), catchAsync(createInstance));
 
 router.put("/:id", validateRequest(updateInstanceValidation), catchAsync(updateInstance));
 

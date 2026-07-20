@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import type { IInstance } from "./instance.types.js";
 import { config } from "../../config/config.js";
+import type { IInstance } from "./instance.types.js";
+
 const InstanceMongooseSchema = new Schema<IInstance>(
   {
     schemaId: {
@@ -15,7 +16,7 @@ const InstanceMongooseSchema = new Schema<IInstance>(
     },
 
     answers: {
-      type: Schema.Types.Mixed,
+      type: Map,
       required: true,
     },
   },
@@ -24,4 +25,7 @@ const InstanceMongooseSchema = new Schema<IInstance>(
   },
 );
 
-export const InstanceModel = mongoose.model<IInstance>(config.INSTANCE_MODEL_NAME, InstanceMongooseSchema);
+export const InstanceModel = mongoose.model<IInstance>(
+  config.INSTANCE_MODEL_NAME,
+  InstanceMongooseSchema,
+);

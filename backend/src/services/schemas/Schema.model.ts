@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import type { IQuestion, ISection, Ischema } from "./schema.types.js";
 import { config } from "../../config/config.js";
+import type { IQuestion, ISection, Ischema } from "./schema.types.js";
+
 const QuestionMongooseSchema = new Schema<IQuestion>(
   {
     id: { type: String, required: true },
