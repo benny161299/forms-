@@ -1,11 +1,6 @@
 import { z } from "zod";
+import { emptyObj, mongoIdSchema } from "../../utils/validation.utils.js";
 import { schemaSchema } from "./schema.types.js";
-
-export const emptyObj = z.object({});
-export const mongoIdSchema = z
-  .string()
-  .trim()
-  .regex(/^[0-9a-fA-F]{24}$/);
 
 export const createSchemaValidation = {
   body: schemaSchema,

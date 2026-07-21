@@ -1,15 +1,9 @@
 import { z } from "zod";
+import { emptyObj, mongoIdSchema } from "../../utils/validation.utils.js";
 import { instanceSchema } from "./instance.types.js";
 
-export const emptyObj = z.object({});
-
-export const mongoIdSchema = z
-  .string()
-  .trim()
-  .regex(/^[0-9a-fA-F]{24}$/);
-
 export const createInstanceValidation = {
-  body: instanceSchema,
+  body: instanceSchema.pick({ schemaId: true }),
   query: emptyObj,
   params: emptyObj,
 };

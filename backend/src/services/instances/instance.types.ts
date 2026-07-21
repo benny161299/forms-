@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+const mongoId = z.string().regex(/^[0-9a-fA-F]{24}$/);
 export const answerValueSchema = z.union([
   z.string(),
   z.number(),
@@ -11,13 +12,11 @@ export const answerValueSchema = z.union([
 export type AnswerValue = z.infer<typeof answerValueSchema>;
 
 export const instanceSchema = z.object({
-  _id: z
-    .string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .optional(),
-  schemaId: z.string().regex(/^[0-9a-fA-F]{24}$/),
+  _id: mongoId.optional(),
+  schemaId: mongoId,
   isDraft: z.boolean(),
   answers: z.record(z.string(), answerValueSchema),
 });
 
 export type IInstance = z.infer<typeof instanceSchema>;
+export type CreateInstanceInput = Pick<IInstance, "schemaId">;

@@ -18,14 +18,13 @@ import {
 } from "./schema.validations.js";
 
 const router = Router();
-
-router.post("/", validateRequest(createSchemaValidation), catchAsync(createSchema));
-
 router.get("/", validateRequest(getSchemasValidation), catchAsync(getSchemas));
 
 router.get("/drafts", validateRequest(getSchemasValidation), catchAsync(getSchemaDrafts));
 
 router.get("/:id", validateRequest(getSchemaByIdValidation), catchAsync(getSchemaById));
+
+router.post("/", validateRequest(createSchemaValidation), catchAsync(createSchema));
 
 router.put("/:id", validateRequest(updateSchemaValidation), catchAsync(updateSchema));
 

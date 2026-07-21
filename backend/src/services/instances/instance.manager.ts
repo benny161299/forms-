@@ -2,16 +2,20 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "../schemas/Schema.model.js";
 import { InstanceModel } from "./Instance.model.js";
-import type { IInstance } from "./instance.types.js";
+import type { CreateInstanceInput, IInstance } from "./instance.types.js";
 
-export const createNewInstance = async (instanceData: IInstance) => {
+export const createNewInstance = async (instanceData: CreateInstanceInput) => {
   const { schemaId } = instanceData;
 
   await SchemaModel.findOne({ _id: schemaId, isDraft: false })
     .lean()
     .orFail(() => new AppError("Schema not found or is still a draft", StatusCodes.NOT_FOUND));
 
-  return InstanceModel.create(instanceData);
+  return InstanceModel.create({
+    schemaId,
+    isDraft: true,
+    answers: {},
+  });
 };
 
 export const fetchAllInstances = async () => {
