@@ -5,6 +5,7 @@ import {
   fetchAllSchemaDrafts,
   fetchAllSchemas,
   fetchSchemaById,
+  publishSchemaManager,
   removeSchema,
   updateSchemaManager,
 } from "./schema.manager.js";
@@ -34,6 +35,12 @@ export const updateSchema = async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const updatedSchema = await updateSchemaManager(id, req.body);
   res.status(StatusCodes.OK).json(updatedSchema);
+};
+
+export const publishSchema = async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const publishedSchema = await publishSchemaManager(id);
+  res.status(StatusCodes.OK).json(publishedSchema);
 };
 
 export const deleteSchema = async (req: Request, res: Response) => {

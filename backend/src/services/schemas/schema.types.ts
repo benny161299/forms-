@@ -61,3 +61,5 @@ export const schemaSchema = z.object({
 });
 
 export type Ischema = z.infer<typeof schemaSchema>;
+
+export type SchemaInput = Pick<Ischema, "title" | "sections">;

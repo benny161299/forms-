@@ -3,7 +3,7 @@ import { emptyObj, mongoIdSchema } from "../../utils/validation.utils.js";
 import { schemaSchema } from "./schema.types.js";
 
 export const createSchemaValidation = {
-  body: schemaSchema,
+  body: schemaSchema.pick({ title: true, sections: true }),
   query: emptyObj,
   params: emptyObj,
 };
@@ -21,7 +21,13 @@ export const getSchemaByIdValidation = {
 };
 
 export const updateSchemaValidation = {
-  body: schemaSchema,
+  body: schemaSchema.pick({ title: true, sections: true }),
+  query: emptyObj,
+  params: z.object({ id: mongoIdSchema }),
+};
+
+export const publishSchemaValidation = {
+  body: emptyObj,
   query: emptyObj,
   params: z.object({ id: mongoIdSchema }),
 };

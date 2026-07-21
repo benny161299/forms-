@@ -7,6 +7,7 @@ import {
   getSchemaById,
   getSchemaDrafts,
   getSchemas,
+   publishSchema,
   updateSchema,
 } from "./schema.controller.js";
 import {
@@ -14,6 +15,7 @@ import {
   deleteSchemaValidation,
   getSchemaByIdValidation,
   getSchemasValidation,
+  publishSchemaValidation,
   updateSchemaValidation,
 } from "./schema.validations.js";
 
@@ -27,6 +29,8 @@ router.get("/:id", validateRequest(getSchemaByIdValidation), catchAsync(getSchem
 router.post("/", validateRequest(createSchemaValidation), catchAsync(createSchema));
 
 router.put("/:id", validateRequest(updateSchemaValidation), catchAsync(updateSchema));
+
+router.patch("/:id/publish", validateRequest(publishSchemaValidation), catchAsync(publishSchema));
 
 router.delete("/:id", validateRequest(deleteSchemaValidation), catchAsync(deleteSchema));
 
