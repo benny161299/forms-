@@ -1,15 +1,13 @@
 import express from "express";
+import apiRouter from "./api.routes.js";
 import { config } from "./config/config.js";
 import { connectDB } from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
-import instanceRoutes from "./services/instances/instance.routes.js";
-import schemaRoutes from "./services/schemas/schema.routes.js";
 
 const app = express();
 
 app.use(express.json());
-app.use("/api/schemas", schemaRoutes);
-app.use("/api/instances", instanceRoutes);
+app.use('/api', apiRouter);
 app.use(errorMiddleware);
 try {
   await connectDB();
