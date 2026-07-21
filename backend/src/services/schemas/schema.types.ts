@@ -3,7 +3,7 @@ import { z } from "zod";
 const baseQuestionSchema = z.object({
   id: z.string(),
   title: z.string(),
-  required: z.boolean(),
+  required: z.boolean().default(false),
 });
 
 const textQuestionSchema = baseQuestionSchema.extend({

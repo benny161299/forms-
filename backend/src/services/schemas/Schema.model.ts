@@ -10,7 +10,7 @@ const QuestionMongooseSchema = new Schema<IQuestion>(
       type: String,
       required: true,
     },
-    required: { type: Boolean, required: true },
+    required: { type: Boolean, default: false },
     options: { type: Schema.Types.Mixed },
   },
   { _id: false },
@@ -28,7 +28,7 @@ const SectionMongooseSchema = new Schema<ISection>(
 const SchemaMongooseSchema = new Schema<Ischema>(
   {
     title: { type: String, required: true },
-    isDraft: { type: Boolean, required: true },
+    isDraft: { type: Boolean, default: true },
     sections: [SectionMongooseSchema],
   },
   {
