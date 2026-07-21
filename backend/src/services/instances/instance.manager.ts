@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "../schemas/Schema.model.js";
 import { InstanceModel } from "./Instance.model.js";
-import type { CreateInstanceInput, IInstance } from "./instance.types.js";
+import type { CreateInstanceInput, IInstance ,UpdateInstanceInput} from "./instance.types.js";
 
 export const createNewInstance = async (instanceData: CreateInstanceInput) => {
   const { schemaId } = instanceData;
@@ -40,8 +40,16 @@ export const fetchInstanceById = async (id: string) => {
     .orFail(() => new AppError("Instance not found", StatusCodes.NOT_FOUND));
 };
 
-export const updateInstanceManager = async (id: string, updateData: IInstance) => {
+export const updateInstanceManager = async (id: string, updateData: UpdateInstanceInput) => {
   return InstanceModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData, {
+    returnDocument: "after",
+  })
+    .lean()
+    .orFail(() => new AppError("Instance not found, or it is not a draft", StatusCodes.NOT_FOUND));
+};
+
+export const submitInstanceManager = async (id: string) => {
+  return InstanceModel.findOneAndUpdate({ _id: id, isDraft: true }, { isDraft: false }, {
     returnDocument: "after",
   })
     .lean()

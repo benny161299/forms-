@@ -27,7 +27,13 @@ export const getInstancesBySchemaIdValidation = {
 };
 
 export const updateInstanceValidation = {
-  body: instanceSchema,
+  body: instanceSchema.pick({ answers: true }),
+  query: emptyObj,
+  params: z.object({ id: mongoIdSchema }),
+};
+
+export const submitInstanceValidation = {
+  body: emptyObj,
   query: emptyObj,
   params: z.object({ id: mongoIdSchema }),
 };

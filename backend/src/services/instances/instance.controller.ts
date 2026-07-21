@@ -7,6 +7,7 @@ import {
   fetchInstanceById,
   fetchInstancesBySchemaId,
   removeInstance,
+  submitInstanceManager,
   updateInstanceManager,
 } from "./instance.manager.js";
 
@@ -41,6 +42,12 @@ export const updateInstance = async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const updatedInstance = await updateInstanceManager(id, req.body);
   res.status(StatusCodes.OK).json(updatedInstance);
+};
+
+export const submitInstance = async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const submittedInstance = await submitInstanceManager(id);
+  res.status(StatusCodes.OK).json(submittedInstance);
 };
 
 export const deleteInstance = async (req: Request, res: Response) => {

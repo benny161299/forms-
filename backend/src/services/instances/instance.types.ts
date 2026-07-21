@@ -20,3 +20,4 @@ export const instanceSchema = z.object({
 
 export type IInstance = z.infer<typeof instanceSchema>;
 export type CreateInstanceInput = Pick<IInstance, "schemaId">;
+export type UpdateInstanceInput = Pick<IInstance, "answers">;

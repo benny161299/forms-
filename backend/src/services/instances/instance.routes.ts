@@ -8,6 +8,7 @@ import {
   getInstances,
   getInstancesBySchemaId,
   getInstancesDrafts,
+  submitInstance,
   updateInstance,
 } from "./instance.controller.js";
 import {
@@ -16,6 +17,7 @@ import {
   getInstanceByIdValidation,
   getInstancesBySchemaIdValidation,
   getInstancesValidation,
+  submitInstanceValidation,
   updateInstanceValidation,
 } from "./instance.validations.js";
 
@@ -35,6 +37,8 @@ router.get("/:id", validateRequest(getInstanceByIdValidation), catchAsync(getIns
 router.post("/", validateRequest(createInstanceValidation), catchAsync(createInstance));
 
 router.put("/:id", validateRequest(updateInstanceValidation), catchAsync(updateInstance));
+
+router.patch("/:id/submit", validateRequest(submitInstanceValidation), catchAsync(submitInstance));
 
 router.delete("/:id", validateRequest(deleteInstanceValidation), catchAsync(deleteInstance));
 
