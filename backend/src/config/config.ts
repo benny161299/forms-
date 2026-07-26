@@ -5,7 +5,7 @@ const schema = z.object({
   PORT: z.number().default(3000),
   MONGO_URI: z.string().default("mongodb://localhost:27017/forms"),
   INSTANCE_MODEL_NAME: z.string().default("instances"),
-  SCHEMA_MODEL_NAME: z.string().default("formschemas"),
+  SCHEMA_MODEL_NAME: z.string().default("schemas"),
 });
 type Config = z.infer<typeof schema>;
 
