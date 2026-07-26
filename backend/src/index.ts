@@ -7,7 +7,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 const app = express();
 
 app.use(express.json());
-app.use('/api', apiRouter);
+app.use("/api", apiRouter);
 app.use(errorMiddleware);
 try {
   await connectDB();

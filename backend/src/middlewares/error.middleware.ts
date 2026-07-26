@@ -22,6 +22,7 @@ export const catchAsync = (
 };
 
 export const errorMiddleware = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error("server error:", err);
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       status: "error",
@@ -29,8 +30,6 @@ export const errorMiddleware = (err: Error, _req: Request, res: Response, _next:
       ...(err.errors && { errors: err.errors }),
     });
   }
-
-  console.error("server error:", err);
 
   return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
     status: "error",

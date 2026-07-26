@@ -29,9 +29,3 @@ export const InstanceModel = mongoose.model<IInstance>(
   config.INSTANCE_MODEL_NAME,
   InstanceMongooseSchema,
 );
-
-
-
-
-
-

@@ -7,7 +7,7 @@ import {
   getSchemaById,
   getSchemaDrafts,
   getSchemas,
-   publishSchema,
+  publishSchema,
   updateSchema,
 } from "./schema.controller.js";
 import {

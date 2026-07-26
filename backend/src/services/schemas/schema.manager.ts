@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "./Schema.model.js";
-import type { SchemaInput  } from "./schema.types.js";
+import type { SchemaInput } from "./schema.types.js";
 
 export const createNewSchema = async (schemaData: SchemaInput) => {
   const { title, sections } = schemaData;
