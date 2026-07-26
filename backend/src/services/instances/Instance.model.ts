@@ -12,7 +12,7 @@ const InstanceMongooseSchema = new Schema<IInstance>(
 
     isDraft: {
       type: Boolean,
-      required: true,
+      default: true,
     },
 
     answers: {

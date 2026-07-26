@@ -15,7 +15,7 @@ export const instanceSchema = z.object({
   _id: mongoId.optional(),
   schemaId: mongoId,
   isDraft: z.boolean(),
-  answers: z.record(z.string(), answerValueSchema),
+  answers: z.record(z.uuid(), answerValueSchema),
 });
 
 export type IInstance = z.infer<typeof instanceSchema>;

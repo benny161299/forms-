@@ -13,7 +13,6 @@ export const createNewInstance = async (instanceData: CreateInstanceInput) => {
 
   return InstanceModel.create({
     schemaId,
-    isDraft: true,
     answers: {},
   });
 };
