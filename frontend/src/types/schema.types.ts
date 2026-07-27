@@ -55,7 +55,7 @@ export const sectionSchema = z.object({
 export type ISection = z.infer<typeof sectionSchema>;
 
 export const schemaSchema = z.object({
-  _id: z.string(),
+  _id: z.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
   title: z.string(),
   isDraft: z.boolean(),
   sections: z.array(sectionSchema)
