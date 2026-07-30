@@ -5,9 +5,14 @@ import InstanceFillPage from "./pages/InstanceFillPage";
 import InstancesListPage from "./pages/InstancesListPage";
 import SchemaBuilderPage from "./pages/SchemaBuilderPage";
 import SchemasListPage from "./pages/SchemasListPage";
+import { theme } from "./theme/theme";
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 
 export function App() {
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -23,6 +28,7 @@ export function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

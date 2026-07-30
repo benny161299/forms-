@@ -20,10 +20,17 @@
     "continueFill": "המשך מילוי",
     "viewAnswers": "צפה בתשובות",
     "loading": "טוען נתונים...",
-    "errorLoading": "אירעה שגיאה בטעינת הנתונים למסך הבית",
     "confirmDeleteSchema": "האם אתה בטוח שברצונך למחוק טופס זה?",
     "confirmDeleteInstance": "האם אתה בטוח שברצונך למחוק מופע זה?",
-    "deleteSchemaFailed": "מחיקת הטופס נכשלה",
-    "deleteInstanceFailed": "מחיקת המופע נכשלה"
+    "schemaDeleteSuccess": "הטופס נמחק בהצלחה",
+    "schemaDeleteError": "מחיקת הטופס נכשלה",
+    "instanceDeleteSuccess": "המופע נמחק בהצלחה",
+    "instanceDeleteError": "מחיקת המופע נכשלה"
+  },
+  "errors": {
+    "fetchDraftSchemas": "אירעה שגיאה בטעינת טיוטות הסכמה",
+    "fetchPublishedSchemas": "אירעה שגיאה בטעינת הטפסים הזמינים למילוי",
+    "fetchDraftInstances": "אירעה שגיאה בטעינת טיוטות המופעים",
+    "fetchSubmittedInstances": "אירעה שגיאה בטעינת המופעים שהוגשו"
   }
 }
