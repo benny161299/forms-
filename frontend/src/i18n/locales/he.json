@@ -1,0 +1,29 @@
+{
+  "home": {
+    "title": "מערכת ניהול טפסים",
+    "createNewSchema": "צור טופס חדש",
+    "schemaDrafts": "טפסים בעריכה (טיוטות סכמה)",
+    "publishedSchemas": "טפסים זמינים למילוי",
+    "instanceDrafts": "מופעים באמצע מילוי (טיוטות)",
+    "submittedInstances": "טפסים שהוגשו",
+    "emptySchemaDrafts": "אין טפסי טיוטה כרגע",
+    "emptyPublishedSchemas": "אין טפסים מפורסמים זמינים למילוי",
+    "emptyInstanceDrafts": "אין טפסים באמצע מילוי",
+    "emptySubmittedInstances": "טרם הוגשו טפסים במערכת",
+    "sectionsCount": "{{count}} סקשנים",
+    "instanceInProcess": "טופס בתהליך",
+    "instanceSubmitted": "טופס הוגש",
+    "instanceId": "מזהה: {{id}}",
+    "edit": "ערוך",
+    "delete": "מחק",
+    "fill": "מלא טופס",
+    "continueFill": "המשך מילוי",
+    "viewAnswers": "צפה בתשובות",
+    "loading": "טוען נתונים...",
+    "errorLoading": "אירעה שגיאה בטעינת הנתונים למסך הבית",
+    "confirmDeleteSchema": "האם אתה בטוח שברצונך למחוק טופס זה?",
+    "confirmDeleteInstance": "האם אתה בטוח שברצונך למחוק מופע זה?",
+    "deleteSchemaFailed": "מחיקת הטופס נכשלה",
+    "deleteInstanceFailed": "מחיקת המופע נכשלה"
+  }
+}

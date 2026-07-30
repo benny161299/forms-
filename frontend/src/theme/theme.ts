@@ -10,6 +10,15 @@ export const theme = createTheme({
     secondary: {
       main: "#64748b",
     },
+    error: {
+      main: "#ef4444",
+    },
+    success: {
+      main: "#10b981",
+    },
+    warning: {
+      main: "#f59e0b",
+    },
     background: {
       default: "#f8fafc",
       paper: "#ffffff",
