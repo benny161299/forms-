@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ApiError } from "../api/axiosClient";
 
@@ -11,29 +11,25 @@ export function useFetch<T>(
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchFnRef = useRef(fetchFn);
-  fetchFnRef.current = fetchFn;
-
-  const execute = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await fetchFnRef.current();
-      setData(result);
-    } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError(t(fallbackErrorKey));
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [fallbackErrorKey, t]);
-
   useEffect(() => {
-    execute();
-  }, [execute]);
+    const execute = async () => {
+      try {
+        const result = await fetchFn();
+        setData(result);
+        setError(null);
+      } catch (err) {
+        if (err instanceof ApiError) {
+          setError(err.message);
+        } else {
+          setError(t(fallbackErrorKey));
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return { data, loading, error, refetch: execute };
+    execute();
+  }, [fetchFn, fallbackErrorKey, t]);
+
+  return { data, loading, error };
 }
