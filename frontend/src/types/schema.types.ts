@@ -56,11 +56,11 @@ export const schemaSchema = z.object({
     .regex(/^[0-9a-fA-F]{24}$/)
     .optional(),
   title: z.string(),
+  description: z.string().optional(),
   isDraft: z.boolean(),
   sections: z.array(sectionSchema),
 });
 
 export type Ischema = z.infer<typeof schemaSchema>;
 
-export type SchemaInput = Pick<Ischema, "title" | "sections">;
-
+export type SchemaInput = Pick<Ischema, "title" | "description" | "sections">;

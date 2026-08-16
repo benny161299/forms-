@@ -9,24 +9,25 @@ export function useHomeData() {
   const draftInstances = useDraftInstances();
   const submittedInstances = useSubmittedInstances();
 
-  const isLoading =
-    draftSchemas.loading ||
-    publishedSchemas.loading ||
-    draftInstances.loading ||
-    submittedInstances.loading;
-
-  const errorMessage =
-    draftSchemas.error ||
-    publishedSchemas.error ||
-    draftInstances.error ||
-    submittedInstances.error;
-
   return {
     schemaDrafts: draftSchemas.schemas,
     publishedSchemas: publishedSchemas.schemas,
     instanceDrafts: draftInstances.instances,
     submittedInstances: submittedInstances.instances,
-    isLoading,
-    errorMessage,
+
+    isLoading:
+      draftSchemas.loading ||
+      publishedSchemas.loading ||
+      draftInstances.loading ||
+      submittedInstances.loading,
+
+    errorMessage:
+      draftSchemas.error ||
+      publishedSchemas.error ||
+      draftInstances.error ||
+      submittedInstances.error,
+
+    refetchDraftSchemas: draftSchemas.refetch,
+    refetchDraftInstances: draftInstances.refetch,
   };
 }

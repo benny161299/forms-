@@ -1,11 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+
 import { schemaApi } from "../api/schema.api";
-import { useFetch } from "./useFetch";
+import { ApiError } from "../api/axiosClient";
 
 export function usePublishedSchemas() {
-  const { data, loading, error } = useFetch(
-    schemaApi.getAllSchemas,
-    "errors.fetchPublishedSchemas"
-  );
+  const { t } = useTranslation();
 
-  return { schemas: data ?? [], loading, error };
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["publishedSchemas"],
+    queryFn: schemaApi.getAllSchemas,
+  });
+
+  let errorMessage: string | null = null;
+
+  if (error instanceof ApiError) {
+    errorMessage = error.message;
+  } else if (error) {
+    errorMessage = t("errors.fetchPublishedSchemas");
+  }
+
+  return {
+    schemas: data ?? [],
+    loading: isLoading,
+    error: errorMessage,
+  };
 }
