@@ -23,13 +23,13 @@ export const schemaApi = {
     return response.data;
   },
 
-  
+
   updateSchema: async (id: string, schemaData: Partial<SchemaInput>): Promise<Ischema> => {
     const response = await axiosClient.put<Ischema>(`/schemas/${id}`, schemaData);
     return response.data;
   },
 
- 
+
   publishSchema: async (id: string): Promise<Ischema> => {
     const response = await axiosClient.patch<Ischema>(`/schemas/${id}/publish`);
     return response.data;

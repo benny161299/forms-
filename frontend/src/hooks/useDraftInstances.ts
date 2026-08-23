@@ -14,10 +14,8 @@ export function useDraftInstances() {
 
   let errorMessage: string | null = null;
 
-  if (error instanceof ApiError) {
-    errorMessage = error.message;
-  } else if (error) {
-    errorMessage = t("errors.fetchDraftInstances");
+  if (error) {
+    errorMessage = error instanceof ApiError ? error.message : t("errors.fetchDraftInstances");
   }
 
   return {

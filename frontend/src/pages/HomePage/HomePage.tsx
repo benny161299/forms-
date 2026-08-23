@@ -4,7 +4,7 @@ import { CircularProgress, Typography, Button } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import { toast } from 'react-toastify';
 
-import { useHomeData } from '../../hooks/useHomeData';
+import { useHomeData } from './hooks/useHomeData';
 import { schemaApi } from '../../api/schema.api';
 import { instanceApi } from '../../api/instance.api';
 import { SchemaCard, InstanceCard } from './components/index';

@@ -14,10 +14,8 @@ export function useDraftSchemas() {
 
   let errorMessage: string | null = null;
 
-  if (error instanceof ApiError) {
-    errorMessage = error.message;
-  } else if (error) {
-    errorMessage = t("errors.fetchDraftSchemas");
+  if (error) {
+    errorMessage = error instanceof ApiError ? error.message : t("errors.fetchDraftSchemas");
   }
 
   return {

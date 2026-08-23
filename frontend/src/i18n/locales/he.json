@@ -10,7 +10,7 @@
     "emptyPublishedSchemas": "אין טפסים מפורסמים זמינים למילוי",
     "emptyInstanceDrafts": "אין טפסים באמצע מילוי",
     "emptySubmittedInstances": "טרם הוגשו טפסים במערכת",
-    "sectionsCount": "{{count}} סקשנים",
+    "sectionsCount": "{{count}} סקשן מספר",
     "instanceInProcess": "טופס בתהליך",
     "instanceSubmitted": "טופס הוגש",
     "edit": "ערוך",
@@ -31,5 +31,88 @@
     "fetchPublishedSchemas": "אירעה שגיאה בטעינת הטפסים הזמינים למילוי",
     "fetchDraftInstances": "אירעה שגיאה בטעינת טיוטות המופעים",
     "fetchSubmittedInstances": "אירעה שגיאה בטעינת המופעים שהוגשו"
-  }
+  },
+  "common": {
+    "delete": "מחק"
+  },
+  "schemaBuilder": {
+    "questionType": "סוג שאלה",
+    "pageTitleCreate": "יצירת טופס חדש",
+    "pageTitleEdit": "עריכת טופס",
+    "schemaTitlePlaceholder": "כותרת הטופס",
+    "schemaDescPlaceholder": "תיאור הטופס (אופציונלי)",
+    "sectionTitlePlaceholder": "כותרת הסקשן",
+    "sectionDescPlaceholder": "תיאור הסקשן (אופציונלי)",
+    "questionTitlePlaceholder": "שאלה ללא כותרת",
+    "addSection": "הוסף סקשן חדש",
+    "addQuestion": "הוסף שאלה",
+    "deleteSection": "מחק סקשן",
+    "deleteQuestion": "מחק שאלה",
+    "required": "שדה חובה",
+    "saveDraft": "שמור כטיוטה",
+    "publish": "פרסם טופס",
+    "saveSuccess": "הטופס נשמר בהצלחה",
+    "publishSuccess": "הטופס פורסם בהצלחה",
+    "saveError": "שגיאה בשמירת הטופס",
+    "validationNoTitle": "יש להזין כותרת לטופס",
+    "validationSectionNoTitle": "יש להזין כותרת לסקשן",
+    "validationNoChoices": "יש להוסיף לפחות אפשרות בחירה אחת",
+    "validationEmptyChoice": "אפשרות בחירה אינה יכולה להישאר ריקה",
+    "validationNoGridCols": "יש להוסיף לפחות עמודה אחת לטבלה",
+    "validationEmptyGridCol": "עמודה בטבלה אינה יכולה להישאר ריקה",
+    "validationNoGridRows": "יש להוסיף לפחות שורה אחת לטבלה",
+    "validationEmptyGridRow": "שורה בטבלה אינה יכולה להישאר ריקה",
+
+    "validationNoSections": "לא ניתן לשמור טופס ללא סקשנים",
+    "validationSectionNoQuestions": "סקשן חייב להכיל לפחות שאלה אחת",
+    "validationQuestionNoTitle": "לשאלה בסקשן חסרה כותרת",
+
+    "choiceOptionPlaceholder": "אפשרות {{number}}",
+    "addOption": "הוסף אפשרות",
+    "gridRowPlaceholder": "שורה {{number}}",
+    "addRow": "הוסף שורה",
+    "scaleMin": "min",
+    "scaleMax": "max",
+
+    "types": {
+      "short_answer": "תשובה מילולית קצרה",
+      "paragraph": "תשובה מילולית ארוכה (פסקה)",
+      "multiple_choice": "בחירה יחידה",
+      "checkbox": "בחירה מרובה",
+      "dropdown": "רשימה נפתחת",
+      "linear_scale": "בחירה לינארית",
+      "date": "תאריך",
+      "time": "זמן",
+      "radio": "בחירה יחידה",
+      "radio_grid": "טבלת בחירות Radio",
+      "checkbox_grid": "טבלת בחירות מרובות"
+    }
+  },
+  "instanceFill": {
+    "next": "הבא",
+    "prev": "הקודם",
+    "submit": "שלח טופס",
+    "saveDraft": "שמור טיוטה",
+    "submitSuccess": "הטופס הוגש בהצלחה!",
+    "draftSaved": "הטיוטה נשמרה בהצלחה",
+    "requiredError": "יש למלא את כל שדות החובה לפני המעבר"
+  },
+  "listPages": {
+    "schemasTitle": "כל הטפסים הזמינים",
+    "instancesTitle": "כל הטפסים שמילאתי",
+    "close": "סגור",
+    "view": "צפייה"
+  },
+  "types": {
+      "short_answer": "תשובה קצרה",
+      "paragraph": "פסקה",
+      "radio": "בחירה יחידה",
+      "checkbox": "תיבות סימון",
+      "dropdown": "רשימה נפתחת",
+      "linear_scale": "סולם ליניארי",
+      "radio_grid": "רשת בחירה יחידה",
+      "checkbox_grid": "רשת תיבות סימון",
+      "date": "תאריך",
+      "time": "שעה"
+    }
 }

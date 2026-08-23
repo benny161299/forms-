@@ -9,7 +9,7 @@ import { ConfirmProvider } from "material-ui-confirm";
 import HomePage from "./pages/HomePage/HomePage";
 import InstanceFillPage from "./pages/InstanceFillPage";
 import InstancesListPage from "./pages/InstancesListPage";
-import SchemaBuilderPage from "./pages/SchemaBuilderPage";
+import SchemaBuilderPage from "./pages/SchemaBuilderPage/SchemaBuilderPage";
 import SchemasListPage from "./pages/SchemasListPage";
 import { theme } from "./theme/theme";
 

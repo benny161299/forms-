@@ -1,7 +1,7 @@
-import { useDraftInstances } from "./useDraftInstances";
-import { useDraftSchemas } from "./useDraftSchemas";
-import { usePublishedSchemas } from "./usePublishedSchemas";
-import { useSubmittedInstances } from "./useSubmittedInstances";
+import { useDraftInstances } from "../../../hooks/useDraftInstances";
+import { useDraftSchemas } from "../../../hooks/useDraftSchemas";
+import { usePublishedSchemas } from "../../../hooks/usePublishedSchemas";
+import { useSubmittedInstances } from "../../../hooks/useSubmittedInstances";
 
 export function useHomeData() {
   const draftSchemas = useDraftSchemas();
