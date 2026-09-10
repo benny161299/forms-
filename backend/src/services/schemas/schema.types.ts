@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const baseQuestionSchema = z.object({
-  id: z.string(),
-  title: z.string(),
+  id: z.uuidv4(),
+  title: z.string().trim().min(1, "schemaBuilder.validationQuestionNoTitle"),
   required: z.boolean().default(false),
 });
 
@@ -13,7 +13,9 @@ const textQuestionSchema = baseQuestionSchema.extend({
 const choiceQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(["radio", "checkbox", "dropdown"]),
   options: z.object({
-    choices: z.array(z.string()),
+    choices: z
+      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyChoice"))
+      .min(1, "schemaBuilder.validationNoChoices"),
   }),
 });
 
@@ -28,8 +30,12 @@ const scaleQuestionSchema = baseQuestionSchema.extend({
 const tableQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(["radio_grid", "checkbox_grid"]),
   options: z.object({
-    choices: z.array(z.string()),
-    rows: z.array(z.string()),
+    choices: z
+      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridCol"))
+      .min(1, "schemaBuilder.validationNoGridCols"),
+    rows: z
+      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridRow"))
+      .min(1, "schemaBuilder.validationNoGridRows"),
   }),
 });
 
@@ -43,9 +49,9 @@ export const questionSchema = z.discriminatedUnion("type", [
 export type IQuestion = z.infer<typeof questionSchema>;
 
 export const sectionSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  questions: z.array(questionSchema),
+  title: z.string().trim().min(1, "schemaBuilder.validationSectionNoTitle"),
+  description: z.string().trim().default(""),
+  questions: z.array(questionSchema).min(1, "schemaBuilder.validationSectionNoQuestions"),
 });
 
 export type ISection = z.infer<typeof sectionSchema>;
@@ -55,11 +61,12 @@ export const schemaSchema = z.object({
     .string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .optional(),
-  title: z.string(),
+  title: z.string().trim().min(1, "schemaBuilder.validationNoTitle"),
+  description: z.string().trim().default(""),
   isDraft: z.boolean(),
-  sections: z.array(sectionSchema),
+  sections: z.array(sectionSchema).min(1, "schemaBuilder.validationNoSections"),
 });
 
 export type Ischema = z.infer<typeof schemaSchema>;
 
-export type SchemaInput = Pick<Ischema, "title" | "sections">;
+export type SchemaInput = Pick<Ischema, "title" | "description" | "sections">;
