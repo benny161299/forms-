@@ -89,30 +89,25 @@
     }
   },
   "instanceFill": {
+    "pageTitle": "מילוי טופס",
+    "submitSuccess": "הטופס נשלח בהצלחה!",
+    "draftSaveSuccess": "הטיוטה נשמרה בהצלחה",
+    "saveError": "אירעה שגיאה בשמירת התשובות",
+    "requiredField": "שדה חובה *",
     "next": "הבא",
-    "prev": "הקודם",
-    "submit": "שלח טופס",
+    "back": "הקודם",
     "saveDraft": "שמור טיוטה",
-    "submitSuccess": "הטופס הוגש בהצלחה!",
-    "draftSaved": "הטיוטה נשמרה בהצלחה",
-    "requiredError": "יש למלא את כל שדות החובה לפני המעבר"
+    "submit": "שלח טופס",
+    "selectOption": "בחר אפשרות",
+    "shortAnswerPlaceholder": "הקלד את תשובתך כאן...",
+    "paragraphPlaceholder": "הקלד את תשובתך המפורטת כאן...",
+    "submitting": "שולח..."
   },
   "listPages": {
     "schemasTitle": "כל הטפסים הזמינים",
     "instancesTitle": "כל הטפסים שמילאתי",
     "close": "סגור",
     "view": "צפייה"
-  },
-  "types": {
-      "short_answer": "תשובה קצרה",
-      "paragraph": "פסקה",
-      "radio": "בחירה יחידה",
-      "checkbox": "תיבות סימון",
-      "dropdown": "רשימה נפתחת",
-      "linear_scale": "סולם ליניארי",
-      "radio_grid": "רשת בחירה יחידה",
-      "checkbox_grid": "רשת תיבות סימון",
-      "date": "תאריך",
-      "time": "שעה"
-    }
+  }
 }
+
