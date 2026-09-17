@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -40,15 +40,11 @@ export default function InstanceFillPage() {
     instanceId: stateInstanceId,
     answers,
     currentSectionIndex,
-    isFirstSection,
-    isLastSection,
   } = actions;
 
-  useEffect(() => {
-    if (schema?.sections?.length) {
-      actions.setTotalSections(schema.sections.length);
-    }
-  }, [schema]);
+  const totalSections = schema?.sections?.length ?? 0;
+  const isFirstSection = currentSectionIndex === 0;
+  const isLastSection = totalSections > 0 && currentSectionIndex === totalSections - 1;
 
   const currentSection = schema?.sections[currentSectionIndex];
   const { validateSection } = useInstanceSectionValidation(currentSection, answers);

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress, Typography, Button } from '@mui/material';
@@ -9,6 +10,8 @@ import { schemaApi } from '../../api/schema.api';
 import { instanceApi } from '../../api/instance.api';
 import { SchemaCard, InstanceCard } from './components/index';
 import * as S from './HomePage.styles';
+import type { IInstance } from '../../types/instance.types';
+import { InstanceViewModal } from '../InstancesListPage/InstanceViewModal';
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -25,6 +28,8 @@ export default function HomePage() {
     refetchDraftSchemas,
     refetchDraftInstances,
   } = useHomeData();
+
+  const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(null);
 
   const handleDeleteSchema = async (id: string) => {
     const { confirmed } = await confirm({ description: t('home.confirmDeleteSchema') });
@@ -154,9 +159,14 @@ export default function HomePage() {
         </S.SectionPaper>
 
         <S.SectionPaper variant="outlined">
-          <Typography variant="h6" color="secondary" gutterBottom>
-            {t('home.submittedInstances')}
-          </Typography>
+          <S.SectionHeader>
+            <Typography variant="h6" color="secondary" gutterBottom={false}>
+              {t('home.submittedInstances')}
+            </Typography>
+            <Button size="small" onClick={() => navigate('/instances')}>
+              {t('home.viewAll')}
+            </Button>
+          </S.SectionHeader>
           {!submittedInstances || submittedInstances.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               {t('home.emptySubmittedInstances')}
@@ -168,13 +178,18 @@ export default function HomePage() {
                   key={instance._id}
                   instance={instance}
                   index={index}
-                  onView={() => navigate('/instances')}
+                  onView={() => setSelectedInstance(instance)}
                 />
               ))}
             </S.CarouselWrapper>
           )}
         </S.SectionPaper>
       </S.GridContainer>
+
+      <InstanceViewModal
+        instance={selectedInstance}
+        onClose={() => setSelectedInstance(null)}
+      />
     </S.PageContainer>
   );
 }

@@ -24,7 +24,7 @@
     "schemaDeleteSuccess": "הטופס נמחק בהצלחה",
     "schemaDeleteError": "מחיקת הטופס נכשלה",
     "instanceDeleteSuccess": "המופע נמחק בהצלחה",
-    "instanceDeleteError": "מחיקת המופע נכשלה"
+    "viewAll": "הצג הכל"
   },
   "errors": {
     "fetchDraftSchemas": "אירעה שגיאה בטעינת טיוטות הסכמה",
@@ -62,18 +62,15 @@
     "validationEmptyGridCol": "עמודה בטבלה אינה יכולה להישאר ריקה",
     "validationNoGridRows": "יש להוסיף לפחות שורה אחת לטבלה",
     "validationEmptyGridRow": "שורה בטבלה אינה יכולה להישאר ריקה",
-
     "validationNoSections": "לא ניתן לשמור טופס ללא סקשנים",
     "validationSectionNoQuestions": "סקשן חייב להכיל לפחות שאלה אחת",
     "validationQuestionNoTitle": "לשאלה בסקשן חסרה כותרת",
-
     "choiceOptionPlaceholder": "אפשרות {{number}}",
     "addOption": "הוסף אפשרות",
     "gridRowPlaceholder": "שורה {{number}}",
     "addRow": "הוסף שורה",
     "scaleMin": "min",
     "scaleMax": "max",
-
     "types": {
       "short_answer": "תשובה מילולית קצרה",
       "paragraph": "תשובה מילולית ארוכה (פסקה)",
@@ -110,4 +107,3 @@
     "view": "צפייה"
   }
 }
-

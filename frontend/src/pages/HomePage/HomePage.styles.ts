@@ -37,3 +37,10 @@ export const CarouselWrapper = styled(Box)(({ theme }) => ({
   overflowX: 'auto',
   paddingBottom: theme.spacing(1),
 }));
+
+export const SectionHeader = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: theme.spacing(1),
+}));

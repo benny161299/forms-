@@ -4,35 +4,32 @@ import type { IInstance, AnswerValue } from "../../../types/instance.types";
 
 export type InstanceAction =
   | {
-      type: "SET_INSTANCE";
-      payload: {
-        instanceId: string;
-        answers: Record<string, AnswerValue>;
-      };
-    }
+    type: "SET_INSTANCE";
+    payload: {
+      instanceId: string;
+      answers: Record<string, AnswerValue>;
+    };
+  }
   | { type: "SET_INSTANCE_ID"; payload: string }
   | {
-      type: "SET_ANSWER";
-      payload: {
-        questionId: string;
-        value: AnswerValue;
-      };
-    }
-  | { type: "SET_CURRENT_SECTION"; payload: number }
-  | { type: "SET_TOTAL_SECTIONS"; payload: number };
+    type: "SET_ANSWER";
+    payload: {
+      questionId: string;
+      value: AnswerValue;
+    };
+  }
+  | { type: "SET_CURRENT_SECTION"; payload: number };
 
 interface InstanceFillState {
   instanceId: string | null;
   answers: Record<string, AnswerValue>;
   currentSectionIndex: number;
-  totalSections: number;
 }
 
 const initialInstanceState: InstanceFillState = {
   instanceId: null,
   answers: {},
   currentSectionIndex: 0,
-  totalSections: 0,
 };
 
 function instanceReducer(
@@ -55,10 +52,6 @@ function instanceReducer(
 
     case "SET_CURRENT_SECTION":
       draft.currentSectionIndex = action.payload;
-      break;
-
-    case "SET_TOTAL_SECTIONS":
-      draft.totalSections = action.payload;
       break;
   }
 }
@@ -87,11 +80,6 @@ export function useInstanceFill(
     instanceId: state.instanceId,
     answers: state.answers,
     currentSectionIndex: state.currentSectionIndex,
-    totalSections: state.totalSections,
-
-    isFirstSection: state.currentSectionIndex === 0,
-    isLastSection:
-      state.currentSectionIndex === state.totalSections - 1,
 
     setInstanceId: (id: string) =>
       dispatch({
@@ -118,12 +106,6 @@ export function useInstanceFill(
       dispatch({
         type: "SET_CURRENT_SECTION",
         payload: state.currentSectionIndex - 1,
-      }),
-
-    setTotalSections: (total: number) =>
-      dispatch({
-        type: "SET_TOTAL_SECTIONS",
-        payload: total,
       }),
   };
 }
