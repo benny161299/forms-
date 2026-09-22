@@ -107,9 +107,14 @@ export default function HomePage() {
         </S.SectionPaper>
 
         <S.SectionPaper variant="outlined">
-          <Typography variant="h6" color="secondary" gutterBottom>
-            {t('home.publishedSchemas')}
-          </Typography>
+          <S.SectionHeader>
+            <Typography variant="h6" color="secondary" gutterBottom={false}>
+              {t('home.publishedSchemas')}
+            </Typography>
+            <Button size="small" onClick={() => navigate('/schemas')}>
+              {t('home.viewAll')}
+            </Button>
+          </S.SectionHeader>
           {!publishedSchemas || publishedSchemas.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               {t('home.emptyPublishedSchemas')}

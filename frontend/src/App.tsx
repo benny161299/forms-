@@ -10,7 +10,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import InstanceFillPage from "./pages/InstanceFillPage/InstanceFillPage";
 import InstancesListPage from "./pages/InstancesListPage/InstancesListPage";
 import SchemaBuilderPage from "./pages/SchemaBuilderPage/SchemaBuilderPage";
-import SchemasListPage from "./pages/SchemasListPage";
+import SchemasListPage from "./pages/SchemasListPage/SchemasListPage";
 import { theme } from "./theme/theme";
 
 export function App() {

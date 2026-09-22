@@ -7,10 +7,11 @@ interface SchemaCardProps {
   index: number;
   onEdit?: (id: string) => void;
   onFill?: (id: string) => void;
+  onView?: () => void;
   onDelete?: (id: string) => void;
 }
 
-export function SchemaCard({ schema, index, onEdit, onFill, onDelete }: SchemaCardProps) {
+export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: SchemaCardProps) {
   const { t } = useTranslation();
 
   return (
@@ -39,6 +40,15 @@ export function SchemaCard({ schema, index, onEdit, onFill, onDelete }: SchemaCa
             onClick={() => onFill(schema._id)}
           >
             {t('home.fill')}
+          </S.ActionButton>
+        )}
+        {onView && (
+          <S.ActionButton
+            size="small"
+            variant="outlined"
+            onClick={onView}
+          >
+            {t('listPages.view')}
           </S.ActionButton>
         )}
         {onDelete && (

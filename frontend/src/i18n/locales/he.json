@@ -102,7 +102,9 @@
   },
   "listPages": {
     "schemasTitle": "כל הטפסים הזמינים",
+    "schemasEmpty": "אין טפסים זמינים כרגע",
     "instancesTitle": "כל הטפסים שמילאתי",
+    "instancesEmpty": "לא הוגשו טפסים עדיין",
     "close": "סגור",
     "view": "צפייה"
   }
