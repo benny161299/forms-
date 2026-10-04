@@ -28,7 +28,7 @@ export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: 
           <S.ActionButton
             size="small"
             variant="outlined"
-            onClick={() => onEdit(schema._id)}
+            onClick={() => schema._id && onEdit(schema._id)}
           >
             {t('home.edit')}
           </S.ActionButton>
@@ -37,7 +37,7 @@ export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: 
           <S.ActionButton
             size="small"
             variant="contained"
-            onClick={() => onFill(schema._id)}
+            onClick={() => schema._id && onFill(schema._id)}
           >
             {t('home.fill')}
           </S.ActionButton>
@@ -52,7 +52,7 @@ export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: 
           </S.ActionButton>
         )}
         {onDelete && (
-          <S.DeleteButton size="small" onClick={() => onDelete(schema._id)}>
+          <S.DeleteButton size="small" onClick={() => schema._id && onDelete(schema._id)}>
             {t('home.delete')}
           </S.DeleteButton>
         )}

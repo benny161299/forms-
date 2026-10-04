@@ -12,7 +12,7 @@ export const answerValueSchema = z.union([
 export type AnswerValue = z.infer<typeof answerValueSchema>;
 
 export const instanceSchema = z.object({
-  _id: mongoId.optional(),
+  _id: mongoId,
   schemaId: mongoId,
   isDraft: z.boolean(),
   answers: z.record(z.uuidv4(), answerValueSchema),
