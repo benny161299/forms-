@@ -43,9 +43,9 @@ export function ChoiceInput({
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}
         >
-          {choices.map((choice) => (
+          {choices.map((choice, idx) => (
             <FormControlLabel
-              key={choice}
+              key={`${choice}-${idx}`}
               value={choice}
               control={<Radio />}
               label={choice}
@@ -59,9 +59,9 @@ export function ChoiceInput({
       const list = Array.isArray(value) ? value : [];
       return (
         <FormGroup>
-          {choices.map((choice) => (
+          {choices.map((choice, idx) => (
             <FormControlLabel
-              key={choice}
+              key={`${choice}-${idx}`}
               control={
                 <Checkbox
                   checked={list.includes(choice)}
@@ -95,8 +95,8 @@ export function ChoiceInput({
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
           >
-            {choices.map((choice) => (
-              <MenuItem key={choice} value={choice}>
+            {choices.map((choice, idx) => (
+              <MenuItem key={`${choice}-${idx}`} value={choice}>
                 {choice}
               </MenuItem>
             ))}

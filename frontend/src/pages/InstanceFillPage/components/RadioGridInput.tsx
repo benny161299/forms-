@@ -36,19 +36,19 @@ export function RadioGridInput({
         <TableHead>
           <TableRow>
             <TableCell />
-            {choices.map((choice) => (
-              <TableCell key={choice} align="center">
+            {choices.map((choice, colIdx) => (
+              <TableCell key={`${choice}-${colIdx}`} align="center">
                 {choice}
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row}>
+          {rows.map((row, rowIdx) => (
+            <TableRow key={`${row}-${rowIdx}`}>
               <TableCell component="th">{row}</TableCell>
               {choices.map((choice, colIdx) => (
-                <TableCell key={choice} align="center">
+                <TableCell key={`${choice}-${colIdx}`} align="center">
                   <Radio
                     checked={value[row] === colIdx}
                     onChange={() => handleRadioSelect(row, colIdx)}

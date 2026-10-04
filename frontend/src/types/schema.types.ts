@@ -15,7 +15,11 @@ const choiceQuestionSchema = baseQuestionSchema.extend({
   options: z.object({
     choices: z
       .array(z.string().trim().min(1, "schemaBuilder.validationEmptyChoice"))
-      .min(1, "schemaBuilder.validationNoChoices"),
+      .min(1, "schemaBuilder.validationNoChoices")
+      .refine(
+        (items) => new Set(items.map((i) => i.trim())).size === items.length,
+        "schemaBuilder.validationDuplicateChoices"
+      ),
   }),
 });
 
@@ -32,10 +36,18 @@ const tableQuestionSchema = baseQuestionSchema.extend({
   options: z.object({
     choices: z
       .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridCol"))
-      .min(1, "schemaBuilder.validationNoGridCols"),
+      .min(1, "schemaBuilder.validationNoGridCols")
+      .refine(
+        (items) => new Set(items.map((i) => i.trim())).size === items.length,
+        "schemaBuilder.validationDuplicateGridCols"
+      ),
     rows: z
       .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridRow"))
-      .min(1, "schemaBuilder.validationNoGridRows"),
+      .min(1, "schemaBuilder.validationNoGridRows")
+      .refine(
+        (items) => new Set(items.map((i) => i.trim())).size === items.length,
+        "schemaBuilder.validationDuplicateGridRows"
+      ),
   }),
 });
 

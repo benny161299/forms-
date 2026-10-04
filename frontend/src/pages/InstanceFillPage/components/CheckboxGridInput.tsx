@@ -41,21 +41,21 @@ export function CheckboxGridInput({
         <TableHead>
           <TableRow>
             <TableCell />
-            {choices.map((choice) => (
-              <TableCell key={choice} align="center">
+            {choices.map((choice, colIdx) => (
+              <TableCell key={`${choice}-${colIdx}`} align="center">
                 {choice}
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => {
+          {rows.map((row, rowIdx) => {
             const currentRow = value[row] || [];
             return (
-              <TableRow key={row}>
+              <TableRow key={`${row}-${rowIdx}`}>
                 <TableCell component="th">{row}</TableCell>
                 {choices.map((choice, colIdx) => (
-                  <TableCell key={choice} align="center">
+                  <TableCell key={`${choice}-${colIdx}`} align="center">
                     <Checkbox
                       checked={currentRow.includes(colIdx)}
                       onChange={(e) =>
