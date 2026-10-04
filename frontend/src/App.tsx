@@ -6,6 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ConfirmProvider } from "material-ui-confirm";
 
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import rtlPlugin from "stylis-plugin-rtl";
+import { prefixer } from "stylis";
+
 import HomePage from "./pages/HomePage/HomePage";
 import InstanceFillPage from "./pages/InstanceFillPage/InstanceFillPage";
 import InstancesListPage from "./pages/InstancesListPage/InstancesListPage";
@@ -13,9 +18,15 @@ import SchemaBuilderPage from "./pages/SchemaBuilderPage/SchemaBuilderPage";
 import SchemasListPage from "./pages/SchemasListPage/SchemasListPage";
 import { theme } from "./theme/theme";
 
+const cacheRtl = createCache({
+  key: "muirtl",
+  stylisPlugins: [prefixer, rtlPlugin],
+});
+
 export function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
       <CssBaseline />
 
       <ConfirmProvider>
@@ -49,7 +60,8 @@ export function App() {
       </ConfirmProvider>
 
       <ToastContainer />
-    </ThemeProvider>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
 
