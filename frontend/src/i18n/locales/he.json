@@ -38,7 +38,8 @@
     "delete": "מחק",
     "confirm": "אישור",
     "cancel": "ביטול",
-    "confirmTitle": "אישור פעולה"
+    "confirmTitle": "אישור פעולה",
+    "backToHome": "חזרה לדף הבית"
   },
   "schemaBuilder": {
     "questionType": "סוג שאלה",

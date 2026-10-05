@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CircularProgress, Typography, Alert } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 
 import { usePublishedSchemas } from "../../hooks/usePublishedSchemas";
@@ -12,6 +14,7 @@ import * as S from "./SchemasListPage.styles";
 
 export default function SchemasListPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
     schemas,
@@ -43,6 +46,15 @@ export default function SchemasListPage() {
 
   return (
     <S.PageContainer>
+      <S.HomeButton
+        startIcon={<HomeIcon />}
+        onClick={() => navigate("/")}
+        variant="outlined"
+        size="small"
+      >
+        {t("common.backToHome")}
+      </S.HomeButton>
+
       <S.PageTitle variant="h4">
         {t("listPages.schemasTitle")}
       </S.PageTitle>

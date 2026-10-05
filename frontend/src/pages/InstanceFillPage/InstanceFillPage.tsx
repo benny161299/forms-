@@ -1,6 +1,7 @@
 
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -121,6 +122,15 @@ export default function InstanceFillPage() {
 
   return (
     <S.PageContainer>
+      <S.HomeButton
+        startIcon={<HomeIcon />}
+        onClick={() => navigate("/")}
+        variant="outlined"
+        size="small"
+      >
+        {t("common.backToHome")}
+      </S.HomeButton>
+
       <Typography variant="h4" color="primary" gutterBottom>
         {schema.title}
       </Typography>

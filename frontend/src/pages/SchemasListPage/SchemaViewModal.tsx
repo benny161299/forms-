@@ -49,7 +49,7 @@ export function SchemaViewModal({ schema, onClose }: SchemaViewModalProps) {
               )}
             </S.SectionPaper>
 
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, px: 1 }}>
+            <S.ChipsContainer>
               {section.questions.map((question) => (
                 <Chip
                   key={question.id}
@@ -59,7 +59,7 @@ export function SchemaViewModal({ schema, onClose }: SchemaViewModalProps) {
                   title={t(`schemaBuilder.types.${question.type}`)}
                 />
               ))}
-            </Box>
+            </S.ChipsContainer>
           </S.SectionContainer>
         ))}
       </S.ViewModalContainer>

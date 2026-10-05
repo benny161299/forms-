@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CircularProgress,
   Typography,
   Alert,
 } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 
 import { useSubmittedInstances } from "../../hooks/useSubmittedInstances";
@@ -16,6 +18,7 @@ import * as S from "./InstancesListPage.styles";
 
 export default function InstancesListPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
     instances,
@@ -48,6 +51,15 @@ export default function InstancesListPage() {
 
   return (
     <S.PageContainer>
+      <S.HomeButton
+        startIcon={<HomeIcon />}
+        onClick={() => navigate("/")}
+        variant="outlined"
+        size="small"
+      >
+        {t("common.backToHome")}
+      </S.HomeButton>
+
       <S.PageTitle variant="h4">
         {t("listPages.instancesTitle")}
       </S.PageTitle>

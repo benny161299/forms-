@@ -1,6 +1,10 @@
 
 import { styled } from "@mui/material/styles";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, Button } from "@mui/material";
+
+export const HomeButton = styled(Button)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
 
 export const PageContainer = styled(Box)(({ theme }) => ({
   maxWidth: 1100,

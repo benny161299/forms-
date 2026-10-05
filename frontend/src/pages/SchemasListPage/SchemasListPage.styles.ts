@@ -1,6 +1,10 @@
 
 import { styled } from "@mui/material/styles";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography, Button } from "@mui/material";
+
+export const HomeButton = styled(Button)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
 
 export const PageContainer = styled(Box)(({ theme }) => ({
   maxWidth: 1100,
@@ -88,4 +92,12 @@ export const SectionDescription = styled(Typography)(({ theme }) => ({
 
 export const SectionContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
+}));
+
+export const ChipsContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  gap: theme.spacing(1),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
 }));

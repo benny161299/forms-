@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -64,6 +65,15 @@ export function SchemaBuilderPage() {
 
   return (
     <S.PageContainer>
+      <S.HomeButton
+        startIcon={<HomeIcon />}
+        onClick={() => navigate("/")}
+        variant="outlined"
+        size="small"
+      >
+        {t("common.backToHome")}
+      </S.HomeButton>
+
       <Typography variant="h4" color="primary" gutterBottom>
         {t(isEditMode ? "schemaBuilder.pageTitleEdit" : "schemaBuilder.pageTitleCreate")}
       </Typography>
