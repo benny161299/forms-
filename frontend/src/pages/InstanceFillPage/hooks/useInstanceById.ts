@@ -6,6 +6,8 @@ export function useInstanceById(id?: string) {
     queryKey: ["instance", id],
     queryFn: () => instanceApi.getInstanceById(id!),
     enabled: Boolean(id),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
   return {

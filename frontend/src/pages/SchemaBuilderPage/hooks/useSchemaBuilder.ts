@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useImmerReducer } from "use-immer";
 import type { Ischema, ISection, IQuestion } from "../../../types/schema.types";
 
@@ -68,10 +68,20 @@ function schemaReducer(draft: Ischema, action: SchemaAction) {
 
 export function useSchemaBuilder(initialData?: Ischema | null) {
   const [schema, dispatch] = useImmerReducer(schemaReducer, initialSchemaState);
+  const lastLoadedIdRef = useRef<string | undefined>(undefined);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (initialData) {
+    if (!initialData) return;
+
+    if (initialData._id) {
+      if (initialData._id !== lastLoadedIdRef.current) {
+        dispatch({ type: "SET_SCHEMA", payload: initialData });
+        lastLoadedIdRef.current = initialData._id;
+      }
+    } else if (!hasInitializedRef.current) {
       dispatch({ type: "SET_SCHEMA", payload: initialData });
+      hasInitializedRef.current = true;
     }
   }, [initialData, dispatch]);
 

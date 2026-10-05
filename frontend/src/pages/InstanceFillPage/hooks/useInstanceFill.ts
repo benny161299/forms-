@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useImmerReducer } from "use-immer";
 import type { IInstance, AnswerValue } from "../../../types/instance.types";
+import type { ISection } from "../../../types/schema.types";
 
 export type InstanceAction =
   | {
@@ -8,6 +9,7 @@ export type InstanceAction =
     payload: {
       instanceId: string;
       answers: Record<string, AnswerValue>;
+      currentSectionIndex?: number;
     };
   }
   | { type: "SET_INSTANCE_ID"; payload: string }
@@ -32,6 +34,34 @@ const initialInstanceState: InstanceFillState = {
   currentSectionIndex: 0,
 };
 
+export function computeInitialSectionIndex(
+  sections?: ISection[],
+  answers?: Record<string, AnswerValue>
+): number {
+  if (!sections || sections.length <= 1 || !answers || Object.keys(answers).length === 0) {
+    return 0;
+  }
+
+  let lastSectionWithAnswers = 0;
+  for (let i = 0; i < sections.length; i++) {
+    const hasAnyAnswer = sections[i].questions.some((q) => answers[q.id] !== undefined);
+    if (hasAnyAnswer) {
+      lastSectionWithAnswers = i;
+    }
+  }
+
+  const sectionQuestions = sections[lastSectionWithAnswers].questions;
+  const isSectionComplete = sectionQuestions
+    .filter((q) => q.required)
+    .every((q) => answers[q.id] !== undefined && answers[q.id] !== null && answers[q.id] !== "");
+
+  if (isSectionComplete && lastSectionWithAnswers + 1 < sections.length) {
+    return lastSectionWithAnswers + 1;
+  }
+
+  return lastSectionWithAnswers;
+}
+
 function instanceReducer(
   draft: InstanceFillState,
   action: InstanceAction
@@ -40,6 +70,9 @@ function instanceReducer(
     case "SET_INSTANCE":
       draft.instanceId = action.payload.instanceId;
       draft.answers = action.payload.answers;
+      if (typeof action.payload.currentSectionIndex === "number") {
+        draft.currentSectionIndex = action.payload.currentSectionIndex;
+      }
       break;
 
     case "SET_INSTANCE_ID":
@@ -57,24 +90,44 @@ function instanceReducer(
 }
 
 export function useInstanceFill(
-  initialData?: Partial<IInstance> | null
+  initialData?: Partial<IInstance> | null,
+  sections?: ISection[]
 ) {
   const [state, dispatch] = useImmerReducer(
     instanceReducer,
     initialInstanceState
   );
+  const lastLoadedIdRef = useRef<string | undefined>(undefined);
+  const hasRestoredSectionRef = useRef(false);
 
   useEffect(() => {
-    if (initialData?._id) {
+    if (!initialData?._id) return;
+
+    if (initialData._id !== lastLoadedIdRef.current) {
+      const initialSection = computeInitialSectionIndex(sections, initialData.answers);
       dispatch({
         type: "SET_INSTANCE",
         payload: {
           instanceId: initialData._id,
           answers: initialData.answers ?? {},
+          currentSectionIndex: initialSection,
         },
       });
+      lastLoadedIdRef.current = initialData._id;
+      if (initialSection > 0) {
+        hasRestoredSectionRef.current = true;
+      }
+    } else if (sections && sections.length > 0 && !hasRestoredSectionRef.current) {
+      const initialSection = computeInitialSectionIndex(sections, initialData.answers);
+      if (initialSection > 0) {
+        dispatch({
+          type: "SET_CURRENT_SECTION",
+          payload: initialSection,
+        });
+        hasRestoredSectionRef.current = true;
+      }
     }
-  }, [initialData, dispatch]);
+  }, [initialData, sections, dispatch]);
 
   return {
     instanceId: state.instanceId,

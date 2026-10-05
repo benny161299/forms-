@@ -35,7 +35,10 @@ export default function InstanceFillPage() {
   const { updateInstance, isUpdating } = useUpdateInstance();
   const isSaving = isCreating || isUpdating;
 
-  const actions = useInstanceFill(isEditMode ? fetchedInstance : null);
+  const actions = useInstanceFill(
+    isEditMode ? fetchedInstance : null,
+    schema?.sections
+  );
   const {
     instanceId: stateInstanceId,
     answers,
