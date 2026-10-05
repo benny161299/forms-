@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -27,11 +28,49 @@ export default function InstanceFillPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { instance: fetchedInstance, isLoading: isLoadingInstance } =
-    useInstanceById(instanceId);
+  const {
+    instance: fetchedInstance,
+    isLoading: isLoadingInstance,
+    error: instanceError,
+  } = useInstanceById(instanceId);
 
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
-  const { schema, isLoading: isLoadingSchema } = useSchemaById(schemaIdToFetch);
+  const {
+    schema,
+    isLoading: isLoadingSchema,
+    error: schemaError,
+  } = useSchemaById(schemaIdToFetch);
+
+  useEffect(() => {
+    if (instanceError || schemaError) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+
+    if (!isLoadingInstance && isEditMode && !fetchedInstance) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+
+    if (!isLoadingSchema && schemaIdToFetch && !schema) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+  }, [
+    instanceError,
+    schemaError,
+    isLoadingInstance,
+    isLoadingSchema,
+    isEditMode,
+    fetchedInstance,
+    schemaIdToFetch,
+    schema,
+    navigate,
+    t,
+  ]);
 
   const { createInstance, isCreating } = useCreateInstance();
   const { updateInstance, isUpdating } = useUpdateInstance();

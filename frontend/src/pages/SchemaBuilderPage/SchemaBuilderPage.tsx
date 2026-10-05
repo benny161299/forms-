@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,7 +23,14 @@ export function SchemaBuilderPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schema: fetchedSchema, isLoading: isFetching } = useSchemaById(id);
+  const { schema: fetchedSchema, isLoading: isFetching, error: fetchError } = useSchemaById(id);
+
+  useEffect(() => {
+    if (isEditMode && (fetchError || (!isFetching && !fetchedSchema))) {
+      toast.error(t("schemaBuilder.notFoundError"));
+      navigate("/");
+    }
+  }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
   const { createSchema, isCreating } = useCreateSchema();
   const { updateSchema, isUpdating } = useUpdateSchema();
 
