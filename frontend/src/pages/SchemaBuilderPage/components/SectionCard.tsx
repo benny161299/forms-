@@ -1,4 +1,4 @@
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import * as S from "./SchemaBuilder.styles";
 interface SectionCardProps {
   section: ISection;
   sectionIndex: number;
+  isOnlySection?: boolean;
   onUpdateSection: (updated: Partial<ISection>) => void;
   onDeleteSection: () => void;
   onAddQuestion: () => void;
@@ -19,6 +20,7 @@ interface SectionCardProps {
 export function SectionCard({
   section,
   sectionIndex,
+  isOnlySection,
   onUpdateSection,
   onDeleteSection,
   onAddQuestion,
@@ -49,14 +51,19 @@ export function SectionCard({
             onChange={(e) => onUpdateSection({ description: e.target.value })}
           />
         </S.InputsContainer>
-        <Button
-          color="error"
-          variant="text"
-          startIcon={<DeleteOutlineIcon />}
-          onClick={onDeleteSection}
-        >
-          {t("schemaBuilder.deleteSection")}
-        </Button>
+        <Tooltip title={isOnlySection ? t("schemaBuilder.cannotDeleteOnlySection") : ""}>
+          <span>
+            <Button
+              color="error"
+              variant="text"
+              startIcon={<DeleteOutlineIcon />}
+              onClick={onDeleteSection}
+              disabled={isOnlySection}
+            >
+              {t("schemaBuilder.deleteSection")}
+            </Button>
+          </span>
+        </Tooltip>
       </S.SectionHeader>
 
       <S.QuestionsWrapper>

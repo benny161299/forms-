@@ -91,6 +91,7 @@ export function SchemaBuilderPage() {
           key={sIdx}
           section={section}
           sectionIndex={sIdx}
+          isOnlySection={schema.sections.length <= 1}
           onUpdateSection={(data) => actions.updateSection(sIdx, data)}
           onDeleteSection={() => actions.deleteSection(sIdx)}
           onAddQuestion={() => actions.addQuestion(sIdx)}

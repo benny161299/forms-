@@ -48,6 +48,7 @@
     "addSection": "הוסף סקשן חדש",
     "addQuestion": "הוסף שאלה",
     "deleteSection": "מחק סקשן",
+    "cannotDeleteOnlySection": "לא ניתן למחוק את הסקשן היחיד בטופס",
     "deleteQuestion": "מחק שאלה",
     "required": "שדה חובה",
     "saveDraft": "שמור כטיוטה",
