@@ -160,5 +160,11 @@ export function useInstanceFill(
         type: "SET_CURRENT_SECTION",
         payload: state.currentSectionIndex - 1,
       }),
+
+    goToSection: (index: number) =>
+      dispatch({
+        type: "SET_CURRENT_SECTION",
+        payload: index,
+      }),
   };
 }

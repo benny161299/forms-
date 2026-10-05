@@ -11,6 +11,7 @@ import { useCreateInstance } from "./hooks/useCreateInstance";
 import { useUpdateInstance } from "./hooks/useUpdateInstance";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceSectionValidation } from "./hooks/useInstanceSectionValidation";
+import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
 import * as S from "./InstanceFillPage.styles";
@@ -51,6 +52,7 @@ export default function InstanceFillPage() {
 
   const currentSection = schema?.sections[currentSectionIndex];
   const { validateSection } = useInstanceSectionValidation(currentSection, answers);
+  const { validateAll } = useInstanceValidation(schema?.sections, answers);
 
   const handleNext = () => {
     const error = validateSection();
@@ -67,9 +69,10 @@ export default function InstanceFillPage() {
 
   const handleSave = async (submit: boolean) => {
     if (submit) {
-      const error = validateSection();
+      const error = validateAll();
       if (error) {
-        toast.error(error);
+        toast.error(error.message);
+        actions.goToSection(error.sectionIndex);
         return;
       }
     }

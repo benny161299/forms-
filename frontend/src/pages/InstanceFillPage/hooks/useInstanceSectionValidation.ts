@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import type { IQuestion, ISection } from "../../../types/schema.types";
 import type { AnswerValue } from "../../../types/instance.types";
 
-function isAnswerMissing(
+export function isAnswerMissing(
   question: IQuestion,
   value: AnswerValue | undefined
 ): boolean {
