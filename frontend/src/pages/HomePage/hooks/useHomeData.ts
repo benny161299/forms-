@@ -29,5 +29,7 @@ export function useHomeData() {
 
     refetchDraftSchemas: draftSchemas.refetch,
     refetchDraftInstances: draftInstances.refetch,
+    refetchPublishedSchemas: publishedSchemas.refetch,
+    refetchSubmittedInstances: submittedInstances.refetch,
   };
 }

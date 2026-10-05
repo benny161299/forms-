@@ -7,7 +7,7 @@ import { ApiError } from "../api/axiosClient";
 export function useSubmittedInstances() {
   const { t } = useTranslation();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["submittedInstances"],
     queryFn: instanceApi.getAllInstances,
   });
@@ -22,5 +22,6 @@ export function useSubmittedInstances() {
     instances: data ?? [],
     loading: isLoading,
     error: errorMessage,
+    refetch,
   };
 }
