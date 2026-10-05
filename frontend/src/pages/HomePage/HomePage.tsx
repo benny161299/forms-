@@ -32,7 +32,13 @@ export default function HomePage() {
   const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(null);
 
   const handleDeleteSchema = async (id: string) => {
-    const { confirmed } = await confirm({ description: t('home.confirmDeleteSchema') });
+    const { confirmed } = await confirm({
+      title: t('home.confirmDeleteTitle'),
+      description: t('home.confirmDeleteSchema'),
+      confirmationText: t('common.delete'),
+      cancellationText: t('common.cancel'),
+      confirmationButtonProps: { color: 'error' },
+    });
     if (!confirmed) return;
 
     try {
@@ -45,7 +51,13 @@ export default function HomePage() {
   };
 
   const handleDeleteInstance = async (id: string) => {
-    const { confirmed } = await confirm({ description: t('home.confirmDeleteInstance') });
+    const { confirmed } = await confirm({
+      title: t('home.confirmDeleteTitle'),
+      description: t('home.confirmDeleteInstance'),
+      confirmationText: t('common.delete'),
+      cancellationText: t('common.cancel'),
+      confirmationButtonProps: { color: 'error' },
+    });
     if (!confirmed) return;
 
     try {

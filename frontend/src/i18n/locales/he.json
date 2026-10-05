@@ -21,6 +21,7 @@
     "loading": "טוען נתונים...",
     "confirmDeleteSchema": "האם אתה בטוח שברצונך למחוק טופס זה?",
     "confirmDeleteInstance": "האם אתה בטוח שברצונך למחוק מופע זה?",
+    "confirmDeleteTitle": "אישור מחיקה",
     "schemaDeleteSuccess": "הטופס נמחק בהצלחה",
     "schemaDeleteError": "מחיקת הטופס נכשלה",
     "instanceDeleteSuccess": "המופע נמחק בהצלחה",
@@ -34,7 +35,10 @@
     "fetchSubmittedInstances": "אירעה שגיאה בטעינת המופעים שהוגשו"
   },
   "common": {
-    "delete": "מחק"
+    "delete": "מחק",
+    "confirm": "אישור",
+    "cancel": "ביטול",
+    "confirmTitle": "אישור פעולה"
   },
   "schemaBuilder": {
     "questionType": "סוג שאלה",

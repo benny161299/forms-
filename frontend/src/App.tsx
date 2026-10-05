@@ -4,6 +4,7 @@ import { CssBaseline } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { useTranslation } from "react-i18next";
 import { ConfirmProvider } from "material-ui-confirm";
 
 import { CacheProvider } from "@emotion/react";
@@ -24,12 +25,20 @@ const cacheRtl = createCache({
 });
 
 export function App() {
+  const { t } = useTranslation();
+
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <ConfirmProvider>
+      <ConfirmProvider
+        defaultOptions={{
+          title: t("common.confirmTitle"),
+          confirmationText: t("common.confirm"),
+          cancellationText: t("common.cancel"),
+        }}
+      >
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
