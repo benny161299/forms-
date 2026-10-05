@@ -24,6 +24,7 @@
     "schemaDeleteSuccess": "הטופס נמחק בהצלחה",
     "schemaDeleteError": "מחיקת הטופס נכשלה",
     "instanceDeleteSuccess": "המופע נמחק בהצלחה",
+    "instanceDeleteError": "מחיקת המופע נכשלה",
     "viewAll": "הצג הכל"
   },
   "errors": {
