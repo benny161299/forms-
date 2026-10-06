@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress, Typography, Button } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
-import { toast } from 'react-toastify';
-
 import { useHomeData } from './hooks/useHomeData';
-import { schemaApi } from '../../api/schema.api';
-import { instanceApi } from '../../api/instance.api';
 import { SchemaCard, InstanceCard } from './components/index';
 import {
   PageContainer,
@@ -33,8 +29,8 @@ export default function HomePage() {
     submittedInstances,
     isLoading,
     errorMessage,
-    refetchDraftSchemas,
-    refetchDraftInstances,
+    deleteSchema,
+    deleteInstance,
   } = useHomeData();
 
   const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(null);
@@ -49,13 +45,7 @@ export default function HomePage() {
     });
     if (!confirmed) return;
 
-    try {
-      await schemaApi.deleteSchema(id);
-      refetchDraftSchemas();
-      toast.success(t('home.schemaDeleteSuccess'));
-    } catch {
-      toast.error(t('home.schemaDeleteError'));
-    }
+    deleteSchema(id);
   };
 
   const handleDeleteInstance = async (id: string) => {
@@ -68,13 +58,7 @@ export default function HomePage() {
     });
     if (!confirmed) return;
 
-    try {
-      await instanceApi.deleteInstance(id);
-      refetchDraftInstances();
-      toast.success(t('home.instanceDeleteSuccess'));
-    } catch {
-      toast.error(t('home.instanceDeleteError'));
-    }
+    deleteInstance(id);
   };
 
   if (isLoading) {
