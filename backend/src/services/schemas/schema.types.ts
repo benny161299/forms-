@@ -35,7 +35,7 @@ export const TABLE_QUESTION_TYPES = [
 
 const baseQuestionSchema = z.object({
   id: z.uuidv4(),
-  title: z.string().trim().min(1, "schemaBuilder.validationQuestionNoTitle"),
+  title: z.string().trim().min(1, "Question title is required"),
   required: z.boolean().default(false),
 });
 
@@ -47,11 +47,11 @@ const choiceQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(CHOICE_QUESTION_TYPES),
   options: z.object({
     choices: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyChoice"))
-      .min(1, "schemaBuilder.validationNoChoices")
+      .array(z.string().trim().min(1, "Choice option cannot be empty"))
+      .min(1, "At least one choice option is required")
       .refine(
         (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateChoices",
+        "Duplicate choices are not allowed",
       ),
   }),
 });
@@ -68,18 +68,18 @@ const tableQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(TABLE_QUESTION_TYPES),
   options: z.object({
     choices: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridCol"))
-      .min(1, "schemaBuilder.validationNoGridCols")
+      .array(z.string().trim().min(1, "Column title cannot be empty"))
+      .min(1, "At least one column is required")
       .refine(
         (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateGridCols",
+        "Duplicate columns are not allowed",
       ),
     rows: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridRow"))
-      .min(1, "schemaBuilder.validationNoGridRows")
+      .array(z.string().trim().min(1, "Row title cannot be empty"))
+      .min(1, "At least one row is required")
       .refine(
         (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateGridRows",
+        "Duplicate rows are not allowed",
       ),
   }),
 });
@@ -94,9 +94,9 @@ export const questionSchema = z.discriminatedUnion("type", [
 export type IQuestion = z.infer<typeof questionSchema>;
 
 export const sectionSchema = z.object({
-  title: z.string().trim().min(1, "schemaBuilder.validationSectionNoTitle"),
+  title: z.string().trim().min(1, "Section title is required"),
   description: z.string().trim().default(""),
-  questions: z.array(questionSchema).min(1, "schemaBuilder.validationSectionNoQuestions"),
+  questions: z.array(questionSchema).min(1, "Section must contain at least one question"),
 });
 
 export type ISection = z.infer<typeof sectionSchema>;
@@ -106,10 +106,10 @@ export const schemaSchema = z.object({
     .string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .optional(),
-  title: z.string().trim().min(1, "schemaBuilder.validationNoTitle"),
+  title: z.string().trim().min(1, "Schema title is required"),
   description: z.string().trim().default(""),
   isDraft: z.boolean(),
-  sections: z.array(sectionSchema).min(1, "schemaBuilder.validationNoSections"),
+  sections: z.array(sectionSchema).min(1, "Schema must contain at least one section"),
 });
 
 export type Ischema = z.infer<typeof schemaSchema>;
