@@ -1,6 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import type { Ischema } from '../../../types/schema.types';
-import * as S from './SchemaCard.styles';
+import {
+  StyledCard,
+  CardNumber,
+  CardTitle,
+  ActionsContainer,
+  ActionButton,
+  DeleteButton,
+} from './SchemaCard.styles';
 
 interface SchemaCardProps {
   schema: Ischema;
@@ -15,48 +22,48 @@ export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: 
   const { t } = useTranslation();
 
   return (
-    <S.StyledCard variant="outlined">
+    <StyledCard variant="outlined">
       <div>
-        <S.CardNumber variant="caption">{index + 1}</S.CardNumber>
-        <S.CardTitle variant="h6" noWrap>
+        <CardNumber variant="caption">{index + 1}</CardNumber>
+        <CardTitle variant="h6" noWrap>
           {schema.title}
-        </S.CardTitle>
+        </CardTitle>
       </div>
 
-      <S.ActionsContainer>
+      <ActionsContainer>
         {onEdit && (
-          <S.ActionButton
+          <ActionButton
             size="small"
             variant="outlined"
             onClick={() => schema._id && onEdit(schema._id)}
           >
             {t('home.edit')}
-          </S.ActionButton>
+          </ActionButton>
         )}
         {onFill && (
-          <S.ActionButton
+          <ActionButton
             size="small"
             variant="contained"
             onClick={() => schema._id && onFill(schema._id)}
           >
             {t('home.fill')}
-          </S.ActionButton>
+          </ActionButton>
         )}
         {onView && (
-          <S.ActionButton
+          <ActionButton
             size="small"
             variant="outlined"
             onClick={onView}
           >
             {t('listPages.view')}
-          </S.ActionButton>
+          </ActionButton>
         )}
         {onDelete && (
-          <S.DeleteButton size="small" onClick={() => schema._id && onDelete(schema._id)}>
+          <DeleteButton size="small" onClick={() => schema._id && onDelete(schema._id)}>
             {t('home.delete')}
-          </S.DeleteButton>
+          </DeleteButton>
         )}
-      </S.ActionsContainer>
-    </S.StyledCard>
+      </ActionsContainer>
+    </StyledCard>
   );
 }

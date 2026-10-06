@@ -2,7 +2,7 @@ import { TextField, IconButton, Button } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
-import * as S from "./SchemaBuilder.styles";
+import { OptionItem, OptionsList } from "./SchemaBuilder.styles";
 
 interface EditableItemListProps {
   items: string[];
@@ -35,9 +35,9 @@ export function EditableItemList({
   };
 
   return (
-    <S.OptionsList>
+    <OptionsList>
       {items.map((item, index) => (
-        <S.OptionItem key={index}>
+        <OptionItem key={index}>
           <TextField
             size="small"
             fullWidth
@@ -48,12 +48,12 @@ export function EditableItemList({
           <IconButton size="small" onClick={() => handleRemoveItem(index)}>
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
-        </S.OptionItem>
+        </OptionItem>
       ))}
 
       <Button size="small" startIcon={<AddIcon />} onClick={handleAddItem}>
         {t(addLabelKey)}
       </Button>
-    </S.OptionsList>
+    </OptionsList>
   );
 }

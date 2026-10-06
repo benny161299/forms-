@@ -9,7 +9,15 @@ import { useHomeData } from './hooks/useHomeData';
 import { schemaApi } from '../../api/schema.api';
 import { instanceApi } from '../../api/instance.api';
 import { SchemaCard, InstanceCard } from './components/index';
-import * as S from './HomePage.styles';
+import {
+  PageContainer,
+  LoadingContainer,
+  HeaderContainer,
+  GridContainer,
+  SectionPaper,
+  CarouselWrapper,
+  SectionHeader,
+} from './HomePage.styles';
 import type { IInstance } from '../../types/instance.types';
 import { InstanceViewModal } from '../InstancesListPage/InstanceViewModal';
 
@@ -71,22 +79,22 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <S.LoadingContainer>
+      <LoadingContainer>
         <CircularProgress />
-      </S.LoadingContainer>
+      </LoadingContainer>
     );
   }
 
   return (
-    <S.PageContainer>
-      <S.HeaderContainer>
+    <PageContainer>
+      <HeaderContainer>
         <Typography variant="h4" color="primary">
           {t('home.title')}
         </Typography>
         <Button variant="contained" onClick={() => navigate('/schemas/create')}>
           {t('home.createNewSchema')}
         </Button>
-      </S.HeaderContainer>
+      </HeaderContainer>
 
       {errorMessage && (
         <Typography color="error" gutterBottom>
@@ -94,8 +102,8 @@ export default function HomePage() {
         </Typography>
       )}
 
-      <S.GridContainer>
-        <S.SectionPaper variant="outlined">
+      <GridContainer>
+        <SectionPaper variant="outlined">
           <Typography variant="h6" color="secondary" gutterBottom>
             {t('home.schemaDrafts')}
           </Typography>
@@ -104,7 +112,7 @@ export default function HomePage() {
               {t('home.emptySchemaDrafts')}
             </Typography>
           ) : (
-            <S.CarouselWrapper>
+            <CarouselWrapper>
               {schemaDrafts.map((schema, index) => (
                 <SchemaCard
                   key={schema._id}
@@ -114,25 +122,25 @@ export default function HomePage() {
                   onDelete={handleDeleteSchema}
                 />
               ))}
-            </S.CarouselWrapper>
+            </CarouselWrapper>
           )}
-        </S.SectionPaper>
+        </SectionPaper>
 
-        <S.SectionPaper variant="outlined">
-          <S.SectionHeader>
+        <SectionPaper variant="outlined">
+          <SectionHeader>
             <Typography variant="h6" color="secondary" gutterBottom={false}>
               {t('home.publishedSchemas')}
             </Typography>
             <Button size="small" onClick={() => navigate('/schemas')}>
               {t('home.viewAll')}
             </Button>
-          </S.SectionHeader>
+          </SectionHeader>
           {!publishedSchemas || publishedSchemas.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               {t('home.emptyPublishedSchemas')}
             </Typography>
           ) : (
-            <S.CarouselWrapper>
+            <CarouselWrapper>
               {publishedSchemas.map((schema, index) => (
                 <SchemaCard
                   key={schema._id}
@@ -141,16 +149,11 @@ export default function HomePage() {
                   onFill={(id) => navigate(`/instances/fill/${id}`)}
                 />
               ))}
-
-
-
-
-              
-            </S.CarouselWrapper>
+            </CarouselWrapper>
           )}
-        </S.SectionPaper>
+        </SectionPaper>
 
-        <S.SectionPaper variant="outlined">
+        <SectionPaper variant="outlined">
           <Typography variant="h6" color="secondary" gutterBottom>
             {t('home.instanceDrafts')}
           </Typography>
@@ -159,7 +162,7 @@ export default function HomePage() {
               {t('home.emptyInstanceDrafts')}
             </Typography>
           ) : (
-            <S.CarouselWrapper>
+            <CarouselWrapper>
               {instanceDrafts.map((instance, index) => (
                 <InstanceCard
                   key={instance._id}
@@ -171,25 +174,25 @@ export default function HomePage() {
                   onDelete={handleDeleteInstance}
                 />
               ))}
-            </S.CarouselWrapper>
+            </CarouselWrapper>
           )}
-        </S.SectionPaper>
+        </SectionPaper>
 
-        <S.SectionPaper variant="outlined">
-          <S.SectionHeader>
+        <SectionPaper variant="outlined">
+          <SectionHeader>
             <Typography variant="h6" color="secondary" gutterBottom={false}>
               {t('home.submittedInstances')}
             </Typography>
             <Button size="small" onClick={() => navigate('/instances')}>
               {t('home.viewAll')}
             </Button>
-          </S.SectionHeader>
+          </SectionHeader>
           {!submittedInstances || submittedInstances.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               {t('home.emptySubmittedInstances')}
             </Typography>
           ) : (
-            <S.CarouselWrapper>
+            <CarouselWrapper>
               {submittedInstances.map((instance, index) => (
                 <InstanceCard
                   key={instance._id}
@@ -198,15 +201,15 @@ export default function HomePage() {
                   onView={() => setSelectedInstance(instance)}
                 />
               ))}
-            </S.CarouselWrapper>
+            </CarouselWrapper>
           )}
-        </S.SectionPaper>
-      </S.GridContainer>
+        </SectionPaper>
+      </GridContainer>
 
       <InstanceViewModal
         instance={selectedInstance}
         onClose={() => setSelectedInstance(null)}
       />
-    </S.PageContainer>
+    </PageContainer>
   );
 }

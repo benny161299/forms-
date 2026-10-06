@@ -4,7 +4,17 @@ import { useTranslation } from "react-i18next";
 
 import type { Ischema } from "../../types/schema.types";
 
-import * as S from "./SchemasListPage.styles";
+import {
+  ViewModalContainer,
+  ModalHeader,
+  ModalTitle,
+  ModalDescription,
+  SectionContainer,
+  SectionPaper,
+  SectionTitle,
+  SectionDescription,
+  ChipsContainer,
+} from "./SchemasListPage.styles";
 
 interface SchemaViewModalProps {
   schema: Ischema | null;
@@ -20,36 +30,36 @@ export function SchemaViewModal({ schema, onClose }: SchemaViewModalProps) {
 
   return (
     <Modal open onClose={onClose}>
-      <S.ViewModalContainer>
-        <S.ModalHeader>
+      <ViewModalContainer>
+        <ModalHeader>
           <Box>
-            <S.ModalTitle variant="h5">{schema.title}</S.ModalTitle>
+            <ModalTitle variant="h5">{schema.title}</ModalTitle>
 
             {schema.description && (
-              <S.ModalDescription variant="body2">
+              <ModalDescription variant="body2">
                 {schema.description}
-              </S.ModalDescription>
+              </ModalDescription>
             )}
           </Box>
 
           <IconButton onClick={onClose} edge="end">
             <CloseIcon />
           </IconButton>
-        </S.ModalHeader>
+        </ModalHeader>
 
         {schema.sections.map((section, sectionIndex) => (
-          <S.SectionContainer key={section.title || sectionIndex}>
-            <S.SectionPaper elevation={0} variant="outlined">
-              <S.SectionTitle variant="subtitle1">{section.title}</S.SectionTitle>
+          <SectionContainer key={section.title || sectionIndex}>
+            <SectionPaper elevation={0} variant="outlined">
+              <SectionTitle variant="subtitle1">{section.title}</SectionTitle>
 
               {section.description && (
-                <S.SectionDescription variant="caption">
+                <SectionDescription variant="caption">
                   {section.description}
-                </S.SectionDescription>
+                </SectionDescription>
               )}
-            </S.SectionPaper>
+            </SectionPaper>
 
-            <S.ChipsContainer>
+            <ChipsContainer>
               {section.questions.map((question) => (
                 <Chip
                   key={question.id}
@@ -59,10 +69,10 @@ export function SchemaViewModal({ schema, onClose }: SchemaViewModalProps) {
                   title={t(`schemaBuilder.types.${question.type}`)}
                 />
               ))}
-            </S.ChipsContainer>
-          </S.SectionContainer>
+            </ChipsContainer>
+          </SectionContainer>
         ))}
-      </S.ViewModalContainer>
+      </ViewModalContainer>
     </Modal>
   );
 }

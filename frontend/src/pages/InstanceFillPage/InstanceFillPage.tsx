@@ -16,7 +16,11 @@ import { useInstanceSectionValidation } from "./hooks/useInstanceSectionValidati
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
-import * as S from "./InstanceFillPage.styles";
+import {
+  HomeButton,
+  PageContainer,
+  SectionHeader,
+} from "./InstanceFillPage.styles";
 
 export default function InstanceFillPage() {
   const { schemaId, instanceId } = useParams<{
@@ -149,9 +153,9 @@ export default function InstanceFillPage() {
 
   if (isLoadingSchema || isLoadingInstance) {
     return (
-      <S.PageContainer>
+      <PageContainer>
         <CircularProgress />
-      </S.PageContainer>
+      </PageContainer>
     );
   }
 
@@ -160,15 +164,15 @@ export default function InstanceFillPage() {
   }
 
   return (
-    <S.PageContainer>
-      <S.HomeButton
+    <PageContainer>
+      <HomeButton
         startIcon={<HomeIcon />}
         onClick={() => navigate("/")}
         variant="outlined"
         size="small"
       >
         {t("common.backToHome")}
-      </S.HomeButton>
+      </HomeButton>
 
       <Typography variant="h4" color="primary" gutterBottom>
         {schema.title}
@@ -180,14 +184,14 @@ export default function InstanceFillPage() {
         </Typography>
       )}
 
-      <S.SectionHeader variant="outlined">
+      <SectionHeader variant="outlined">
         <Typography variant="h6">{currentSection.title}</Typography>
         {currentSection.description && (
           <Typography variant="body2" color="text.secondary">
             {currentSection.description}
           </Typography>
         )}
-      </S.SectionHeader>
+      </SectionHeader>
 
       {currentSection.questions.map((question) => (
         <QuestionAnswerField
@@ -208,6 +212,6 @@ export default function InstanceFillPage() {
         onSaveDraft={() => handleSave(false)}
         onSubmit={() => handleSave(true)}
       />
-    </S.PageContainer>
+    </PageContainer>
   );
 }

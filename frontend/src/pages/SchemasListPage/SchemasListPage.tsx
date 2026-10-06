@@ -10,7 +10,14 @@ import { SchemaViewModal } from "./SchemaViewModal";
 
 import type { Ischema } from "../../types/schema.types";
 
-import * as S from "./SchemasListPage.styles";
+import {
+  PageContainer,
+  LoadingContainer,
+  HomeButton,
+  PageTitle,
+  EmptyState,
+  CardsGrid,
+} from "./SchemasListPage.styles";
 
 export default function SchemasListPage() {
   const { t } = useTranslation();
@@ -26,47 +33,47 @@ export default function SchemasListPage() {
 
   if (isLoading) {
     return (
-      <S.PageContainer>
-        <S.LoadingContainer>
+      <PageContainer>
+        <LoadingContainer>
           <CircularProgress />
-        </S.LoadingContainer>
-      </S.PageContainer>
+        </LoadingContainer>
+      </PageContainer>
     );
   }
 
   if (error) {
     return (
-      <S.PageContainer>
+      <PageContainer>
         <Alert severity="error">
           {t("errors.fetchPublishedSchemas")}
         </Alert>
-      </S.PageContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <S.PageContainer>
-      <S.HomeButton
+    <PageContainer>
+      <HomeButton
         startIcon={<HomeIcon />}
         onClick={() => navigate("/")}
         variant="outlined"
         size="small"
       >
         {t("common.backToHome")}
-      </S.HomeButton>
+      </HomeButton>
 
-      <S.PageTitle variant="h4">
+      <PageTitle variant="h4">
         {t("listPages.schemasTitle")}
-      </S.PageTitle>
+      </PageTitle>
 
       {!schemas || schemas.length === 0 ? (
-        <S.EmptyState elevation={0}>
+        <EmptyState elevation={0}>
           <Typography variant="body1">
             {t("listPages.schemasEmpty")}
           </Typography>
-        </S.EmptyState>
+        </EmptyState>
       ) : (
-        <S.CardsGrid>
+        <CardsGrid>
           {schemas.map((schema, index) => (
             <SchemaCard
               key={schema._id}
@@ -75,13 +82,13 @@ export default function SchemasListPage() {
               onView={() => setSelectedSchema(schema)}
             />
           ))}
-        </S.CardsGrid>
+        </CardsGrid>
       )}
 
       <SchemaViewModal
         schema={selectedSchema}
         onClose={() => setSelectedSchema(null)}
       />
-    </S.PageContainer>
+    </PageContainer>
   );
 }

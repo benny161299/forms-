@@ -1,6 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import type { IInstance } from '../../../types/instance.types';
-import * as S from './InstanceCard.styles';
+import {
+  StyledCard,
+  Content,
+  CardNumber,
+  CardTitle,
+  ActionsContainer,
+  ActionButton,
+  DeleteButton,
+} from './InstanceCard.styles';
 
 interface InstanceCardProps {
   instance: IInstance;
@@ -21,51 +29,51 @@ export function InstanceCard({
   const isDraft = instance.isDraft;
 
   return (
-    <S.StyledCard variant="outlined">
-      <S.Content>
-        <S.CardNumber variant="caption">
+    <StyledCard variant="outlined">
+      <Content>
+        <CardNumber variant="caption">
           {index + 1}
-        </S.CardNumber>
+        </CardNumber>
 
-        <S.CardTitle variant="body1">
+        <CardTitle variant="body1">
           {isDraft
             ? t('home.instanceInProcess')
             : t('home.instanceSubmitted')}
-        </S.CardTitle>
+        </CardTitle>
 
 
-      </S.Content>
+      </Content>
 
-      <S.ActionsContainer>
+      <ActionsContainer>
         {onContinueFill && (
-          <S.ActionButton
+          <ActionButton
             size="small"
             variant="contained"
             onClick={() => onContinueFill(instance._id)}
           >
             {t('home.continueFill')}
-          </S.ActionButton>
+          </ActionButton>
         )}
 
         {onView && (
-          <S.ActionButton
+          <ActionButton
             size="small"
             variant="outlined"
             onClick={() => onView(instance._id)}
           >
             {t('home.viewAnswers')}
-          </S.ActionButton>
+          </ActionButton>
         )}
 
         {onDelete && (
-          <S.DeleteButton
+          <DeleteButton
             size="small"
             onClick={() => onDelete(instance._id)}
           >
             {t('home.delete')}
-          </S.DeleteButton>
+          </DeleteButton>
         )}
-      </S.ActionsContainer>
-    </S.StyledCard> 
+      </ActionsContainer>
+    </StyledCard> 
   );
 }

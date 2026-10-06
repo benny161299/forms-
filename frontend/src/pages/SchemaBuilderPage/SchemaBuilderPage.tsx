@@ -14,7 +14,13 @@ import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
 import { SectionCard } from "./components/SectionCard";
-import * as S from "./SchemaBuilderPage.styles";
+import {
+  ActionsFooter,
+  HeaderPaper,
+  HomeButton,
+  PageContainer,
+  SaveActions,
+} from "./SchemaBuilderPage.styles";
 
 export function SchemaBuilderPage() {
   const { id } = useParams<{ id: string }>();
@@ -65,28 +71,28 @@ export function SchemaBuilderPage() {
 
   if (isFetching) {
     return (
-      <S.PageContainer>
+      <PageContainer>
         <CircularProgress />
-      </S.PageContainer>
+      </PageContainer>
     );
   }
 
   return (
-    <S.PageContainer>
-      <S.HomeButton
+    <PageContainer>
+      <HomeButton
         startIcon={<HomeIcon />}
         onClick={() => navigate("/")}
         variant="outlined"
         size="small"
       >
         {t("common.backToHome")}
-      </S.HomeButton>
+      </HomeButton>
 
       <Typography variant="h4" color="primary" gutterBottom>
         {t(isEditMode ? "schemaBuilder.pageTitleEdit" : "schemaBuilder.pageTitleCreate")}
       </Typography>
 
-      <S.HeaderPaper variant="outlined">
+      <HeaderPaper variant="outlined">
         <TextField
           fullWidth
           variant="standard"
@@ -102,7 +108,7 @@ export function SchemaBuilderPage() {
           value={schema.description || ""}
           onChange={(e) => actions.setDescription(e.target.value)}
         />
-      </S.HeaderPaper>
+      </HeaderPaper>
 
       {schema.sections.map((section, sIdx) => (
         <SectionCard
@@ -118,21 +124,21 @@ export function SchemaBuilderPage() {
         />
       ))}
 
-      <S.ActionsFooter>
+      <ActionsFooter>
         <Button variant="outlined" startIcon={<AddIcon />} onClick={actions.addSection}>
           {t("schemaBuilder.addSection")}
         </Button>
 
-        <S.SaveActions>
+        <SaveActions>
           <Button variant="outlined" disabled={isSaving} onClick={() => handleSave(false)}>
             {t("schemaBuilder.saveDraft")}
           </Button>
           <Button variant="contained" disabled={isSaving} onClick={() => handleSave(true)}>
             {t("schemaBuilder.publish")}
           </Button>
-        </S.SaveActions>
-      </S.ActionsFooter>
-    </S.PageContainer>
+        </SaveActions>
+      </ActionsFooter>
+    </PageContainer>
   );
 }
 

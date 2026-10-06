@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useTranslation } from "react-i18next";
-import * as S from "../InstanceFillPage.styles";
+import { ActionsFooter, RightActions } from "../InstanceFillPage.styles";
 
 interface InstanceFillFooterProps {
   isFirstSection: boolean;
@@ -26,7 +26,7 @@ export function InstanceFillFooter({
   const { t } = useTranslation();
 
   return (
-    <S.ActionsFooter>
+    <ActionsFooter>
       <Button
         variant="outlined"
         startIcon={<ArrowBackIcon />}
@@ -36,7 +36,7 @@ export function InstanceFillFooter({
         {t("instanceFill.back")}
       </Button>
 
-      <S.RightActions>
+      <RightActions>
         <Button
           variant="outlined"
           onClick={onSaveDraft}
@@ -63,7 +63,7 @@ export function InstanceFillFooter({
             {t("instanceFill.next")}
           </Button>
         )}
-      </S.RightActions>
-    </S.ActionsFooter>
+      </RightActions>
+    </ActionsFooter>
   );
 }

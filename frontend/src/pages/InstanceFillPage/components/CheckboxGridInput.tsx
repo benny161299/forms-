@@ -6,7 +6,7 @@ import {
   TableRow,
   Checkbox,
 } from "@mui/material";
-import * as S from "./InstanceFillComponents.styles";
+import { StyledTableContainer } from "./InstanceFillComponents.styles";
 
 interface CheckboxGridInputProps {
   rows: string[];
@@ -36,7 +36,7 @@ export function CheckboxGridInput({
   };
 
   return (
-    <S.StyledTableContainer >
+    <StyledTableContainer>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -70,6 +70,6 @@ export function CheckboxGridInput({
           })}
         </TableBody>
       </Table>
-    </S.StyledTableContainer>
+    </StyledTableContainer>
   );
 }

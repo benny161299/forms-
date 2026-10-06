@@ -11,7 +11,17 @@ import { QuestionAnswerField } from "../InstanceFillPage/components/QuestionAnsw
 
 import type { IInstance } from "../../types/instance.types";
 
-import * as S from "./InstancesListPage.styles";
+import {
+  ModalDescription,
+  ModalHeader,
+  ModalLoadingContainer,
+  ModalTitle,
+  SectionContainer,
+  SectionDescription,
+  SectionPaper,
+  SectionTitle,
+  ViewModalContainer,
+} from "./InstancesListPage.styles";
 
 interface InstanceViewModalProps {
   instance: IInstance | null;
@@ -30,45 +40,45 @@ export function InstanceViewModal({
 
   return (
     <Modal open onClose={onClose}>
-      <S.ViewModalContainer>
-        <S.ModalHeader>
+      <ViewModalContainer>
+        <ModalHeader>
           <Box>
-            <S.ModalTitle variant="h5">
+            <ModalTitle variant="h5">
               {schema?.title}
-            </S.ModalTitle>
+            </ModalTitle>
 
             {schema?.description && (
-              <S.ModalDescription variant="body2">
+              <ModalDescription variant="body2">
                 {schema.description}
-              </S.ModalDescription>
+              </ModalDescription>
             )}
           </Box>
 
           <IconButton onClick={onClose} edge="end">
             <CloseIcon />
           </IconButton>
-        </S.ModalHeader>
+        </ModalHeader>
 
         {isLoading ? (
-          <S.ModalLoadingContainer>
+          <ModalLoadingContainer>
             <CircularProgress />
-          </S.ModalLoadingContainer>
+          </ModalLoadingContainer>
         ) : (
           schema?.sections.map((section, sectionIndex) => (
-            <S.SectionContainer
+            <SectionContainer
               key={section.title || sectionIndex}
             >
-              <S.SectionPaper elevation={0} variant="outlined">
-                <S.SectionTitle variant="subtitle1">
+              <SectionPaper elevation={0} variant="outlined">
+                <SectionTitle variant="subtitle1">
                   {section.title}
-                </S.SectionTitle>
+                </SectionTitle>
 
                 {section.description && (
-                  <S.SectionDescription variant="caption">
+                  <SectionDescription variant="caption">
                     {section.description}
-                  </S.SectionDescription>
+                  </SectionDescription>
                 )}
-              </S.SectionPaper>
+              </SectionPaper>
 
               {section.questions.map((question) => (
                 <QuestionAnswerField
@@ -79,10 +89,10 @@ export function InstanceViewModal({
                   disabled
                 />
               ))}
-            </S.SectionContainer>
+            </SectionContainer>
           ))
         )}
-      </S.ViewModalContainer>
+      </ViewModalContainer>
     </Modal>
   );
 }

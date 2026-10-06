@@ -7,7 +7,12 @@ import { ChoiceInput } from "./ChoiceInput";
 import { ScaleInput } from "./ScaleInput";
 import { RadioGridInput } from "./RadioGridInput";
 import { CheckboxGridInput } from "./CheckboxGridInput";
-import * as S from "./InstanceFillComponents.styles";
+import {
+  QuestionCardContainer,
+  QuestionHeader,
+  QuestionTitle,
+  RequiredLabel,
+} from "./InstanceFillComponents.styles";
 
 interface QuestionAnswerFieldProps {
   question: IQuestion;
@@ -97,16 +102,16 @@ export function QuestionAnswerField({
   };
 
   return (
-    <S.QuestionCardContainer variant="outlined">
-      <S.QuestionHeader>
-        <S.QuestionTitle variant="subtitle1">{question.title}</S.QuestionTitle>
+    <QuestionCardContainer variant="outlined">
+      <QuestionHeader>
+        <QuestionTitle variant="subtitle1">{question.title}</QuestionTitle>
         {question.required && (
-          <S.RequiredLabel variant="caption">
+          <RequiredLabel variant="caption">
             {t("instanceFill.requiredField")}
-          </S.RequiredLabel>
+          </RequiredLabel>
         )}
-      </S.QuestionHeader>
+      </QuestionHeader>
       {renderInput()}
-    </S.QuestionCardContainer>
+    </QuestionCardContainer>
   );
 }

@@ -4,7 +4,12 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import { useTranslation } from "react-i18next";
 import type { ISection, IQuestion } from "../../../types/schema.types";
 import { QuestionCard } from "./QuestionCard";
-import * as S from "./SchemaBuilder.styles";
+import {
+  InputsContainer,
+  QuestionsWrapper,
+  SectionHeader,
+  SectionPaper,
+} from "./SchemaBuilder.styles";
 
 interface SectionCardProps {
   section: ISection;
@@ -30,9 +35,9 @@ export function SectionCard({
   const { t } = useTranslation();
 
   return (
-    <S.SectionPaper variant="outlined">
-      <S.SectionHeader>
-        <S.InputsContainer>
+    <SectionPaper variant="outlined">
+      <SectionHeader>
+        <InputsContainer>
           <Typography variant="subtitle1" color="primary">
             {t("home.sectionsCount", { count: sectionIndex + 1 })}
           </Typography>
@@ -50,7 +55,7 @@ export function SectionCard({
             value={section.description}
             onChange={(e) => onUpdateSection({ description: e.target.value })}
           />
-        </S.InputsContainer>
+        </InputsContainer>
         <Tooltip title={isOnlySection ? t("schemaBuilder.cannotDeleteOnlySection") : ""}>
           <span>
             <Button
@@ -64,9 +69,9 @@ export function SectionCard({
             </Button>
           </span>
         </Tooltip>
-      </S.SectionHeader>
+      </SectionHeader>
 
-      <S.QuestionsWrapper>
+      <QuestionsWrapper>
         {section.questions.map((question, qIdx) => (
           <QuestionCard
             key={question.id}
@@ -82,7 +87,7 @@ export function SectionCard({
         >
           {t("schemaBuilder.addQuestion")}
         </Button>
-      </S.QuestionsWrapper>
-    </S.SectionPaper>
+      </QuestionsWrapper>
+    </SectionPaper>
   );
 }

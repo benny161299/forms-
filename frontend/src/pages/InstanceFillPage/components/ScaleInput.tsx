@@ -1,5 +1,9 @@
 import { RadioGroup, Radio } from "@mui/material";
-import * as S from "./InstanceFillComponents.styles";
+import {
+  ScaleContainer,
+  ScaleFormControlLabel,
+  ScaleLabel,
+} from "./InstanceFillComponents.styles";
 
 interface ScaleInputProps {
   min: number;
@@ -16,8 +20,8 @@ export function ScaleInput({ min, max, value, onChange, disabled }: ScaleInputPr
   }
 
   return (
-    <S.ScaleContainer>
-      <S.ScaleLabel>{min}</S.ScaleLabel>
+    <ScaleContainer>
+      <ScaleLabel>{min}</ScaleLabel>
 
       <RadioGroup
         row
@@ -25,7 +29,7 @@ export function ScaleInput({ min, max, value, onChange, disabled }: ScaleInputPr
         onChange={(e) => onChange(Number(e.target.value))}
       >
         {numbers.map((num) => (
-          <S.ScaleFormControlLabel
+          <ScaleFormControlLabel
             key={num}
             value={String(num)}
             control={<Radio />}
@@ -36,7 +40,7 @@ export function ScaleInput({ min, max, value, onChange, disabled }: ScaleInputPr
         ))}
       </RadioGroup>
 
-      <S.ScaleLabel>{max}</S.ScaleLabel>
-    </S.ScaleContainer>
+      <ScaleLabel>{max}</ScaleLabel>
+    </ScaleContainer>
   );
 }

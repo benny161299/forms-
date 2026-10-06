@@ -6,7 +6,12 @@ import { QUESTION_TYPES } from "../../../types/schema.types";
 import { QuestionTypeSelector } from "./QuestionTypeSelector";
 import { EditableItemList } from "./EditableItemList";
 import { ScaleRangeSelector } from "./ScaleRangeSelector";
-import * as S from "./SchemaBuilder.styles";
+import {
+  CardContainer,
+  ControlsRow,
+  DeleteButton,
+  RightControls,
+} from "./SchemaBuilder.styles";
 
 interface QuestionCardProps {
   question: IQuestion;
@@ -62,7 +67,7 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
   };
 
   return (
-    <S.CardContainer variant="outlined">
+    <CardContainer variant="outlined">
       <TextField
         fullWidth
         size="small"
@@ -71,10 +76,10 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
         onChange={(e) => onUpdate({ ...question, title: e.target.value } as IQuestion)}
       />
 
-      <S.ControlsRow>
+      <ControlsRow>
         <QuestionTypeSelector value={question.type} onChange={handleTypeChange} />
 
-        <S.RightControls>
+        <RightControls>
           <FormControlLabel
             control={
               <Switch
@@ -87,11 +92,11 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
             }
             label={t("schemaBuilder.required")}
           />
-          <S.DeleteButton onClick={onDelete} size="small">
+          <DeleteButton onClick={onDelete} size="small">
             <DeleteOutlineIcon fontSize="small" />
-          </S.DeleteButton>
-        </S.RightControls>
-      </S.ControlsRow>
+          </DeleteButton>
+        </RightControls>
+      </ControlsRow>
 
       {question.type === QUESTION_TYPES.LINEAR_SCALE && (
         <ScaleRangeSelector
@@ -130,6 +135,6 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
           }
         />
       )}
-    </S.CardContainer>
+    </CardContainer>
   );
 }

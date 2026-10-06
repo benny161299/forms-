@@ -6,7 +6,7 @@ import {
   TableRow,
   Radio,
 } from "@mui/material";
-import * as S from "./InstanceFillComponents.styles";
+import { StyledTableContainer } from "./InstanceFillComponents.styles";
 
 interface RadioGridInputProps {
   rows: string[];
@@ -31,7 +31,7 @@ export function RadioGridInput({
   };
 
   return (
-    <S.StyledTableContainer >
+    <StyledTableContainer>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -60,6 +60,6 @@ export function RadioGridInput({
           ))}
         </TableBody>
       </Table>
-    </S.StyledTableContainer>
+    </StyledTableContainer>
   );
 }
