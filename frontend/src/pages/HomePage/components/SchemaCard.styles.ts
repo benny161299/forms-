@@ -2,7 +2,8 @@ import { styled } from '@mui/material/styles';
 import { Card, CardActions, Typography, Button } from '@mui/material';
 
 export const StyledCard = styled(Card)(({ theme }) => ({
-  width: 260,
+  width: '16.5rem',
+  maxWidth: '100%',
   flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
