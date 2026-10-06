@@ -44,3 +44,10 @@ export const SectionHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   marginBottom: theme.spacing(1),
 }));
+
+export const SectionLoadingContainer = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: 120,
+});
