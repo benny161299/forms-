@@ -26,7 +26,6 @@ export function InstanceCard({
   onDelete,
 }: InstanceCardProps) {
   const { t } = useTranslation();
-  const isDraft = instance.isDraft;
 
   return (
     <StyledCard variant="outlined">
@@ -36,7 +35,7 @@ export function InstanceCard({
         </CardNumber>
 
         <CardTitle variant="body1">
-          {isDraft
+          {instance.isDraft
             ? t('home.instanceInProcess')
             : t('home.instanceSubmitted')}
         </CardTitle>
