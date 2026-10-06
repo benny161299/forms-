@@ -4,13 +4,11 @@ import apiRouter from "./api.routes.js";
 import { config } from "./config/config.js";
 import { connectDB } from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
-import { normalizeBody } from "./middlewares/normalizeBody.middleware.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(normalizeBody);
 app.use("/api", apiRouter);
 app.use(errorMiddleware);
 await connectDB();
