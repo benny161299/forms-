@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { IQuestion, ISection } from "../../../types/schema.types";
+import { QUESTION_TYPES } from "../../../types/schema.types";
 import type { AnswerValue } from "../../../types/instance.types";
 
 export function isAnswerMissing(
@@ -11,21 +12,21 @@ export function isAnswerMissing(
   }
 
   switch (question.type) {
-    case "short_answer":
-    case "paragraph":
-    case "date":
-    case "time":
-    case "radio":
-    case "dropdown":
+    case QUESTION_TYPES.SHORT_ANSWER:
+    case QUESTION_TYPES.PARAGRAPH:
+    case QUESTION_TYPES.DATE:
+    case QUESTION_TYPES.TIME:
+    case QUESTION_TYPES.RADIO:
+    case QUESTION_TYPES.DROPDOWN:
       return typeof value !== "string" || value.trim() === "";
 
-    case "checkbox":
+    case QUESTION_TYPES.CHECKBOX:
       return !Array.isArray(value) || value.length === 0;
 
-    case "linear_scale":
+    case QUESTION_TYPES.LINEAR_SCALE:
       return typeof value !== "number";
 
-    case "radio_grid": {
+    case QUESTION_TYPES.RADIO_GRID: {
       const record = value as Record<string, number>;
 
       return question.options.rows.some(
@@ -33,7 +34,7 @@ export function isAnswerMissing(
       );
     }
 
-    case "checkbox_grid": {
+    case QUESTION_TYPES.CHECKBOX_GRID: {
       const record = value as Record<string, number[]>;
 
       return question.options.rows.some(

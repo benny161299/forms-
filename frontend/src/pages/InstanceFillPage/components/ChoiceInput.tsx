@@ -10,12 +10,9 @@ import {
   InputLabel,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import type { QuestionType } from "../../../types/schema.types";
+import { QUESTION_TYPES, CHOICE_QUESTION_TYPES } from "../../../types/schema.types";
 
-type ChoiceQuestionType = Extract<
-  QuestionType,
-  "radio" | "checkbox" | "dropdown"
->;
+type ChoiceQuestionType = (typeof CHOICE_QUESTION_TYPES)[number];
 
 interface ChoiceInputProps {
   type: ChoiceQuestionType;
@@ -37,7 +34,7 @@ export function ChoiceInput({
   const { t } = useTranslation();
 
   switch (type) {
-    case "radio":
+    case QUESTION_TYPES.RADIO:
       return (
         <RadioGroup
           value={typeof value === "string" ? value : ""}
@@ -55,7 +52,7 @@ export function ChoiceInput({
         </RadioGroup>
       );
 
-    case "checkbox": {
+    case QUESTION_TYPES.CHECKBOX: {
       const list = Array.isArray(value) ? value : [];
       return (
         <FormGroup>
@@ -82,7 +79,7 @@ export function ChoiceInput({
       );
     }
 
-    case "dropdown":
+    case QUESTION_TYPES.DROPDOWN:
       return (
         <FormControl fullWidth variant="outlined">
           <InputLabel id={`label-${id}`}>

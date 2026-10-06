@@ -2,6 +2,7 @@ import { TextField, FormControlLabel, Switch } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import { useTranslation } from "react-i18next";
 import type { IQuestion, QuestionType } from "../../../types/schema.types";
+import { QUESTION_TYPES } from "../../../types/schema.types";
 import { QuestionTypeSelector } from "./QuestionTypeSelector";
 import { EditableItemList } from "./EditableItemList";
 import { ScaleRangeSelector } from "./ScaleRangeSelector";
@@ -24,16 +25,16 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
     };
 
     switch (newType) {
-      case "short_answer":
-      case "paragraph":
-      case "time":
-      case "date":
+      case QUESTION_TYPES.SHORT_ANSWER:
+      case QUESTION_TYPES.PARAGRAPH:
+      case QUESTION_TYPES.TIME:
+      case QUESTION_TYPES.DATE:
         onUpdate({ ...base, type: newType });
         break;
 
-      case "radio":
-      case "checkbox":
-      case "dropdown":
+      case QUESTION_TYPES.RADIO:
+      case QUESTION_TYPES.CHECKBOX:
+      case QUESTION_TYPES.DROPDOWN:
         onUpdate({
           ...base,
           type: newType,
@@ -41,7 +42,7 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
         });
         break;
 
-      case "linear_scale":
+      case QUESTION_TYPES.LINEAR_SCALE:
         onUpdate({
           ...base,
           type: newType,
@@ -49,8 +50,8 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
         });
         break;
 
-      case "radio_grid":
-      case "checkbox_grid":
+      case QUESTION_TYPES.RADIO_GRID:
+      case QUESTION_TYPES.CHECKBOX_GRID:
         onUpdate({
           ...base,
           type: newType,
@@ -92,7 +93,7 @@ export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps
         </S.RightControls>
       </S.ControlsRow>
 
-      {question.type === "linear_scale" && (
+      {question.type === QUESTION_TYPES.LINEAR_SCALE && (
         <ScaleRangeSelector
           min={question.options.min}
           max={question.options.max}

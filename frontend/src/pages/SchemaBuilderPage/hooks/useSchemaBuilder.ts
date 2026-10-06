@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useImmerReducer } from "use-immer";
 import type { Ischema, ISection, IQuestion } from "../../../types/schema.types";
+import { QUESTION_TYPES } from "../../../types/schema.types";
 
 export type SchemaAction =
   | { type: "SET_SCHEMA"; payload: Ischema }
@@ -16,7 +17,7 @@ export type SchemaAction =
 const createDefaultQuestion = (): IQuestion => ({
   id: crypto.randomUUID(),
   title: "",
-  type: "short_answer",
+  type: QUESTION_TYPES.SHORT_ANSWER,
   required: false,
 });
 

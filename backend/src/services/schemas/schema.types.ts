@@ -1,5 +1,38 @@
 import { z } from "zod";
 
+export const QUESTION_TYPES = {
+  SHORT_ANSWER: "short_answer",
+  PARAGRAPH: "paragraph",
+  TIME: "time",
+  DATE: "date",
+  RADIO: "radio",
+  CHECKBOX: "checkbox",
+  DROPDOWN: "dropdown",
+  LINEAR_SCALE: "linear_scale",
+  RADIO_GRID: "radio_grid",
+  CHECKBOX_GRID: "checkbox_grid",
+} as const;
+
+export type QuestionType = (typeof QUESTION_TYPES)[keyof typeof QUESTION_TYPES];
+
+export const TEXT_QUESTION_TYPES = [
+  QUESTION_TYPES.SHORT_ANSWER,
+  QUESTION_TYPES.PARAGRAPH,
+  QUESTION_TYPES.TIME,
+  QUESTION_TYPES.DATE,
+] as const;
+
+export const CHOICE_QUESTION_TYPES = [
+  QUESTION_TYPES.RADIO,
+  QUESTION_TYPES.CHECKBOX,
+  QUESTION_TYPES.DROPDOWN,
+] as const;
+
+export const TABLE_QUESTION_TYPES = [
+  QUESTION_TYPES.RADIO_GRID,
+  QUESTION_TYPES.CHECKBOX_GRID,
+] as const;
+
 const baseQuestionSchema = z.object({
   id: z.uuidv4(),
   title: z.string().trim().min(1, "schemaBuilder.validationQuestionNoTitle"),
@@ -7,11 +40,11 @@ const baseQuestionSchema = z.object({
 });
 
 const textQuestionSchema = baseQuestionSchema.extend({
-  type: z.enum(["short_answer", "paragraph", "time", "date"]),
+  type: z.enum(TEXT_QUESTION_TYPES),
 });
 
 const choiceQuestionSchema = baseQuestionSchema.extend({
-  type: z.enum(["radio", "checkbox", "dropdown"]),
+  type: z.enum(CHOICE_QUESTION_TYPES),
   options: z.object({
     choices: z
       .array(z.string().trim().min(1, "schemaBuilder.validationEmptyChoice"))
@@ -24,7 +57,7 @@ const choiceQuestionSchema = baseQuestionSchema.extend({
 });
 
 const scaleQuestionSchema = baseQuestionSchema.extend({
-  type: z.literal("linear_scale"),
+  type: z.literal(QUESTION_TYPES.LINEAR_SCALE),
   options: z.object({
     min: z.number().int().min(0).max(1),
     max: z.number().int().min(5).max(10),
@@ -32,7 +65,7 @@ const scaleQuestionSchema = baseQuestionSchema.extend({
 });
 
 const tableQuestionSchema = baseQuestionSchema.extend({
-  type: z.enum(["radio_grid", "checkbox_grid"]),
+  type: z.enum(TABLE_QUESTION_TYPES),
   options: z.object({
     choices: z
       .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridCol"))

@@ -1,11 +1,8 @@
 import { TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import type { QuestionType } from "../../../types/schema.types";
+import { QUESTION_TYPES, TEXT_QUESTION_TYPES } from "../../../types/schema.types";
 
-type TextQuestionType = Extract<
-  QuestionType,
-  "short_answer" | "paragraph" | "date" | "time"
->;
+type TextQuestionType = (typeof TEXT_QUESTION_TYPES)[number];
 
 interface TextInputProps {
   type: TextQuestionType;
@@ -21,8 +18,9 @@ export function TextInput({
   disabled,
 }: TextInputProps) {
   const { t } = useTranslation();
-  const isParagraph = type === "paragraph";
-  const isDateTime = type === "date" || type === "time";
+  const isParagraph = type === QUESTION_TYPES.PARAGRAPH;
+  const isDateTime =
+    type === QUESTION_TYPES.DATE || type === QUESTION_TYPES.TIME;
   const placeholder = isParagraph
     ? t("instanceFill.paragraphPlaceholder")
     : t("instanceFill.shortAnswerPlaceholder");

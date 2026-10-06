@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { IQuestion } from "../../../types/schema.types";
+import { QUESTION_TYPES } from "../../../types/schema.types";
 import type { AnswerValue } from "../../../types/instance.types";
 import { TextInput } from "./TextInput";
 import { ChoiceInput } from "./ChoiceInput";
@@ -25,10 +26,10 @@ export function QuestionAnswerField({
 
   const renderInput = () => {
     switch (question.type) {
-      case "short_answer":
-      case "paragraph":
-      case "date":
-      case "time":
+      case QUESTION_TYPES.SHORT_ANSWER:
+      case QUESTION_TYPES.PARAGRAPH:
+      case QUESTION_TYPES.DATE:
+      case QUESTION_TYPES.TIME:
         return (
           <TextInput
             type={question.type}
@@ -38,9 +39,9 @@ export function QuestionAnswerField({
           />
         );
 
-      case "radio":
-      case "checkbox":
-      case "dropdown":
+      case QUESTION_TYPES.RADIO:
+      case QUESTION_TYPES.CHECKBOX:
+      case QUESTION_TYPES.DROPDOWN:
         return (
           <ChoiceInput
             type={question.type}
@@ -56,7 +57,7 @@ export function QuestionAnswerField({
           />
         );
 
-      case "linear_scale":
+      case QUESTION_TYPES.LINEAR_SCALE:
         return (
           <ScaleInput
             min={question.options.min}
@@ -67,7 +68,7 @@ export function QuestionAnswerField({
           />
         );
 
-     case "radio_grid":
+      case QUESTION_TYPES.RADIO_GRID:
         return (
           <RadioGridInput
             rows={question.options.rows}
@@ -78,7 +79,7 @@ export function QuestionAnswerField({
           />
         );
 
-      case "checkbox_grid":
+      case QUESTION_TYPES.CHECKBOX_GRID:
         return (
           <CheckboxGridInput
             rows={question.options.rows}
