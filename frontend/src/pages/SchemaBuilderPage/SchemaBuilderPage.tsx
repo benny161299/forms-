@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import type { Ischema } from "../../types/schema.types";
-import { ApiError } from "../../api/axiosClient";
 import { useSchemaMutations } from "./hooks/useSchemaMutations";
 import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
@@ -61,8 +60,8 @@ export function SchemaBuilderPage() {
 
       toast.success(t(publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess"));
       navigate("/");
-    } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : t("schemaBuilder.saveError"));
+    } catch {
+      toast.error(t("schemaBuilder.saveError"));
     }
   };
 

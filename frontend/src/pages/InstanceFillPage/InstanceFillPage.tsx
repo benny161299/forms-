@@ -6,7 +6,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { ApiError } from "../../api/axiosClient";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { useInstanceById } from "./hooks/useInstanceById";
 import { useInstanceMutations } from "./hooks/useInstanceMutations";
@@ -141,10 +140,8 @@ export default function InstanceFillPage() {
       );
 
       navigate("/");
-    } catch (error) {
-      toast.error(
-        error instanceof ApiError ? error.message : t("instanceFill.saveError")
-      );
+    } catch {
+      toast.error(t("instanceFill.saveError"));
     }
   };
 

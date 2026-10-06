@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { schemaApi } from "../api/schema.api";
-import { ApiError } from "../api/axiosClient";
-
 export function usePublishedSchemas() {
   const { t } = useTranslation();
 
@@ -12,11 +10,7 @@ export function usePublishedSchemas() {
     queryFn: schemaApi.getAllSchemas,
   });
 
-  let errorMessage: string | null = null;
-
-  if (error) {
-    errorMessage = error instanceof ApiError ? error.message : t("errors.fetchPublishedSchemas");
-  }
+  const errorMessage = error ? t("errors.fetchPublishedSchemas") : null;
 
   return {
     schemas: data ?? [],

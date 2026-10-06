@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { instanceApi } from "../api/instance.api";
-import { ApiError } from "../api/axiosClient";
-
 export function useSubmittedInstances() {
   const { t } = useTranslation();
 
@@ -12,11 +10,7 @@ export function useSubmittedInstances() {
     queryFn: instanceApi.getAllInstances,
   });
 
-  let errorMessage: string | null = null;
-
-  if (error) {
-    errorMessage = error instanceof ApiError ? error.message : t("errors.fetchSubmittedInstances");
-  }
+  const errorMessage = error ? t("errors.fetchSubmittedInstances") : null;
 
   return {
     instances: data ?? [],

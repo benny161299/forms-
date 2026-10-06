@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { instanceApi } from "../api/instance.api";
-import { ApiError } from "../api/axiosClient";
-
 export function useDraftInstances() {
   const { t } = useTranslation();
 
@@ -12,11 +10,7 @@ export function useDraftInstances() {
     queryFn: instanceApi.getDraftInstances,
   });
 
-  let errorMessage: string | null = null;
-
-  if (error) {
-    errorMessage = error instanceof ApiError ? error.message : t("errors.fetchDraftInstances");
-  }
+  const errorMessage = error ? t("errors.fetchDraftInstances") : null;
 
   return {
     instances: data ?? [],
