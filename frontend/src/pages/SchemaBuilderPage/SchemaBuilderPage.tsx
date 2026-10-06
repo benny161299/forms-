@@ -8,8 +8,7 @@ import { toast } from "react-toastify";
 
 import type { Ischema } from "../../types/schema.types";
 import { ApiError } from "../../api/axiosClient";
-import { useCreateSchema } from "./hooks/useCreateSchema";
-import { useUpdateSchema } from "./hooks/useUpdateSchema";
+import { useSchemaMutations } from "./hooks/useSchemaMutations";
 import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
@@ -37,14 +36,12 @@ export function SchemaBuilderPage() {
       navigate("/");
     }
   }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
-  const { createSchema, isCreating } = useCreateSchema();
-  const { updateSchema, isUpdating } = useUpdateSchema();
+
+  const { createSchema, updateSchema, isSaving } = useSchemaMutations();
 
   const actions = useSchemaBuilder(fetchedSchema);
   const { schema } = actions;
   const { validate } = useSchemaValidation(schema);
-
-  const isSaving = isCreating || isUpdating;
 
   const handleSave = async (publish: boolean) => {
     const validationError = validate();

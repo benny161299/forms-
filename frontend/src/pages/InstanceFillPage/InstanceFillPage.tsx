@@ -9,8 +9,7 @@ import { toast } from "react-toastify";
 import { ApiError } from "../../api/axiosClient";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { useInstanceById } from "./hooks/useInstanceById";
-import { useCreateInstance } from "./hooks/useCreateInstance";
-import { useUpdateInstance } from "./hooks/useUpdateInstance";
+import { useInstanceMutations } from "./hooks/useInstanceMutations";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceSectionValidation } from "./hooks/useInstanceSectionValidation";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
@@ -76,9 +75,7 @@ export default function InstanceFillPage() {
     t,
   ]);
 
-  const { createInstance, isCreating } = useCreateInstance();
-  const { updateInstance, isUpdating } = useUpdateInstance();
-  const isSaving = isCreating || isUpdating;
+  const { createInstance, updateInstance, isSaving } = useInstanceMutations();
 
   const actions = useInstanceFill(
     isEditMode ? fetchedInstance : null,

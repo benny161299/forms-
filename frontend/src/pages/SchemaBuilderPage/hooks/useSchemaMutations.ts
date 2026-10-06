@@ -2,16 +2,37 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { schemaApi } from "../../../api/schema.api";
 import type { Ischema } from "../../../types/schema.types";
 
+interface CreateSchemaParams {
+  schema: Ischema;
+  publish: boolean;
+}
+
 interface UpdateSchemaParams {
   id: string;
   schema: Ischema;
   publish: boolean;
 }
 
-export function useUpdateSchema() {
+export function useSchemaMutations() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const createMutation = useMutation({
+    mutationFn: async ({ schema, publish }: CreateSchemaParams) => {
+      const createdSchema = await schemaApi.createSchema(schema);
+
+      if (publish && createdSchema._id) {
+        await schemaApi.publishSchema(createdSchema._id);
+      }
+
+      return { createdSchema, publish };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
+      queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
+    },
+  });
+
+  const updateMutation = useMutation({
     mutationFn: async ({ id, schema, publish }: UpdateSchemaParams) => {
       const updatedSchema = await schemaApi.updateSchema(id, schema);
 
@@ -29,7 +50,8 @@ export function useUpdateSchema() {
   });
 
   return {
-    updateSchema: mutation.mutateAsync,
-    isUpdating: mutation.isPending,
+    createSchema: createMutation.mutateAsync,
+    updateSchema: updateMutation.mutateAsync,
+    isSaving: createMutation.isPending || updateMutation.isPending,
   };
 }

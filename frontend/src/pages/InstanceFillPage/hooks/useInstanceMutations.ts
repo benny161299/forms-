@@ -2,16 +2,31 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { instanceApi } from "../../../api/instance.api";
 import type { AnswerValue } from "../../../types/instance.types";
 
+interface CreateInstanceParams {
+  schemaId: string;
+}
+
 interface UpdateInstanceParams {
   id: string;
   answers: Record<string, AnswerValue>;
   submit: boolean;
 }
 
-export function useUpdateInstance() {
+export function useInstanceMutations() {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const createMutation = useMutation({
+    mutationFn: async ({ schemaId }: CreateInstanceParams) => {
+      return await instanceApi.createInstance({ schemaId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["instances"] });
+      queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
+    },
+  });
+
+  const updateMutation = useMutation({
     mutationFn: async ({
       id,
       answers,
@@ -28,24 +43,25 @@ export function useUpdateInstance() {
 
       return { updatedInstance, submit };
     },
-
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["instance", variables.id],
       });
-
       queryClient.invalidateQueries({
         queryKey: ["draftInstances"],
       });
-
       queryClient.invalidateQueries({
         queryKey: ["submittedInstances"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["instances"],
       });
     },
   });
 
   return {
-    updateInstance: mutation.mutateAsync,
-    isUpdating: mutation.isPending,
+    createInstance: createMutation.mutateAsync,
+    updateInstance: updateMutation.mutateAsync,
+    isSaving: createMutation.isPending || updateMutation.isPending,
   };
 }
