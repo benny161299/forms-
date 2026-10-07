@@ -16,9 +16,8 @@ export function useInstanceMutations() {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: async ({ schemaId }: CreateInstanceParams) => {
-      return await instanceApi.createInstance({ schemaId });
-    },
+    mutationFn: ({ schemaId }: CreateInstanceParams) =>
+      instanceApi.createInstance({ schemaId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["instances"] });
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
