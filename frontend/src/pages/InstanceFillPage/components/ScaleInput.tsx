@@ -14,11 +14,6 @@ interface ScaleInputProps {
 }
 
 export const ScaleInput = ({ min, max, value, onChange, disabled }: ScaleInputProps) => {
-  const numbers: number[] = [];
-  for (let i = min; i <= max; i++) {
-    numbers.push(i);
-  }
-
   return (
     <ScaleContainer>
       <ScaleLabel>{min}</ScaleLabel>
@@ -28,7 +23,7 @@ export const ScaleInput = ({ min, max, value, onChange, disabled }: ScaleInputPr
         value={value !== undefined ? String(value) : ""}
         onChange={(e) => onChange(Number(e.target.value))}
       >
-        {numbers.map((num) => (
+        {Array.from({ length: max - min + 1 }, (_, index) => index + min).map((num) => (
           <ScaleFormControlLabel
             key={num}
             value={String(num)}
@@ -43,4 +38,4 @@ export const ScaleInput = ({ min, max, value, onChange, disabled }: ScaleInputPr
       <ScaleLabel>{max}</ScaleLabel>
     </ScaleContainer>
   );
-}
+};
