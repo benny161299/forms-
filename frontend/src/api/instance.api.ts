@@ -16,13 +16,6 @@ export const instanceApi = {
     return response.data;
   },
 
-  getInstancesBySchemaId: async (schemaId: string): Promise<IInstance[]> => {
-    const response = await axiosClient.get<IInstance[]>(
-      `/instances/schema/${schemaId}`
-    );
-    return response.data;
-  },
-
   getInstanceById: async (id: string): Promise<IInstance> => {
     const response = await axiosClient.get<IInstance>(`/instances/${id}`);
     return response.data;
