@@ -5,9 +5,9 @@ import { Typography, CircularProgress } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-
+import { useQuery } from "@tanstack/react-query";
+import { instanceApi } from "../../api/instance.api";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
-import { useInstanceById } from "./hooks/useInstanceById";
 import { useInstanceMutations } from "./hooks/useInstanceMutations";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceSectionValidation } from "./hooks/useInstanceSectionValidation";
@@ -31,10 +31,16 @@ export const InstanceFillPage = () => {
   const navigate = useNavigate();
 
   const {
-    instance: fetchedInstance,
+    data: fetchedInstance,
     isLoading: isLoadingInstance,
     error: instanceError,
-  } = useInstanceById(instanceId);
+  } = useQuery({
+    queryKey: ["instance", instanceId],
+    queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
+    enabled: Boolean(instanceId),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
   const {
