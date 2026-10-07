@@ -11,12 +11,12 @@ interface TextInputProps {
   disabled?: boolean;
 }
 
-export function TextInput({
+export const TextInput = ({
   type,
   value = "",
   onChange,
   disabled,
-}: TextInputProps) {
+}: TextInputProps) => {
   const { t } = useTranslation();
   const isParagraph = type === QUESTION_TYPES.PARAGRAPH;
   const isDateTime =

@@ -11,7 +11,7 @@ import {
   SectionLoadingContainer,
 } from '../HomePage.styles';
 
-export function PublishedSchemasSection() {
+export const PublishedSchemasSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

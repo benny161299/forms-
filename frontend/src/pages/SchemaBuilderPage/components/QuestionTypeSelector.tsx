@@ -9,7 +9,7 @@ interface QuestionTypeSelectorProps {
   onChange: (type: QuestionType) => void;
 }
 
-export function QuestionTypeSelector({ value, onChange }: QuestionTypeSelectorProps) {
+export const QuestionTypeSelector = ({ value, onChange }: QuestionTypeSelectorProps) => {
   const { t } = useTranslation();
 
   return (

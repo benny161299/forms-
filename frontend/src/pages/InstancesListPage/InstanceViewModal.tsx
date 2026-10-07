@@ -28,10 +28,10 @@ interface InstanceViewModalProps {
   onClose: () => void;
 }
 
-export function InstanceViewModal({
+export const InstanceViewModal = ({
   instance,
   onClose,
-}: InstanceViewModalProps) {
+}: InstanceViewModalProps) => {
   const { schema, isLoading } = useSchemaById(instance?.schemaId);
 
   if (!instance) {

@@ -21,7 +21,7 @@ const cacheRtl = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
-export function App() {
+export const App = () => {
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>

@@ -23,14 +23,14 @@ interface ChoiceInputProps {
   disabled?: boolean;
 }
 
-export function ChoiceInput({
+export const ChoiceInput = ({
   type,
   id,
   choices,
   value,
   onChange,
   disabled,
-}: ChoiceInputProps) {
+}: ChoiceInputProps) => {
   const { t } = useTranslation();
 
   switch (type) {

@@ -12,7 +12,7 @@ import {
   SectionLoadingContainer,
 } from '../HomePage.styles';
 
-export function InstanceDraftsSection() {
+export const InstanceDraftsSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

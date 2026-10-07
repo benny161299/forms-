@@ -22,7 +22,7 @@ interface SectionCardProps {
   onDeleteQuestion: (questionIndex: number) => void;
 }
 
-export function SectionCard({
+export const SectionCard = ({
   section,
   sectionIndex,
   isOnlySection,
@@ -31,7 +31,7 @@ export function SectionCard({
   onAddQuestion,
   onUpdateQuestion,
   onDeleteQuestion,
-}: SectionCardProps) {
+}: SectionCardProps) => {
   const { t } = useTranslation();
 
   return (

@@ -21,7 +21,7 @@ interface SchemaViewModalProps {
   onClose: () => void;
 }
 
-export function SchemaViewModal({ schema, onClose }: SchemaViewModalProps) {
+export const SchemaViewModal = ({ schema, onClose }: SchemaViewModalProps) => {
   const { t } = useTranslation();
 
   if (!schema) {

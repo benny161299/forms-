@@ -19,7 +19,7 @@ import {
   CardsGrid,
 } from "./SchemasListPage.styles";
 
-export default function SchemasListPage() {
+export const SchemasListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -91,4 +91,6 @@ export default function SchemasListPage() {
       />
     </PageContainer>
   );
-}
+};
+
+export default SchemasListPage;

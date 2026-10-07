@@ -20,7 +20,7 @@ import {
   SaveActions,
 } from "./SchemaBuilderPage.styles";
 
-export function SchemaBuilderPage() {
+export const SchemaBuilderPage = () => {
   const { id } = useParams<{ id: string }>();
   const isEditMode = Boolean(id);
 
@@ -136,6 +136,6 @@ export function SchemaBuilderPage() {
       </ActionsFooter>
     </PageContainer>
   );
-}
+};
 
 export default SchemaBuilderPage;

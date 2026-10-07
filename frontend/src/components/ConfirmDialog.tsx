@@ -19,7 +19,7 @@ interface ConfirmDialogProps {
   onClose: () => void;
 }
 
-export function ConfirmDialog({
+export const ConfirmDialog = ({
   open,
   title,
   description,
@@ -28,7 +28,7 @@ export function ConfirmDialog({
   confirmColor = 'error',
   onConfirm,
   onClose,
-}: ConfirmDialogProps) {
+}: ConfirmDialogProps) => {
   const { t } = useTranslation();
 
   const resolvedConfirmText = confirmText ?? t('common.confirm');

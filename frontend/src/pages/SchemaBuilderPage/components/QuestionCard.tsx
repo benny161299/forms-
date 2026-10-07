@@ -19,7 +19,7 @@ interface QuestionCardProps {
   onDelete: () => void;
 }
 
-export function QuestionCard({ question, onUpdate, onDelete }: QuestionCardProps) {
+export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps) => {
   const { t } = useTranslation();
 
   const handleTypeChange = (newType: QuestionType) => {

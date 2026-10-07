@@ -14,7 +14,7 @@ interface InstanceFillFooterProps {
   onSubmit: () => void;
 }
 
-export function InstanceFillFooter({
+export const InstanceFillFooter = ({
   isFirstSection,
   isLastSection,
   isSaving,
@@ -22,7 +22,7 @@ export function InstanceFillFooter({
   onNext,
   onSaveDraft,
   onSubmit,
-}: InstanceFillFooterProps) {
+}: InstanceFillFooterProps) => {
   const { t } = useTranslation();
 
   return (

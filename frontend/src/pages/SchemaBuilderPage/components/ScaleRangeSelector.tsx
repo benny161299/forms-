@@ -11,7 +11,7 @@ interface ScaleRangeSelectorProps {
   onUpdate: (min: number, max: number) => void;
 }
 
-export function ScaleRangeSelector({ min, max, onUpdate }: ScaleRangeSelectorProps) {
+export const ScaleRangeSelector = ({ min, max, onUpdate }: ScaleRangeSelectorProps) => {
   const { t } = useTranslation();
 
   return (

@@ -16,13 +16,13 @@ interface CheckboxGridInputProps {
   disabled?: boolean;
 }
 
-export function CheckboxGridInput({
+export const CheckboxGridInput = ({
   rows,
   choices,
   value = {},
   onChange,
   disabled,
-}: CheckboxGridInputProps) {
+}: CheckboxGridInputProps) => {
   const handleCheckboxSelect = (row: string, colIdx: number, checked: boolean) => {
     const currentRow = value[row] || [];
     const nextRow = checked

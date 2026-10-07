@@ -21,12 +21,12 @@ interface QuestionAnswerFieldProps {
   disabled?: boolean;
 }
 
-export function QuestionAnswerField({
+export const QuestionAnswerField = ({
   question,
   value,
   onChange,
   disabled,
-}: QuestionAnswerFieldProps) {
+}: QuestionAnswerFieldProps) => {
   const { t } = useTranslation();
 
   const renderInput = () => {

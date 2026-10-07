@@ -12,7 +12,7 @@ import {
   SectionLoadingContainer,
 } from '../HomePage.styles';
 
-export function SchemaDraftsSection() {
+export const SchemaDraftsSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

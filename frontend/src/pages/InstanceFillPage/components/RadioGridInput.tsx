@@ -16,13 +16,13 @@ interface RadioGridInputProps {
   disabled?: boolean;
 }
 
-export function RadioGridInput({
+export const RadioGridInput = ({
   rows,
   choices,
   value = {},
   onChange,
   disabled,
-}: RadioGridInputProps) {
+}: RadioGridInputProps) => {
   const handleRadioSelect = (row: string, colIdx: number) => {
     onChange({
       ...value,

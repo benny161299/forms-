@@ -14,7 +14,7 @@ import {
   GridContainer,
 } from './HomePage.styles';
 
-export default function HomePage() {
+export const HomePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -37,4 +37,6 @@ export default function HomePage() {
       </GridContainer>
     </PageContainer>
   );
-}
+};
+
+export default HomePage;

@@ -11,12 +11,12 @@ interface EditableItemListProps {
   onUpdate: (updatedItems: string[]) => void;
 }
 
-export function EditableItemList({
+export const EditableItemList = ({
   items,
   placeholderKey,
   addLabelKey,
   onUpdate,
-}: EditableItemListProps) {
+}: EditableItemListProps) => {
   const { t } = useTranslation();
 
   const handleItemChange = (index: number, val: string) => {

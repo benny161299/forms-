@@ -14,7 +14,7 @@ import {
   SectionLoadingContainer,
 } from '../HomePage.styles';
 
-export function SubmittedInstancesSection() {
+export const SubmittedInstancesSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

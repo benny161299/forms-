@@ -13,7 +13,7 @@ interface ScaleInputProps {
   disabled?: boolean;
 }
 
-export function ScaleInput({ min, max, value, onChange, disabled }: ScaleInputProps) {
+export const ScaleInput = ({ min, max, value, onChange, disabled }: ScaleInputProps) => {
   const numbers: number[] = [];
   for (let i = min; i <= max; i++) {
     numbers.push(i);

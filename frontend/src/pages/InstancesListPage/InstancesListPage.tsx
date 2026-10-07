@@ -23,7 +23,7 @@ import {
   PageTitle,
 } from "./InstancesListPage.styles";
 
-export default function InstancesListPage() {
+export const InstancesListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -96,4 +96,6 @@ export default function InstancesListPage() {
       />
     </PageContainer>
   );
-}
+};
+
+export default InstancesListPage;

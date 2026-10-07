@@ -20,7 +20,7 @@ import {
   SectionHeader,
 } from "./InstanceFillPage.styles";
 
-export default function InstanceFillPage() {
+export const InstanceFillPage = () => {
   const { schemaId, instanceId } = useParams<{
     schemaId?: string;
     instanceId?: string;
@@ -208,4 +208,6 @@ export default function InstanceFillPage() {
       />
     </PageContainer>
   );
-}
+};
+
+export default InstanceFillPage;

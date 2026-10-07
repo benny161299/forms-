@@ -18,7 +18,7 @@ interface SchemaCardProps {
   onDelete?: (id: string) => void;
 }
 
-export function SchemaCard({ schema, index, onEdit, onFill, onView, onDelete }: SchemaCardProps) {
+export const SchemaCard = ({ schema, index, onEdit, onFill, onView, onDelete }: SchemaCardProps) => {
   const { t } = useTranslation();
 
   return (

@@ -18,13 +18,13 @@ interface InstanceCardProps {
   onDelete?: (instanceId: string) => void;
 }
 
-export function InstanceCard({
+export const InstanceCard = ({
   instance,
   index,
   onContinueFill,
   onView,
   onDelete,
-}: InstanceCardProps) {
+}: InstanceCardProps) => {
   const { t } = useTranslation();
 
   return (
