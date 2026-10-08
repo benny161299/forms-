@@ -24,7 +24,7 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
     if (!result.success) {
       return next(result.error);
     }
-    req.body = result.data.body;
+    req.body = result.data.body ?? {};
 
     return next();
   };
