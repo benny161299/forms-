@@ -80,8 +80,6 @@
     "addOption": "הוסף אפשרות",
     "gridRowPlaceholder": "שורה {{number}}",
     "addRow": "הוסף שורה",
-    "scaleMin": "min",
-    "scaleMax": "max",
     "types": {
       "short_answer": "תשובה מילולית קצרה",
       "paragraph": "תשובה מילולית ארוכה (פסקה)",
