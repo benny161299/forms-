@@ -7,8 +7,10 @@ export const HomeButton = styled(Button)(({ theme }) => ({
 }));
 
 export const PageContainer = styled(Box)(({ theme }) => ({
-  maxWidth: 1100,
+  width: "100%",
+  maxWidth: "68.75rem",
   margin: "0 auto",
+  boxSizing: "border-box",
   padding: theme.spacing(4, 2),
   direction: "rtl",
 }));
@@ -28,7 +30,7 @@ export const PageTitle = styled(Typography)(({ theme }) => ({
 
 export const CardsGrid = styled(Box)(({ theme }) => ({
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fill, minmax(17.5rem, 1fr))",
   gap: theme.spacing(3),
 }));
 
@@ -46,7 +48,7 @@ export const ViewModalContainer = styled(Box)(({ theme }) => ({
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "90%",
-  maxWidth: 780,
+  maxWidth: "48.75rem",
   maxHeight: "90vh",
   overflowY: "auto",
   backgroundColor: theme.palette.background.paper,

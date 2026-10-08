@@ -2,9 +2,11 @@ import { styled } from '@mui/material/styles';
 import { Box, Paper } from '@mui/material';
 
 export const PageContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(4),
-  maxWidth: 1200,
+  width: '100%',
+  maxWidth: '75rem',
   margin: '0 auto',
+  boxSizing: 'border-box',
+  padding: theme.spacing(4),
 }));
 
 export const LoadingContainer = styled(PageContainer)({
@@ -23,7 +25,7 @@ export const HeaderContainer = styled(Box)(({ theme }) => ({
 
 export const GridContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(25rem, 1fr))',
   gap: theme.spacing(3),
 }));
 
@@ -49,5 +51,5 @@ export const SectionLoadingContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  minHeight: 120,
+  minHeight: '7.5rem',
 });

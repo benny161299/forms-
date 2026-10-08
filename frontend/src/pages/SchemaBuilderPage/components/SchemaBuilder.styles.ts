@@ -29,7 +29,7 @@ export const DeleteButton = styled(IconButton)(({ theme }) => ({
 }));
 
 export const QuestionTypeFormControl = styled(FormControl)({
-  minWidth: 180,
+  minWidth: "11.25rem",
 });
 export const OptionsList = styled(Box)(({ theme }) => ({
   display: "flex",
