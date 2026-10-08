@@ -62,6 +62,8 @@ export function useInstanceFill(
     instanceId,
     answers,
     currentSectionIndex,
+    isFirstSection: currentSectionIndex === 0,
+    isLastSection: Boolean(sections?.length && currentSectionIndex === sections.length - 1),
 
     setInstanceId,
 

@@ -134,11 +134,9 @@ export const InstanceFillPage = () => {
     instanceId: stateInstanceId,
     answers,
     currentSectionIndex,
+    isFirstSection,
+    isLastSection,
   } = actions;
-
-  const totalSections = schema?.sections?.length ?? 0;
-  const isFirstSection = currentSectionIndex === 0;
-  const isLastSection = totalSections > 0 && currentSectionIndex === totalSections - 1;
 
   const currentSection = schema?.sections[currentSectionIndex];
   const { validateSection, validateAll } = useInstanceValidation(
