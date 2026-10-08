@@ -7,46 +7,46 @@ import type {
 
 export const instanceApi = {
   getAllInstances: async (): Promise<IInstance[]> => {
-    const response = await axiosClient.get<IInstance[]>("/instances");
-    return response.data;
+    const { data } = await axiosClient.get<IInstance[]>("/instances");
+    return data;
   },
 
   getDraftInstances: async (): Promise<IInstance[]> => {
-    const response = await axiosClient.get<IInstance[]>("/instances/drafts");
-    return response.data;
+    const { data } = await axiosClient.get<IInstance[]>("/instances/drafts");
+    return data;
   },
 
   getInstanceById: async (id: string): Promise<IInstance> => {
-    const response = await axiosClient.get<IInstance>(`/instances/${id}`);
-    return response.data;
+    const { data } = await axiosClient.get<IInstance>(`/instances/${id}`);
+    return data;
   },
 
   createInstance: async (
     instanceData: CreateInstanceInput
   ): Promise<IInstance> => {
-    const response = await axiosClient.post<IInstance>(
+    const { data } = await axiosClient.post<IInstance>(
       "/instances",
       instanceData
     );
-    return response.data;
+    return data;
   },
 
   updateInstance: async (
     id: string,
     instanceData: UpdateInstanceInput
   ): Promise<IInstance> => {
-    const response = await axiosClient.put<IInstance>(
+    const { data } = await axiosClient.put<IInstance>(
       `/instances/${id}`,
       instanceData
     );
-    return response.data;
+    return data;
   },
 
   submitInstance: async (id: string): Promise<IInstance> => {
-    const response = await axiosClient.patch<IInstance>(
+    const { data } = await axiosClient.patch<IInstance>(
       `/instances/${id}/submit`
     );
-    return response.data;
+    return data;
   },
 
   deleteInstance: async (id: string): Promise<void> => {
