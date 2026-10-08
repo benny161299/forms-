@@ -5,10 +5,10 @@ import { Typography, CircularProgress } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { instanceApi } from "../../api/instance.api";
+import type { AnswerValue } from "../../types/instance.types";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
-import { useInstanceMutations } from "./hooks/useInstanceMutations";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
@@ -79,7 +79,52 @@ export const InstanceFillPage = () => {
     t,
   ]);
 
-  const { createInstance, updateInstance, isSaving } = useInstanceMutations();
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: (schemaId: string) => instanceApi.createInstance({ schemaId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["instances"] });
+      queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      answers,
+      submit,
+    }: {
+      id: string;
+      answers: Record<string, AnswerValue>;
+      submit: boolean;
+    }) => {
+      const updatedInstance = await instanceApi.updateInstance(id, { answers });
+
+      if (submit) {
+        await instanceApi.submitInstance(id);
+      }
+
+      return { updatedInstance, submit };
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["instance", variables.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["draftInstances"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["submittedInstances"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["instances"],
+      });
+    },
+  });
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const actions = useInstanceFill(
     isEditMode ? fetchedInstance : null,
@@ -128,7 +173,7 @@ export const InstanceFillPage = () => {
       let targetInstanceId = stateInstanceId;
 
       if (!targetInstanceId && schemaId) {
-        const created = await createInstance({ schemaId });
+        const created = await createMutation.mutateAsync(schemaId);
         targetInstanceId = created._id;
         if (targetInstanceId) {
           actions.setInstanceId(targetInstanceId);
@@ -140,7 +185,7 @@ export const InstanceFillPage = () => {
         return;
       }
 
-      await updateInstance({ id: targetInstanceId, answers, submit });
+      await updateMutation.mutateAsync({ id: targetInstanceId, answers, submit });
 
       toast.success(
         t(submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
