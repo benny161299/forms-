@@ -10,7 +10,6 @@ import { instanceApi } from "../../api/instance.api";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { useInstanceMutations } from "./hooks/useInstanceMutations";
 import { useInstanceFill } from "./hooks/useInstanceFill";
-import { useInstanceSectionValidation } from "./hooks/useInstanceSectionValidation";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
@@ -97,11 +96,13 @@ export const InstanceFillPage = () => {
   const isLastSection = totalSections > 0 && currentSectionIndex === totalSections - 1;
 
   const currentSection = schema?.sections[currentSectionIndex];
-  const { validateSection } = useInstanceSectionValidation(currentSection, answers);
-  const { validateAll } = useInstanceValidation(schema?.sections, answers);
+  const { validateSection, validateAll } = useInstanceValidation(
+    schema?.sections,
+    answers
+  );
 
   const handleNext = () => {
-    const error = validateSection();
+    const error = validateSection(currentSection);
     if (error) {
       toast.error(error);
       return;
