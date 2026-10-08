@@ -6,8 +6,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { schemaApi } from "../../api/schema.api";
 import type { Ischema } from "../../types/schema.types";
-import { useSchemaMutations } from "./hooks/useSchemaMutations";
 import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
@@ -36,32 +37,82 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
 
-  const { createSchema, updateSchema, isSaving } = useSchemaMutations();
+  const queryClient = useQueryClient();
+
+  const createMutation = useMutation({
+    mutationFn: async ({ schema, publish }: { schema: Ischema; publish: boolean }) => {
+      const createdSchema = await schemaApi.createSchema(schema);
+
+      if (publish && createdSchema._id) {
+        await schemaApi.publishSchema(createdSchema._id);
+      }
+
+      return { createdSchema, publish };
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
+      queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
+      toast.success(
+        t(variables.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
+      );
+      navigate("/");
+    },
+    onError: () => {
+      toast.error(t("schemaBuilder.saveError"));
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      schema,
+      publish,
+    }: {
+      id: string;
+      schema: Ischema;
+      publish: boolean;
+    }) => {
+      const updatedSchema = await schemaApi.updateSchema(id, schema);
+
+      if (publish) {
+        await schemaApi.publishSchema(id);
+      }
+
+      return { updatedSchema, publish };
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
+      queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
+      queryClient.invalidateQueries({ queryKey: ["schema", variables.id] });
+      toast.success(
+        t(variables.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
+      );
+      navigate("/");
+    },
+    onError: () => {
+      toast.error(t("schemaBuilder.saveError"));
+    },
+  });
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const actions = useSchemaBuilder(fetchedSchema);
   const { schema } = actions;
   const { validate } = useSchemaValidation(schema);
 
-  const handleSave = async (publish: boolean) => {
+  const handleSave = (publish: boolean) => {
     const validationError = validate();
     if (validationError) {
       toast.error(validationError);
       return;
     }
 
-    try {
-      const payload: Ischema = { ...schema, isDraft: !publish };
+    const payload: Ischema = { ...schema, isDraft: !publish };
 
-      if (isEditMode && id) {
-        await updateSchema({ id, schema: payload, publish });
-      } else {
-        await createSchema({ schema: payload, publish });
-      }
-
-      toast.success(t(publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess"));
-      navigate("/");
-    } catch {
-      toast.error(t("schemaBuilder.saveError"));
+    if (isEditMode && id) {
+      updateMutation.mutate({ id, schema: payload, publish });
+    } else {
+      createMutation.mutate({ schema: payload, publish });
     }
   };
 
