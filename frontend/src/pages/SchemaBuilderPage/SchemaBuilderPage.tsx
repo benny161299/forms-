@@ -5,7 +5,6 @@ import AddIcon from "@mui/icons-material/Add";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { schemaApi } from "../../api/schema.api";
 import type { Ischema } from "../../types/schema.types";
@@ -100,7 +99,7 @@ export const SchemaBuilderPage = () => {
   const { schema } = actions;
   const { validate } = useSchemaValidation(schema);
 
-  const handleSave = (publish: boolean) => {
+  const saveSchema = (publish: boolean) => {
     const validationError = validate();
     if (validationError) {
       toast.error(validationError);
@@ -115,6 +114,9 @@ export const SchemaBuilderPage = () => {
       createMutation.mutate({ schema: payload, publish });
     }
   };
+
+  const handleSaveDraft = () => saveSchema(false);
+  const handlePublish = () => saveSchema(true);
 
   if (isFetching) {
     return (
@@ -195,10 +197,10 @@ export const SchemaBuilderPage = () => {
         </Button>
 
         <SaveActions>
-          <Button variant="outlined" disabled={isSaving} onClick={() => handleSave(false)}>
+          <Button variant="outlined" disabled={isSaving} onClick={handleSaveDraft}>
             {t("schemaBuilder.saveDraft")}
           </Button>
-          <Button variant="contained" disabled={isSaving} onClick={() => handleSave(true)}>
+          <Button variant="contained" disabled={isSaving} onClick={handlePublish}>
             {t("schemaBuilder.publish")}
           </Button>
         </SaveActions>
