@@ -121,6 +121,13 @@ export const InstanceFillPage = () => {
       queryClient.invalidateQueries({
         queryKey: ["instances"],
       });
+      toast.success(
+        t(variables.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
+      );
+      navigate("/");
+    },
+    onError: () => {
+      toast.error(t("instanceFill.saveError"));
     },
   });
 
@@ -183,13 +190,7 @@ export const InstanceFillPage = () => {
         return;
       }
 
-      await updateMutation.mutateAsync({ id: targetInstanceId, answers, submit });
-
-      toast.success(
-        t(submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
-      );
-
-      navigate("/");
+      updateMutation.mutate({ id: targetInstanceId, answers, submit });
     } catch {
       toast.error(t("instanceFill.saveError"));
     }
