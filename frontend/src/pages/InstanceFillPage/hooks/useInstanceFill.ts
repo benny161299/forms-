@@ -1,38 +1,6 @@
-import { useEffect, useRef } from "react";
-import { useImmerReducer } from "use-immer";
+import { useState } from "react";
 import type { IInstance, AnswerValue } from "../../../types/instance.types";
 import type { ISection } from "../../../types/schema.types";
-
-export type InstanceAction =
-  | {
-    type: "SET_INSTANCE";
-    payload: {
-      instanceId: string;
-      answers: Record<string, AnswerValue>;
-      currentSectionIndex?: number;
-    };
-  }
-  | { type: "SET_INSTANCE_ID"; payload: string }
-  | {
-    type: "SET_ANSWER";
-    payload: {
-      questionId: string;
-      value: AnswerValue;
-    };
-  }
-  | { type: "SET_CURRENT_SECTION"; payload: number };
-
-interface InstanceFillState {
-  instanceId: string | null;
-  answers: Record<string, AnswerValue>;
-  currentSectionIndex: number;
-}
-
-const initialInstanceState: InstanceFillState = {
-  instanceId: null,
-  answers: {},
-  currentSectionIndex: 0,
-};
 
 export function computeInitialSectionIndex(
   sections?: ISection[],
@@ -62,109 +30,51 @@ export function computeInitialSectionIndex(
   return lastSectionWithAnswers;
 }
 
-function instanceReducer(
-  draft: InstanceFillState,
-  action: InstanceAction
-) {
-  switch (action.type) {
-    case "SET_INSTANCE":
-      draft.instanceId = action.payload.instanceId;
-      draft.answers = action.payload.answers;
-      if (typeof action.payload.currentSectionIndex === "number") {
-        draft.currentSectionIndex = action.payload.currentSectionIndex;
-      }
-      break;
-
-    case "SET_INSTANCE_ID":
-      draft.instanceId = action.payload;
-      break;
-
-    case "SET_ANSWER":
-      draft.answers[action.payload.questionId] = action.payload.value;
-      break;
-
-    case "SET_CURRENT_SECTION":
-      draft.currentSectionIndex = action.payload;
-      break;
-  }
-}
-
 export function useInstanceFill(
   initialData?: Partial<IInstance> | null,
   sections?: ISection[]
 ) {
-  const [state, dispatch] = useImmerReducer(
-    instanceReducer,
-    initialInstanceState
-  );
-  const lastLoadedIdRef = useRef<string | undefined>(undefined);
-  const hasRestoredSectionRef = useRef(false);
+  const [prevId, setPrevId] = useState<string | undefined>(undefined);
+  const [hasRestoredSection, setHasRestoredSection] = useState(false);
 
-  useEffect(() => {
-    if (!initialData?._id) return;
+  const [instanceId, setInstanceId] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
-    if (initialData._id !== lastLoadedIdRef.current) {
-      const initialSection = computeInitialSectionIndex(sections, initialData.answers);
-      dispatch({
-        type: "SET_INSTANCE",
-        payload: {
-          instanceId: initialData._id,
-          answers: initialData.answers ?? {},
-          currentSectionIndex: initialSection,
-        },
-      });
-      lastLoadedIdRef.current = initialData._id;
-      if (initialSection > 0) {
-        hasRestoredSectionRef.current = true;
-      }
-    } else if (sections && sections.length > 0 && !hasRestoredSectionRef.current) {
-      const initialSection = computeInitialSectionIndex(sections, initialData.answers);
-      if (initialSection > 0) {
-        dispatch({
-          type: "SET_CURRENT_SECTION",
-          payload: initialSection,
-        });
-        hasRestoredSectionRef.current = true;
-      }
+  if (initialData?._id && initialData._id !== prevId) {
+    setPrevId(initialData._id);
+    setInstanceId(initialData._id);
+    setAnswers(initialData.answers ?? {});
+    const initialSection = computeInitialSectionIndex(sections, initialData.answers);
+    setCurrentSectionIndex(initialSection);
+    if (initialSection > 0) {
+      setHasRestoredSection(true);
     }
-  }, [initialData, sections, dispatch]);
+  } else if (sections && sections.length > 0 && !hasRestoredSection && initialData?.answers) {
+    const initialSection = computeInitialSectionIndex(sections, initialData.answers);
+    if (initialSection > 0) {
+      setHasRestoredSection(true);
+      setCurrentSectionIndex(initialSection);
+    }
+  }
 
   return {
-    instanceId: state.instanceId,
-    answers: state.answers,
-    currentSectionIndex: state.currentSectionIndex,
+    instanceId,
+    answers,
+    currentSectionIndex,
 
-    setInstanceId: (id: string) =>
-      dispatch({
-        type: "SET_INSTANCE_ID",
-        payload: id,
-      }),
+    setInstanceId,
 
     setAnswer: (questionId: string, value: AnswerValue) =>
-      dispatch({
-        type: "SET_ANSWER",
-        payload: {
-          questionId,
-          value,
-        },
-      }),
+      setAnswers((prev) => ({
+        ...prev,
+        [questionId]: value,
+      })),
 
-    goToNextSection: () =>
-      dispatch({
-        type: "SET_CURRENT_SECTION",
-        payload: state.currentSectionIndex + 1,
-      }),
+    goToNextSection: () => setCurrentSectionIndex((prev) => prev + 1),
 
-    goToPrevSection: () =>
-      dispatch({
-        type: "SET_CURRENT_SECTION",
-        payload: state.currentSectionIndex - 1,
-      }),
+    goToPrevSection: () => setCurrentSectionIndex((prev) => prev - 1),
 
-    goToSection: (index: number) =>
-      dispatch({
-        type: "SET_CURRENT_SECTION",
-        payload: index,
-      }),
+    goToSection: (index: number) => setCurrentSectionIndex(index),
   };
 }
