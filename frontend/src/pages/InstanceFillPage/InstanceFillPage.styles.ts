@@ -6,9 +6,14 @@ export const HomeButton = styled(Button)(({ theme }) => ({
 }));
 
 export const PageContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(4),
-  maxWidth: 900,
+  width: "100%",
+  maxWidth: "56.25rem",
   margin: "0 auto",
+  boxSizing: "border-box",
+  padding: theme.spacing(2),
+  [theme.breakpoints.up("sm")]: {
+    padding: theme.spacing(4),
+  },
 }));
 
 export const ProgressWrapper = styled(Box)(({ theme }) => ({
