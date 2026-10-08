@@ -205,7 +205,21 @@ export const InstanceFillPage = () => {
   }
 
   if (!schema || !currentSection) {
-    return null;
+    return (
+      <PageContainer>
+        <HomeButton
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+          variant="outlined"
+          size="small"
+        >
+          {t("common.backToHome")}
+        </HomeButton>
+        <Typography variant="h6" color="text.secondary" align="center">
+          {t("instanceFill.notFoundError")}
+        </Typography>
+      </PageContainer>
+    );
   }
 
   return (
