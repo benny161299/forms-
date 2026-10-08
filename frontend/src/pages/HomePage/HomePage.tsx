@@ -2,12 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Typography, Button } from '@mui/material';
 
-import {
-  SchemaDraftsSection,
-  PublishedSchemasSection,
-  InstanceDraftsSection,
-  SubmittedInstancesSection,
-} from './components/index';
+import { SchemaDraftsSection } from './components/SchemaDraftsSection';
+import { PublishedSchemasSection } from './components/PublishedSchemasSection';
+import { InstanceDraftsSection } from './components/InstanceDraftsSection';
+import { SubmittedInstancesSection } from './components/SubmittedInstancesSection';
 import {
   PageContainer,
   HeaderContainer,
