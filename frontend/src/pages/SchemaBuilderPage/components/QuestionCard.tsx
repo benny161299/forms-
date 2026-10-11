@@ -13,6 +13,9 @@ import {
   RightControls,
 } from "./SchemaBuilder.styles";
 
+const DEFAULT_SCALE_MIN = 1;
+const DEFAULT_SCALE_MAX = 5;
+
 interface QuestionCardProps {
   question: IQuestion;
   onUpdate: (updated: IQuestion) => void;
@@ -51,7 +54,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         onUpdate({
           ...base,
           type: newType,
-          options: { min: 1, max: 5 },
+          options: { min: DEFAULT_SCALE_MIN, max: DEFAULT_SCALE_MAX },
         });
         break;
 
@@ -137,4 +140,4 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
       )}
     </CardContainer>
   );
-}
+};
