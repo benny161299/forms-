@@ -32,7 +32,7 @@ export const InstanceViewModal = ({
   instance,
   onClose,
 }: InstanceViewModalProps) => {
-  const { schema, isLoading } = useSchemaById(instance?.schemaId);
+  const { schema, isPending } = useSchemaById(instance?.schemaId);
 
   if (!instance) {
     return null;
@@ -59,7 +59,7 @@ export const InstanceViewModal = ({
           </IconButton>
         </ModalHeader>
 
-        {isLoading ? (
+        {isPending ? (
           <ModalLoadingContainer>
             <CircularProgress />
           </ModalLoadingContainer>

@@ -230,7 +230,7 @@ export const InstanceFillPage = () => {
 
   const {
     data: fetchedInstance,
-    isLoading: isLoadingInstance,
+    isPending: isPendingInstance,
     error: instanceError,
   } = useQuery({
     queryKey: ["instance", instanceId],
@@ -242,7 +242,7 @@ export const InstanceFillPage = () => {
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
   const {
     schema,
-    isLoading: isLoadingSchema,
+    isPending: isPendingSchema,
     error: schemaError,
   } = useSchemaById(schemaIdToFetch);
 
@@ -250,34 +250,10 @@ export const InstanceFillPage = () => {
     if (instanceError || schemaError) {
       toast.error(t("instanceFill.notFoundError"));
       navigate("/");
-      return;
     }
+  }, [instanceError, schemaError, navigate, t]);
 
-    if (!isLoadingInstance && isEditMode && !fetchedInstance) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
-      return;
-    }
-
-    if (!isLoadingSchema && schemaIdToFetch && !schema) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
-      return;
-    }
-  }, [
-    instanceError,
-    schemaError,
-    isLoadingInstance,
-    isLoadingSchema,
-    isEditMode,
-    fetchedInstance,
-    schemaIdToFetch,
-    schema,
-    navigate,
-    t,
-  ]);
-
-  if (isLoadingSchema || (isEditMode && isLoadingInstance)) {
+  if ((isEditMode && isPendingInstance) || isPendingSchema) {
     return (
       <PageContainer>
         <CircularProgress />

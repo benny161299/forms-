@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { schemaApi } from "../../../api/schema.api";
 
 export function useSchemaById(id?: string) {
-  const { data, isLoading, error } = useQuery({
+  const { data, isPending, isLoading, error, isError } = useQuery({
     queryKey: ["schema", id],
     queryFn: () => (id ? schemaApi.getSchemaById(id) : null),
     enabled: Boolean(id),
@@ -12,6 +12,8 @@ export function useSchemaById(id?: string) {
   return {
     schema: data,
     isLoading,
+    isPending,
     error,
+    isError,
   };
 }

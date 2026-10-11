@@ -170,16 +170,16 @@ export const SchemaBuilderPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schema: fetchedSchema, isLoading: isFetching, error: fetchError } = useSchemaById(id);
+  const { schema: fetchedSchema, isPending, error: fetchError } = useSchemaById(id);
 
   useEffect(() => {
-    if (isEditMode && (fetchError || (!isFetching && !fetchedSchema))) {
+    if (isEditMode && fetchError) {
       toast.error(t("schemaBuilder.notFoundError"));
       navigate("/");
     }
-  }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
+  }, [isEditMode, fetchError, navigate, t]);
 
-  if (isFetching) {
+  if (isEditMode && isPending) {
     return (
       <PageContainer>
         <CircularProgress />
