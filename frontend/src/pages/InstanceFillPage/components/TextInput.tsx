@@ -2,6 +2,9 @@ import { TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { QUESTION_TYPES, TEXT_QUESTION_TYPES } from "../../../types/schema.types";
 
+const PARAGRAPH_ROWS = 4;
+const SINGLE_LINE_ROWS = 1;
+
 type TextQuestionType = (typeof TEXT_QUESTION_TYPES)[number];
 
 interface TextInputProps {
@@ -30,7 +33,7 @@ export const TextInput = ({
       fullWidth
       variant="outlined"
       multiline={isParagraph}
-      rows={isParagraph ? 4 : 1}
+      rows={isParagraph ? PARAGRAPH_ROWS : SINGLE_LINE_ROWS}
       type={isDateTime ? type : "text"}
       placeholder={placeholder}
       value={value}
@@ -39,4 +42,4 @@ export const TextInput = ({
       slotProps={isDateTime ? { inputLabel: { shrink: true } } : undefined}
     />
   );
-}
+};
