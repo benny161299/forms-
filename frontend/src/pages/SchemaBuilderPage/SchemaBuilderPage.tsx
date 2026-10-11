@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,62 +22,54 @@ import {
 
 interface SchemaBuilderContentProps {
   id?: string;
-  isEditMode: boolean;
   initialData?: Ischema | null;
 }
 
-const SchemaBuilderContent = ({ id, isEditMode, initialData }: SchemaBuilderContentProps) => {
+const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation({
-    mutationFn: async ({ schema, publish }: { schema: Ischema; publish: boolean }) => {
-      const createdSchema = await schemaApi.createSchema(schema);
+  const [schemaId, setSchemaId] = useState<string | undefined>(id);
+  const isEditMode = Boolean(schemaId);
 
-      if (publish && createdSchema._id) {
-        await schemaApi.publishSchema(createdSchema._id);
-      }
-
-      return { createdSchema, publish };
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
-      queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
-      toast.success(
-        t(variables.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
-      );
-      navigate("/");
-    },
-    onError: () => {
-      toast.error(t("schemaBuilder.saveError"));
-    },
-  });
-
-  const updateMutation = useMutation({
+  const saveMutation = useMutation({
     mutationFn: async ({
-      id,
-      schema,
+      targetId,
+      payload,
       publish,
     }: {
-      id: string;
-      schema: Ischema;
+      targetId?: string;
+      payload: Ischema;
       publish: boolean;
     }) => {
-      const updatedSchema = await schemaApi.updateSchema(id, schema);
+      let currentId = targetId;
+      let savedSchema: Ischema;
 
-      if (publish) {
-        await schemaApi.publishSchema(id);
+      if (currentId) {
+        savedSchema = await schemaApi.updateSchema(currentId, payload);
+      } else {
+        savedSchema = await schemaApi.createSchema(payload);
+        currentId = savedSchema._id;
+        if (currentId) {
+          setSchemaId(currentId);
+        }
       }
 
-      return { updatedSchema, publish };
+      if (publish && currentId) {
+        await schemaApi.publishSchema(currentId);
+      }
+
+      return { savedSchema, publish, id: currentId };
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
       queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
-      queryClient.invalidateQueries({ queryKey: ["schema", variables.id] });
+      if (data.id) {
+        queryClient.invalidateQueries({ queryKey: ["schema", data.id] });
+      }
       toast.success(
-        t(variables.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
+        t(data.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
       );
       navigate("/");
     },
@@ -86,7 +78,7 @@ const SchemaBuilderContent = ({ id, isEditMode, initialData }: SchemaBuilderCont
     },
   });
 
-  const isSaving = createMutation.isPending || updateMutation.isPending;
+  const isSaving = saveMutation.isPending;
 
   const actions = useSchemaBuilder(initialData);
   const { schema } = actions;
@@ -100,12 +92,7 @@ const SchemaBuilderContent = ({ id, isEditMode, initialData }: SchemaBuilderCont
     }
 
     const payload: Ischema = { ...schema, isDraft: !publish };
-
-    if (isEditMode && id) {
-      updateMutation.mutate({ id, schema: payload, publish });
-    } else {
-      createMutation.mutate({ schema: payload, publish });
-    }
+    saveMutation.mutate({ targetId: schemaId, payload, publish });
   };
 
   const handleSaveDraft = () => saveSchema(false);
@@ -222,7 +209,6 @@ export const SchemaBuilderPage = () => {
     <SchemaBuilderContent
       key={id || "new"}
       id={id}
-      isEditMode={isEditMode}
       initialData={isEditMode ? fetchedSchema : null}
     />
   );
