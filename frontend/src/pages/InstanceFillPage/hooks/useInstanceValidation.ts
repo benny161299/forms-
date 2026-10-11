@@ -64,12 +64,7 @@ export function useInstanceValidation(
     }
 
     for (const question of section.questions) {
-      if (!question.required) {
-        continue;
-      }
-
-      const answer = answers[question.id];
-      if (isAnswerMissing(question, answer)) {
+      if (question.required && isAnswerMissing(question, answers[question.id])) {
         return t("instanceFill.requiredField");
       }
     }
