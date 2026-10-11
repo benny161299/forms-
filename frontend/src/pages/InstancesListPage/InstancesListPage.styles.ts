@@ -1,4 +1,3 @@
-
 import { styled } from "@mui/material/styles";
 import { Box, Paper, Typography, Button } from "@mui/material";
 
@@ -12,7 +11,6 @@ export const PageContainer = styled(Box)(({ theme }) => ({
   margin: "0 auto",
   boxSizing: "border-box",
   padding: theme.spacing(4, 2),
-  direction: "rtl",
 }));
 
 export const LoadingContainer = styled(Box)(({ theme }) => ({
@@ -55,7 +53,6 @@ export const ViewModalContainer = styled(Box)(({ theme }) => ({
   boxShadow: theme.shadows[24],
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(4),
-  direction: "rtl",
   outline: "none",
 }));
 
@@ -101,4 +98,3 @@ export const ModalLoadingContainer = styled(Box)(({ theme }) => ({
 export const SectionContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
-
