@@ -32,6 +32,20 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
       required: question.required,
     };
 
+    const existingChoices =
+      "options" in question && "choices" in question.options
+        ? question.options.choices
+        : undefined;
+
+    const existingRows =
+      "options" in question && "rows" in question.options
+        ? question.options.rows
+        : undefined;
+
+    const choices =
+      existingChoices && existingChoices.length > 0 ? existingChoices : [""];
+    const rows = existingRows && existingRows.length > 0 ? existingRows : [""];
+
     switch (newType) {
       case QUESTION_TYPES.SHORT_ANSWER:
       case QUESTION_TYPES.PARAGRAPH:
@@ -46,7 +60,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         onUpdate({
           ...base,
           type: newType,
-          options: { choices: [""] },
+          options: { choices },
         });
         break;
 
@@ -54,7 +68,16 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         onUpdate({
           ...base,
           type: newType,
-          options: { min: DEFAULT_SCALE_MIN, max: DEFAULT_SCALE_MAX },
+          options: {
+            min:
+              "options" in question && "min" in question.options
+                ? question.options.min
+                : DEFAULT_SCALE_MIN,
+            max:
+              "options" in question && "max" in question.options
+                ? question.options.max
+                : DEFAULT_SCALE_MAX,
+          },
         });
         break;
 
@@ -63,7 +86,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         onUpdate({
           ...base,
           type: newType,
-          options: { choices: [""], rows: [""] },
+          options: { choices, rows },
         });
         break;
     }
