@@ -29,7 +29,7 @@ export const InstanceFillFooter = ({
     <ActionsFooter>
       <Button
         variant="outlined"
-        startIcon={<ArrowBackIcon />}
+        startIcon={<ArrowForwardIcon />}
         onClick={onPrev}
         disabled={isFirstSection || isSaving}
       >
@@ -56,7 +56,7 @@ export const InstanceFillFooter = ({
         ) : (
           <Button
             variant="contained"
-            endIcon={<ArrowForwardIcon />}
+            endIcon={<ArrowBackIcon />}
             onClick={onNext}
             disabled={isSaving}
           >
