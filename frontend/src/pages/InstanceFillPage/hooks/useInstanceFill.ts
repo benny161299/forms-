@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { IInstance, AnswerValue } from "../../../types/instance.types";
 import type { ISection } from "../../../types/schema.types";
+import { isAnswerMissing } from "./useInstanceValidation";
 
 export function computeInitialSectionIndex(
   sections?: ISection[],
@@ -19,9 +20,10 @@ export function computeInitialSectionIndex(
   }
 
   const sectionQuestions = sections[lastSectionWithAnswers].questions;
-  const isSectionComplete = sectionQuestions
-    .filter((q) => q.required)
-    .every((q) => answers[q.id] !== undefined && answers[q.id] !== null && answers[q.id] !== "");
+  const requiredQuestions = sectionQuestions.filter((q) => q.required);
+  const isSectionComplete =
+    requiredQuestions.length > 0 &&
+    requiredQuestions.every((q) => !isAnswerMissing(q, answers[q.id]));
 
   if (isSectionComplete && lastSectionWithAnswers + 1 < sections.length) {
     return lastSectionWithAnswers + 1;
