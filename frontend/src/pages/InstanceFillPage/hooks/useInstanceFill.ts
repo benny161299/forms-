@@ -34,29 +34,13 @@ export function useInstanceFill(
   initialData?: Partial<IInstance> | null,
   sections?: ISection[]
 ) {
-  const [prevId, setPrevId] = useState<string | undefined>(undefined);
-  const [hasRestoredSection, setHasRestoredSection] = useState(false);
-
-  const [instanceId, setInstanceId] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-
-  if (initialData?._id && initialData._id !== prevId) {
-    setPrevId(initialData._id);
-    setInstanceId(initialData._id);
-    setAnswers(initialData.answers ?? {});
-    const initialSection = computeInitialSectionIndex(sections, initialData.answers);
-    setCurrentSectionIndex(initialSection);
-    if (initialSection > 0) {
-      setHasRestoredSection(true);
-    }
-  } else if (sections && sections.length > 0 && !hasRestoredSection && initialData?.answers) {
-    const initialSection = computeInitialSectionIndex(sections, initialData.answers);
-    if (initialSection > 0) {
-      setHasRestoredSection(true);
-      setCurrentSectionIndex(initialSection);
-    }
-  }
+  const [instanceId, setInstanceId] = useState<string | null>(initialData?._id ?? null);
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>(
+    () => initialData?.answers ?? {}
+  );
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(() =>
+    computeInitialSectionIndex(sections, initialData?.answers)
+  );
 
   return {
     instanceId,

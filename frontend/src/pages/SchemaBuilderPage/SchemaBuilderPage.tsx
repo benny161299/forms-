@@ -20,22 +20,15 @@ import {
   SaveActions,
 } from "./SchemaBuilderPage.styles";
 
-export const SchemaBuilderPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const isEditMode = Boolean(id);
+interface SchemaBuilderContentProps {
+  id?: string;
+  isEditMode: boolean;
+  initialData?: Ischema | null;
+}
 
+const SchemaBuilderContent = ({ id, isEditMode, initialData }: SchemaBuilderContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  const { schema: fetchedSchema, isLoading: isFetching, error: fetchError } = useSchemaById(id);
-
-  useEffect(() => {
-    if (isEditMode && (fetchError || (!isFetching && !fetchedSchema))) {
-      toast.error(t("schemaBuilder.notFoundError"));
-      navigate("/");
-    }
-  }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
-
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
@@ -95,7 +88,7 @@ export const SchemaBuilderPage = () => {
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
-  const actions = useSchemaBuilder(fetchedSchema);
+  const actions = useSchemaBuilder(initialData);
   const { schema } = actions;
   const { validate } = useSchemaValidation(schema);
 
@@ -117,32 +110,6 @@ export const SchemaBuilderPage = () => {
 
   const handleSaveDraft = () => saveSchema(false);
   const handlePublish = () => saveSchema(true);
-
-  if (isFetching) {
-    return (
-      <PageContainer>
-        <CircularProgress />
-      </PageContainer>
-    );
-  }
-
-  if (isEditMode && !fetchedSchema) {
-    return (
-      <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
-        <Typography variant="h6" color="text.secondary" align="center">
-          {t("schemaBuilder.notFoundError")}
-        </Typography>
-      </PageContainer>
-    );
-  }
 
   return (
     <PageContainer>
@@ -206,6 +173,58 @@ export const SchemaBuilderPage = () => {
         </SaveActions>
       </ActionsFooter>
     </PageContainer>
+  );
+};
+
+export const SchemaBuilderPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const isEditMode = Boolean(id);
+
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const { schema: fetchedSchema, isLoading: isFetching, error: fetchError } = useSchemaById(id);
+
+  useEffect(() => {
+    if (isEditMode && (fetchError || (!isFetching && !fetchedSchema))) {
+      toast.error(t("schemaBuilder.notFoundError"));
+      navigate("/");
+    }
+  }, [isEditMode, fetchError, isFetching, fetchedSchema, navigate, t]);
+
+  if (isFetching) {
+    return (
+      <PageContainer>
+        <CircularProgress />
+      </PageContainer>
+    );
+  }
+
+  if (isEditMode && !fetchedSchema) {
+    return (
+      <PageContainer>
+        <HomeButton
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+          variant="outlined"
+          size="small"
+        >
+          {t("common.backToHome")}
+        </HomeButton>
+        <Typography variant="h6" color="text.secondary" align="center">
+          {t("schemaBuilder.notFoundError")}
+        </Typography>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <SchemaBuilderContent
+      key={id || "new"}
+      id={id}
+      isEditMode={isEditMode}
+      initialData={isEditMode ? fetchedSchema : null}
+    />
   );
 };
 

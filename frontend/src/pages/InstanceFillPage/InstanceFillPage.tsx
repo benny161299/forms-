@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
@@ -7,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { instanceApi } from "../../api/instance.api";
-import type { AnswerValue } from "../../types/instance.types";
+import type { AnswerValue, IInstance } from "../../types/instance.types";
+import type { Ischema } from "../../types/schema.types";
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
@@ -19,70 +19,24 @@ import {
   SectionHeader,
 } from "./InstanceFillPage.styles";
 
-export const InstanceFillPage = () => {
-  const { schemaId, instanceId } = useParams<{
-    schemaId?: string;
-    instanceId?: string;
-  }>();
-  const isEditMode = Boolean(instanceId);
+interface InstanceFillContentProps {
+  schema: Ischema;
+  initialInstance?: IInstance | null;
+  schemaId?: string;
+}
 
+const InstanceFillContent = ({
+  schema,
+  initialInstance,
+  schemaId,
+}: InstanceFillContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  const {
-    data: fetchedInstance,
-    isLoading: isLoadingInstance,
-    error: instanceError,
-  } = useQuery({
-    queryKey: ["instance", instanceId],
-    queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
-    enabled: Boolean(instanceId),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-
-  const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
-  const {
-    schema,
-    isLoading: isLoadingSchema,
-    error: schemaError,
-  } = useSchemaById(schemaIdToFetch);
-
-  useEffect(() => {
-    if (instanceError || schemaError) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
-      return;
-    }
-
-    if (!isLoadingInstance && isEditMode && !fetchedInstance) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
-      return;
-    }
-
-    if (!isLoadingSchema && schemaIdToFetch && !schema) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
-      return;
-    }
-  }, [
-    instanceError,
-    schemaError,
-    isLoadingInstance,
-    isLoadingSchema,
-    isEditMode,
-    fetchedInstance,
-    schemaIdToFetch,
-    schema,
-    navigate,
-    t,
-  ]);
-
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: (schemaId: string) => instanceApi.createInstance({ schemaId }),
+    mutationFn: (schemaIdToCreate: string) =>
+      instanceApi.createInstance({ schemaId: schemaIdToCreate }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["instances"] });
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
@@ -133,10 +87,7 @@ export const InstanceFillPage = () => {
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
-  const actions = useInstanceFill(
-    isEditMode ? fetchedInstance : null,
-    schema?.sections
-  );
+  const actions = useInstanceFill(initialInstance, schema.sections);
   const {
     instanceId: stateInstanceId,
     answers,
@@ -145,9 +96,9 @@ export const InstanceFillPage = () => {
     isLastSection,
   } = actions;
 
-  const currentSection = schema?.sections[currentSectionIndex];
+  const currentSection = schema.sections[currentSectionIndex];
   const { validateSection, validateAll } = useInstanceValidation(
-    schema?.sections,
+    schema.sections,
     answers
   );
 
@@ -196,15 +147,7 @@ export const InstanceFillPage = () => {
     }
   };
 
-  if (isLoadingSchema || isLoadingInstance) {
-    return (
-      <PageContainer>
-        <CircularProgress />
-      </PageContainer>
-    );
-  }
-
-  if (!schema || !currentSection) {
+  if (!currentSection) {
     return (
       <PageContainer>
         <HomeButton
@@ -272,6 +215,101 @@ export const InstanceFillPage = () => {
         onSubmit={() => handleSave(true)}
       />
     </PageContainer>
+  );
+};
+
+export const InstanceFillPage = () => {
+  const { schemaId, instanceId } = useParams<{
+    schemaId?: string;
+    instanceId?: string;
+  }>();
+  const isEditMode = Boolean(instanceId);
+
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const {
+    data: fetchedInstance,
+    isLoading: isLoadingInstance,
+    error: instanceError,
+  } = useQuery({
+    queryKey: ["instance", instanceId],
+    queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
+    enabled: Boolean(instanceId),
+    refetchOnWindowFocus: false,
+  });
+
+  const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
+  const {
+    schema,
+    isLoading: isLoadingSchema,
+    error: schemaError,
+  } = useSchemaById(schemaIdToFetch);
+
+  useEffect(() => {
+    if (instanceError || schemaError) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+
+    if (!isLoadingInstance && isEditMode && !fetchedInstance) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+
+    if (!isLoadingSchema && schemaIdToFetch && !schema) {
+      toast.error(t("instanceFill.notFoundError"));
+      navigate("/");
+      return;
+    }
+  }, [
+    instanceError,
+    schemaError,
+    isLoadingInstance,
+    isLoadingSchema,
+    isEditMode,
+    fetchedInstance,
+    schemaIdToFetch,
+    schema,
+    navigate,
+    t,
+  ]);
+
+  if (isLoadingSchema || (isEditMode && isLoadingInstance)) {
+    return (
+      <PageContainer>
+        <CircularProgress />
+      </PageContainer>
+    );
+  }
+
+  if (!schema) {
+    return (
+      <PageContainer>
+        <HomeButton
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+          variant="outlined"
+          size="small"
+        >
+          {t("common.backToHome")}
+        </HomeButton>
+        <Typography variant="h6" color="text.secondary" align="center">
+          {t("instanceFill.notFoundError")}
+        </Typography>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <InstanceFillContent
+      key={instanceId || schemaIdToFetch}
+      schema={schema}
+      initialInstance={isEditMode ? fetchedInstance : null}
+      schemaId={schemaIdToFetch}
+    />
   );
 };
 
