@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { type ZodType, z } from "zod";
+import { AppError } from "./error.middleware.js";
 
 interface RequestValidationSchemas {
   body: ZodType;
@@ -22,7 +24,13 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
     });
 
     if (!result.success) {
-      return next(result.error);
+      return next(
+        new AppError(
+          "Validation failed",
+          StatusCodes.BAD_REQUEST,
+          z.flattenError(result.error).fieldErrors,
+        ),
+      );
     }
     req.body = result.data.body ?? {};
 
