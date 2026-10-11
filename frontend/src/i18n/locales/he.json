@@ -10,7 +10,7 @@
     "emptyPublishedSchemas": "אין טפסים מפורסמים זמינים למילוי",
     "emptyInstanceDrafts": "אין טפסים באמצע מילוי",
     "emptySubmittedInstances": "טרם הוגשו טפסים במערכת",
-    "sectionsCount": "{{count}} סקשן מספר",
+    "sectionsCount": "סקשן מספר {{count}}",
     "instanceInProcess": "טופס בתהליך",
     "instanceSubmitted": "טופס הוגש",
     "edit": "ערוך",
