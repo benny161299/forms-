@@ -7,7 +7,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: config.FRONTEND_ORIGIN }));
 app.use(express.json());
 app.use("/api", apiRouter);
 app.use(errorMiddleware);
