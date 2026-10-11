@@ -66,7 +66,7 @@ export const SchemaDraftsSection = () => {
           <Typography color="error" variant="body2">
             {errorMessage}
           </Typography>
-        ) : !schemas || schemas.length === 0 ? (
+        ) : schemas.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             {t('home.emptySchemaDrafts')}
           </Typography>

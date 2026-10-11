@@ -66,7 +66,7 @@ export const SchemasListPage = () => {
         {t("listPages.schemasTitle")}
       </PageTitle>
 
-      {!schemas || schemas.length === 0 ? (
+      {schemas.length === 0 ? (
         <EmptyState elevation={0}>
           <Typography variant="body1">
             {t("listPages.schemasEmpty")}

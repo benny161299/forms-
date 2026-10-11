@@ -36,7 +36,7 @@ export const PublishedSchemasSection = () => {
         <Typography color="error" variant="body2">
           {error}
         </Typography>
-      ) : !schemas || schemas.length === 0 ? (
+      ) : schemas.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           {t('home.emptyPublishedSchemas')}
         </Typography>
@@ -54,4 +54,4 @@ export const PublishedSchemasSection = () => {
       )}
     </SectionPaper>
   );
-}
+};

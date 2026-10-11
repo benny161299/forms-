@@ -66,7 +66,7 @@ export const InstanceDraftsSection = () => {
           <Typography color="error" variant="body2">
             {errorMessage}
           </Typography>
-        ) : !instances || instances.length === 0 ? (
+        ) : instances.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             {t('home.emptyInstanceDrafts')}
           </Typography>

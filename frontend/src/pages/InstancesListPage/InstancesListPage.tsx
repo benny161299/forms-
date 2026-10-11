@@ -71,7 +71,7 @@ export const InstancesListPage = () => {
         {t("listPages.instancesTitle")}
       </PageTitle>
 
-      {!instances || instances.length === 0 ? (
+      {instances.length === 0 ? (
         <EmptyState elevation={0}>
           <Typography variant="body1">
             {t("listPages.instancesEmpty")}
