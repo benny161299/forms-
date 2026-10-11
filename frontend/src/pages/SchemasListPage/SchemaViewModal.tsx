@@ -48,7 +48,7 @@ export const SchemaViewModal = ({ schema, onClose }: SchemaViewModalProps) => {
         </ModalHeader>
 
         {schema.sections.map((section, sectionIndex) => (
-          <SectionContainer key={section.title || sectionIndex}>
+          <SectionContainer key={sectionIndex}>
             <SectionPaper elevation={0} variant="outlined">
               <SectionTitle variant="subtitle1">{section.title}</SectionTitle>
 

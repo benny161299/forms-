@@ -66,7 +66,7 @@ export const InstanceViewModal = ({
         ) : (
           schema?.sections.map((section, sectionIndex) => (
             <SectionContainer
-              key={section.title || sectionIndex}
+              key={sectionIndex}
             >
               <SectionPaper elevation={0} variant="outlined">
                 <SectionTitle variant="subtitle1">
