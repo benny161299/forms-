@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { CircularProgress, Typography } from '@mui/material';
 
-import { useDraftSchemas } from '../../../hooks/useDraftSchemas';
+import { schemaApi } from '../../../api/schema.api';
 import { ConfirmDialog } from '../../../components/ConfirmDialog';
 import { SchemaCard } from './SchemaCard';
 import {
@@ -15,16 +17,39 @@ import {
 export const SchemaDraftsSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const { schemas, loading, error, deleteSchema } = useDraftSchemas();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const {
+    data: schemas = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ['draftSchemas'],
+    queryFn: schemaApi.getDraftSchemas,
+  });
+
+  const deleteSchemaMutation = useMutation({
+    mutationFn: (id: string) => schemaApi.deleteSchema(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['draftSchemas'] });
+      queryClient.invalidateQueries({ queryKey: ['schemas'] });
+      toast.success(t('home.schemaDeleteSuccess'));
+    },
+    onError: () => {
+      toast.error(t('home.schemaDeleteError'));
+    },
+  });
 
   const handleConfirmDelete = () => {
     if (deleteId) {
-      deleteSchema(deleteId);
+      deleteSchemaMutation.mutate(deleteId);
       setDeleteId(null);
     }
   };
+
+  const errorMessage = error ? t('errors.fetchDraftSchemas') : null;
 
   return (
     <>
@@ -37,9 +62,9 @@ export const SchemaDraftsSection = () => {
           <SectionLoadingContainer>
             <CircularProgress size={32} />
           </SectionLoadingContainer>
-        ) : error ? (
+        ) : errorMessage ? (
           <Typography color="error" variant="body2">
-            {error}
+            {errorMessage}
           </Typography>
         ) : !schemas || schemas.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
@@ -72,4 +97,4 @@ export const SchemaDraftsSection = () => {
       />
     </>
   );
-}
+};

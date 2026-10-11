@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { CircularProgress, Typography } from '@mui/material';
 
-import { useDraftInstances } from '../../../hooks/useDraftInstances';
+import { instanceApi } from '../../../api/instance.api';
 import { ConfirmDialog } from '../../../components/ConfirmDialog';
 import { InstanceCard } from './InstanceCard';
 import {
@@ -15,16 +17,39 @@ import {
 export const InstanceDraftsSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const { instances, loading, error, deleteInstance } = useDraftInstances();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const {
+    data: instances = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ['draftInstances'],
+    queryFn: instanceApi.getDraftInstances,
+  });
+
+  const deleteInstanceMutation = useMutation({
+    mutationFn: (id: string) => instanceApi.deleteInstance(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['draftInstances'] });
+      queryClient.invalidateQueries({ queryKey: ['instances'] });
+      toast.success(t('home.instanceDeleteSuccess'));
+    },
+    onError: () => {
+      toast.error(t('home.instanceDeleteError'));
+    },
+  });
 
   const handleConfirmDelete = () => {
     if (deleteId) {
-      deleteInstance(deleteId);
+      deleteInstanceMutation.mutate(deleteId);
       setDeleteId(null);
     }
   };
+
+  const errorMessage = error ? t('errors.fetchDraftInstances') : null;
 
   return (
     <>
@@ -37,9 +62,9 @@ export const InstanceDraftsSection = () => {
           <SectionLoadingContainer>
             <CircularProgress size={32} />
           </SectionLoadingContainer>
-        ) : error ? (
+        ) : errorMessage ? (
           <Typography color="error" variant="body2">
-            {error}
+            {errorMessage}
           </Typography>
         ) : !instances || instances.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
@@ -74,4 +99,4 @@ export const InstanceDraftsSection = () => {
       />
     </>
   );
-}
+};
