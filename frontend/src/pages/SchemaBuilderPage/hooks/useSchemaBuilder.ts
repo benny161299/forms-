@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { useImmerReducer } from "use-immer";
 import type { Ischema, ISection, IQuestion } from "../../../types/schema.types";
 import { QUESTION_TYPES } from "../../../types/schema.types";
@@ -14,7 +15,7 @@ export type SchemaAction =
   | { type: "DELETE_QUESTION"; payload: { sectionIndex: number; questionIndex: number } };
 
 const createDefaultQuestion = (): IQuestion => ({
-  id: crypto.randomUUID(),
+  id: uuidv4(),
   title: "",
   type: QUESTION_TYPES.SHORT_ANSWER,
   required: false,
