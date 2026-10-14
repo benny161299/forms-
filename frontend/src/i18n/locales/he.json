@@ -32,7 +32,8 @@
     "fetchDraftSchemas": "אירעה שגיאה בטעינת טיוטות הסכמה",
     "fetchPublishedSchemas": "אירעה שגיאה בטעינת הטפסים הזמינים למילוי",
     "fetchDraftInstances": "אירעה שגיאה בטעינת טיוטות המופעים",
-    "fetchSubmittedInstances": "אירעה שגיאה בטעינת המופעים שהוגשו"
+    "fetchSubmittedInstances": "אירעה שגיאה בטעינת המופעים שהוגשו",
+    "fetchSchema": "אירעה שגיאה בטעינת נתוני הטופס"
   },
   "common": {
     "delete": "מחק",

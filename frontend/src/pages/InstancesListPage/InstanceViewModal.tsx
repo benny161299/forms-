@@ -3,8 +3,11 @@ import {
   Box,
   IconButton,
   CircularProgress,
+  Alert,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "react-i18next";
 
 import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { QuestionAnswerField } from "../InstanceFillPage/components/QuestionAnswerField";
@@ -32,7 +35,8 @@ export const InstanceViewModal = ({
   instance,
   onClose,
 }: InstanceViewModalProps) => {
-  const { schema, isPending } = useSchemaById(instance?.schemaId);
+  const { t } = useTranslation();
+  const { schema, isPending, isError, refetch } = useSchemaById(instance?.schemaId);
 
   if (!instance) {
     return null;
@@ -44,7 +48,7 @@ export const InstanceViewModal = ({
         <ModalHeader>
           <Box>
             <ModalTitle variant="h5">
-              {schema?.title}
+              {schema?.title || t("listPages.view")}
             </ModalTitle>
 
             {schema?.description && (
@@ -63,8 +67,19 @@ export const InstanceViewModal = ({
           <ModalLoadingContainer>
             <CircularProgress />
           </ModalLoadingContainer>
+        ) : isError || !schema ? (
+          <Alert
+            severity="error"
+            action={
+              <Button color="inherit" size="small" onClick={() => refetch()}>
+                {t("common.retry")}
+              </Button>
+            }
+          >
+            {t("errors.fetchSchema")}
+          </Alert>
         ) : (
-          schema?.sections.map((section, sectionIndex) => (
+          schema.sections.map((section, sectionIndex) => (
             <SectionContainer
               key={sectionIndex}
             >
@@ -95,4 +110,4 @@ export const InstanceViewModal = ({
       </ViewModalContainer>
     </Modal>
   );
-}
+};
