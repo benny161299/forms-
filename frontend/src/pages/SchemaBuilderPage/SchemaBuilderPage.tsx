@@ -71,7 +71,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
       toast.success(
         t(data.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
       );
-      navigate("/");
+      navigate("/", { replace: true });
     },
     onError: () => {
       toast.error(t("schemaBuilder.saveError"));
@@ -183,6 +183,17 @@ export const SchemaBuilderPage = () => {
       navigate("/");
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
+
+  useEffect(() => {
+    if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
+      toast.error(t("schemaBuilder.alreadyPublished"));
+      navigate("/", { replace: true });
+    }
+  }, [isEditMode, fetchedSchema, navigate, t]);
+
+  if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
+    return null;
+  }
 
   if (isEditMode && !fetchError && !isPaused && !isFetchedAfterMount) {
     return (

@@ -79,7 +79,7 @@ const InstanceFillContent = ({
       toast.success(
         t(variables.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
       );
-      navigate("/");
+      navigate("/", { replace: true });
     },
     onError: () => {
       toast.error(t("instanceFill.saveError"));
@@ -259,6 +259,17 @@ export const InstanceFillPage = () => {
       navigate("/");
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
+
+  useEffect(() => {
+    if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
+      toast.error(t("instanceFill.alreadySubmitted"));
+      navigate("/", { replace: true });
+    }
+  }, [isEditMode, fetchedInstance, navigate, t]);
+
+  if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
+    return null;
+  }
 
   const isWaitingInstance =
     isEditMode && !instanceError && !isInstancePaused && !isInstanceFetchedAfterMount;
