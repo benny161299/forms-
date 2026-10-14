@@ -35,3 +35,9 @@ export const SaveActions = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(1.5),
 }));
+
+export const FormFieldSet = styled("fieldset")({
+  border: "none",
+  margin: 0,
+  padding: 0,
+});

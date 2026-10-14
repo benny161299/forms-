@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -14,6 +14,7 @@ import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
 import { SectionCard } from "./components/SectionCard";
 import {
   ActionsFooter,
+  FormFieldSet,
   HeaderPaper,
   HomeButton,
   PageContainer,
@@ -105,60 +106,70 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
         onClick={() => navigate("/")}
         variant="outlined"
         size="small"
+        disabled={isSaving}
       >
         {t("common.backToHome")}
       </HomeButton>
 
-      <Typography variant="h4" color="primary" gutterBottom>
-        {t(isEditMode ? "schemaBuilder.pageTitleEdit" : "schemaBuilder.pageTitleCreate")}
-      </Typography>
+      <FormFieldSet disabled={isSaving}>
+        <Typography variant="h4" color="primary" gutterBottom>
+          {t(isEditMode ? "schemaBuilder.pageTitleEdit" : "schemaBuilder.pageTitleCreate")}
+        </Typography>
 
-      <HeaderPaper variant="outlined">
-        <TextField
-          fullWidth
-          variant="standard"
-          placeholder={t("schemaBuilder.schemaTitlePlaceholder")}
-          value={schema.title}
-          onChange={(e) => actions.setTitle(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          multiline
-          rows={2}
-          placeholder={t("schemaBuilder.schemaDescPlaceholder")}
-          value={schema.description || ""}
-          onChange={(e) => actions.setDescription(e.target.value)}
-        />
-      </HeaderPaper>
+        <HeaderPaper variant="outlined">
+          <TextField
+            fullWidth
+            variant="standard"
+            placeholder={t("schemaBuilder.schemaTitlePlaceholder")}
+            value={schema.title}
+            onChange={(e) => actions.setTitle(e.target.value)}
+            disabled={isSaving}
+          />
+          <TextField
+            fullWidth
+            multiline
+            rows={2}
+            placeholder={t("schemaBuilder.schemaDescPlaceholder")}
+            value={schema.description || ""}
+            onChange={(e) => actions.setDescription(e.target.value)}
+            disabled={isSaving}
+          />
+        </HeaderPaper>
 
-      {schema.sections.map((section, sIdx) => (
-        <SectionCard
-          key={sIdx}
-          section={section}
-          sectionIndex={sIdx}
-          isOnlySection={schema.sections.length <= 1}
-          onUpdateSection={(data) => actions.updateSection(sIdx, data)}
-          onDeleteSection={() => actions.deleteSection(sIdx)}
-          onAddQuestion={() => actions.addQuestion(sIdx)}
-          onUpdateQuestion={(qIdx, q) => actions.updateQuestion(sIdx, qIdx, q)}
-          onDeleteQuestion={(qIdx) => actions.deleteQuestion(sIdx, qIdx)}
-        />
-      ))}
+        {schema.sections.map((section, sIdx) => (
+          <SectionCard
+            key={sIdx}
+            section={section}
+            sectionIndex={sIdx}
+            isOnlySection={schema.sections.length <= 1}
+            onUpdateSection={(data) => actions.updateSection(sIdx, data)}
+            onDeleteSection={() => actions.deleteSection(sIdx)}
+            onAddQuestion={() => actions.addQuestion(sIdx)}
+            onUpdateQuestion={(qIdx, q) => actions.updateQuestion(sIdx, qIdx, q)}
+            onDeleteQuestion={(qIdx) => actions.deleteQuestion(sIdx, qIdx)}
+          />
+        ))}
 
-      <ActionsFooter>
-        <Button variant="outlined" startIcon={<AddIcon />} onClick={actions.addSection}>
-          {t("schemaBuilder.addSection")}
-        </Button>
-
-        <SaveActions>
-          <Button variant="outlined" disabled={isSaving} onClick={handleSaveDraft}>
-            {t("schemaBuilder.saveDraft")}
+        <ActionsFooter>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={actions.addSection}
+            disabled={isSaving}
+          >
+            {t("schemaBuilder.addSection")}
           </Button>
-          <Button variant="contained" disabled={isSaving} onClick={handlePublish}>
-            {t("schemaBuilder.publish")}
-          </Button>
-        </SaveActions>
-      </ActionsFooter>
+
+          <SaveActions>
+            <Button variant="outlined" disabled={isSaving} onClick={handleSaveDraft}>
+              {t("schemaBuilder.saveDraft")}
+            </Button>
+            <Button variant="contained" disabled={isSaving} onClick={handlePublish}>
+              {t("schemaBuilder.publish")}
+            </Button>
+          </SaveActions>
+        </ActionsFooter>
+      </FormFieldSet>
     </PageContainer>
   );
 };
@@ -184,12 +195,17 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
+  const initialFetchChecked = useRef(false);
   useEffect(() => {
+    if (!isFetchedAfterMount) return;
+    if (initialFetchChecked.current) return;
+    initialFetchChecked.current = true;
+
     if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
       toast.error(t("schemaBuilder.alreadyPublished"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedSchema, navigate, t]);
+  }, [isEditMode, isFetchedAfterMount, fetchedSchema, navigate, t]);
 
   if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
     return null;

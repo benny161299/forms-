@@ -173,6 +173,7 @@ const InstanceFillContent = ({
         onClick={() => navigate("/")}
         variant="outlined"
         size="small"
+        disabled={isSaving}
       >
         {t("common.backToHome")}
       </HomeButton>
