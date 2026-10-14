@@ -44,22 +44,26 @@ export const RadioGridInput = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, rowIdx) => (
-            <TableRow key={`${row}-${rowIdx}`}>
-              <TableCell component="th">{row}</TableCell>
-              {choices.map((choice, colIdx) => (
-                <TableCell key={`${choice}-${colIdx}`} align="center">
-                  <Radio
-                    checked={value[row] === colIdx}
-                    onChange={() => handleRadioSelect(row, colIdx)}
-                    disabled={disabled}
-                  />
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {rows.map((row, rowIdx) => {
+            const isRowAnswered =
+              Object.hasOwn(value, row) && typeof value[row] === "number";
+            return (
+              <TableRow key={`${row}-${rowIdx}`}>
+                <TableCell component="th">{row}</TableCell>
+                {choices.map((choice, colIdx) => (
+                  <TableCell key={`${choice}-${colIdx}`} align="center">
+                    <Radio
+                      checked={isRowAnswered && value[row] === colIdx}
+                      onChange={() => handleRadioSelect(row, colIdx)}
+                      disabled={disabled}
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </StyledTableContainer>
   );
-}
+};

@@ -23,8 +23,14 @@ export const CheckboxGridInput = ({
   onChange,
   disabled,
 }: CheckboxGridInputProps) => {
+  const getRowValue = (row: string): number[] => {
+    return Object.hasOwn(value, row) && Array.isArray(value[row])
+      ? value[row]
+      : [];
+  };
+
   const handleCheckboxSelect = (row: string, colIdx: number, checked: boolean) => {
-    const currentRow = value[row] || [];
+    const currentRow = getRowValue(row);
     const nextRow = checked
       ? [...currentRow, colIdx]
       : currentRow.filter((c) => c !== colIdx);
@@ -50,7 +56,7 @@ export const CheckboxGridInput = ({
         </TableHead>
         <TableBody>
           {rows.map((row, rowIdx) => {
-            const currentRow = value[row] || [];
+            const currentRow = getRowValue(row);
             return (
               <TableRow key={`${row}-${rowIdx}`}>
                 <TableCell component="th">{row}</TableCell>
@@ -72,4 +78,4 @@ export const CheckboxGridInput = ({
       </Table>
     </StyledTableContainer>
   );
-}
+};

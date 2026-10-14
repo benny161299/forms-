@@ -32,18 +32,27 @@ export function isAnswerMissing(
       return typeof value !== "number";
 
     case QUESTION_TYPES.RADIO_GRID: {
+      if (!value || typeof value !== "object" || Array.isArray(value)) {
+        return true;
+      }
       const record = value as Record<string, number>;
 
       return question.options.rows.some(
-        (row) => record[row] === undefined
+        (row) => !Object.hasOwn(record, row) || typeof record[row] !== "number"
       );
     }
 
     case QUESTION_TYPES.CHECKBOX_GRID: {
+      if (!value || typeof value !== "object" || Array.isArray(value)) {
+        return true;
+      }
       const record = value as Record<string, number[]>;
 
       return question.options.rows.some(
-        (row) => !Array.isArray(record[row]) || record[row].length === 0
+        (row) =>
+          !Object.hasOwn(record, row) ||
+          !Array.isArray(record[row]) ||
+          record[row].length === 0
       );
     }
 
