@@ -58,12 +58,20 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
       }
 
       if (publish && currentId) {
-        await schemaApi.publishSchema(currentId);
+        try {
+          await schemaApi.publishSchema(currentId);
+        } catch {
+          return { savedSchema, publish, id: currentId, publishFailed: true };
+        }
       }
 
-      return { savedSchema, publish, id: currentId };
+      return { savedSchema, publish, id: currentId, publishFailed: false };
     },
     onSuccess: (data) => {
+      if (data.publishFailed) {
+        toast.error(t("schemaBuilder.publishFailedDraftSaved"));
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
       queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
       if (data.id) {
