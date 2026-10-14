@@ -178,11 +178,11 @@ export const SchemaBuilderPage = () => {
   } = useSchemaById(id);
 
   useEffect(() => {
-    if (isEditMode && fetchError) {
+    if (isEditMode && fetchError && !fetchedSchema) {
       toast.error(t("schemaBuilder.notFoundError"));
       navigate("/");
     }
-  }, [isEditMode, fetchError, navigate, t]);
+  }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
   if (isEditMode && !fetchError && !isPaused && !isFetchedAfterMount) {
     return (

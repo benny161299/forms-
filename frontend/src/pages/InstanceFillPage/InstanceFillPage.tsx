@@ -239,6 +239,7 @@ export const InstanceFillPage = () => {
     queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
     enabled: Boolean(instanceId),
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
@@ -250,11 +251,14 @@ export const InstanceFillPage = () => {
   } = useSchemaById(schemaIdToFetch);
 
   useEffect(() => {
-    if (instanceError || schemaError) {
+    const isInstanceFailed = Boolean(isEditMode && instanceError && !fetchedInstance);
+    const isSchemaFailed = Boolean(schemaIdToFetch && schemaError && !schema);
+
+    if (isInstanceFailed || isSchemaFailed) {
       toast.error(t("instanceFill.notFoundError"));
       navigate("/");
     }
-  }, [instanceError, schemaError, navigate, t]);
+  }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
   const isWaitingInstance =
     isEditMode && !instanceError && !isInstancePaused && !isInstanceFetchedAfterMount;
