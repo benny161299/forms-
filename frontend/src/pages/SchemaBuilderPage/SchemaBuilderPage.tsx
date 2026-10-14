@@ -170,7 +170,12 @@ export const SchemaBuilderPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schema: fetchedSchema, isPending, error: fetchError } = useSchemaById(id);
+  const {
+    schema: fetchedSchema,
+    isFetchedAfterMount,
+    isPaused,
+    error: fetchError,
+  } = useSchemaById(id);
 
   useEffect(() => {
     if (isEditMode && fetchError) {
@@ -179,7 +184,7 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, navigate, t]);
 
-  if (isEditMode && isPending) {
+  if (isEditMode && !fetchError && !isPaused && !isFetchedAfterMount) {
     return (
       <PageContainer>
         <CircularProgress />

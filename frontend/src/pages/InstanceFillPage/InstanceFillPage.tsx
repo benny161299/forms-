@@ -55,6 +55,7 @@ const InstanceFillContent = ({
       submit: boolean;
     }) => {
       const updatedInstance = await instanceApi.updateInstance(id, { answers });
+      queryClient.setQueryData(["instance", id], updatedInstance);
 
       if (submit) {
         await instanceApi.submitInstance(id);
@@ -230,7 +231,8 @@ export const InstanceFillPage = () => {
 
   const {
     data: fetchedInstance,
-    isPending: isPendingInstance,
+    isFetchedAfterMount: isInstanceFetchedAfterMount,
+    isPaused: isInstancePaused,
     error: instanceError,
   } = useQuery({
     queryKey: ["instance", instanceId],
@@ -242,7 +244,8 @@ export const InstanceFillPage = () => {
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
   const {
     schema,
-    isPending: isPendingSchema,
+    isFetchedAfterMount: isSchemaFetchedAfterMount,
+    isPaused: isSchemaPaused,
     error: schemaError,
   } = useSchemaById(schemaIdToFetch);
 
@@ -253,7 +256,12 @@ export const InstanceFillPage = () => {
     }
   }, [instanceError, schemaError, navigate, t]);
 
-  if ((isEditMode && isPendingInstance) || isPendingSchema) {
+  const isWaitingInstance =
+    isEditMode && !instanceError && !isInstancePaused && !isInstanceFetchedAfterMount;
+  const isWaitingSchema =
+    Boolean(schemaIdToFetch) && !schemaError && !isSchemaPaused && !isSchemaFetchedAfterMount;
+
+  if (isWaitingInstance || isWaitingSchema) {
     return (
       <PageContainer>
         <CircularProgress />
