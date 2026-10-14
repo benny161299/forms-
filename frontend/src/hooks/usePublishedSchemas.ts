@@ -16,6 +16,8 @@ export function usePublishedSchemas() {
     schemas: data ?? [],
     loading: isLoading,
     error: errorMessage,
+    isError: Boolean(error),
+    hasData: data !== undefined,
     refetch,
   };
 }

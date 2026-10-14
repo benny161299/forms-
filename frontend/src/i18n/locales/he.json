@@ -39,7 +39,8 @@
     "confirm": "אישור",
     "cancel": "ביטול",
     "confirmTitle": "אישור פעולה",
-    "backToHome": "חזרה לדף הבית"
+    "backToHome": "חזרה לדף הבית",
+    "retry": "נסה שוב"
   },
   "schemaBuilder": {
     "questionType": "סוג שאלה",

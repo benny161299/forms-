@@ -1,7 +1,11 @@
 import { styled } from "@mui/material/styles";
-import { Box, Paper, Typography, Button } from "@mui/material";
+import { Box, Paper, Typography, Button, Alert } from "@mui/material";
 
 export const HomeButton = styled(Button)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
+
+export const ErrorAlert = styled(Alert)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 

@@ -12,13 +12,16 @@ import {
   SectionHeader,
   CarouselWrapper,
   SectionLoadingContainer,
+  SectionErrorText,
+  SectionErrorContainer,
+  RetryButton,
 } from '../HomePage.styles';
 
 export const SubmittedInstancesSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { instances, loading, error } = useSubmittedInstances();
+  const { instances, loading, error, isError, hasData, refetch } = useSubmittedInstances();
   const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(null);
 
   return (
@@ -37,25 +40,54 @@ export const SubmittedInstancesSection = () => {
           <SectionLoadingContainer>
             <CircularProgress size={32} />
           </SectionLoadingContainer>
-        ) : error ? (
-          <Typography color="error" variant="body2">
-            {error}
-          </Typography>
+        ) : isError && !hasData ? (
+          <>
+            <SectionErrorText variant="body2">
+              {error}
+            </SectionErrorText>
+            <RetryButton size="small" onClick={() => refetch()}>
+              {t('common.retry')}
+            </RetryButton>
+          </>
         ) : instances.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            {t('home.emptySubmittedInstances')}
-          </Typography>
+          <>
+            {isError && (
+              <SectionErrorContainer>
+                <SectionErrorText variant="body2">
+                  {error}
+                </SectionErrorText>
+                <Button size="small" onClick={() => refetch()}>
+                  {t('common.retry')}
+                </Button>
+              </SectionErrorContainer>
+            )}
+            <Typography variant="body2" color="text.secondary">
+              {t('home.emptySubmittedInstances')}
+            </Typography>
+          </>
         ) : (
-          <CarouselWrapper>
-            {instances.map((instance, index) => (
-              <InstanceCard
-                key={instance._id}
-                instance={instance}
-                index={index}
-                onView={() => setSelectedInstance(instance)}
-              />
-            ))}
-          </CarouselWrapper>
+          <>
+            {isError && (
+              <SectionErrorContainer>
+                <SectionErrorText variant="body2">
+                  {error}
+                </SectionErrorText>
+                <Button size="small" onClick={() => refetch()}>
+                  {t('common.retry')}
+                </Button>
+              </SectionErrorContainer>
+            )}
+            <CarouselWrapper>
+              {instances.map((instance, index) => (
+                <InstanceCard
+                  key={instance._id}
+                  instance={instance}
+                  index={index}
+                  onView={() => setSelectedInstance(instance)}
+                />
+              ))}
+            </CarouselWrapper>
+          </>
         )}
       </SectionPaper>
 

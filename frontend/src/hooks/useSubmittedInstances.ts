@@ -16,6 +16,8 @@ export function useSubmittedInstances() {
     instances: data ?? [],
     loading: isLoading,
     error: errorMessage,
+    isError: Boolean(error),
+    hasData: data !== undefined,
     refetch,
   };
 }

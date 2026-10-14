@@ -4,6 +4,7 @@ import {
   CircularProgress,
   Typography,
   Alert,
+  Button,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,7 @@ import {
   LoadingContainer,
   PageContainer,
   PageTitle,
+  ErrorAlert,
 } from "./InstancesListPage.styles";
 
 export const InstancesListPage = () => {
@@ -31,6 +33,9 @@ export const InstancesListPage = () => {
     instances,
     loading: isLoading,
     error,
+    isError,
+    hasData,
+    refetch,
   } = useSubmittedInstances();
 
   const [selectedInstance, setSelectedInstance] =
@@ -46,11 +51,26 @@ export const InstancesListPage = () => {
     );
   }
 
-  if (error) {
+  if (isError && !hasData) {
     return (
       <PageContainer>
-        <Alert severity="error">
-          {t("errors.fetchSubmittedInstances")}
+        <HomeButton
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+          variant="outlined"
+          size="small"
+        >
+          {t("common.backToHome")}
+        </HomeButton>
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {error}
         </Alert>
       </PageContainer>
     );
@@ -66,6 +86,19 @@ export const InstancesListPage = () => {
       >
         {t("common.backToHome")}
       </HomeButton>
+
+      {isError && (
+        <ErrorAlert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {error}
+        </ErrorAlert>
+      )}
 
       <PageTitle variant="h4">
         {t("listPages.instancesTitle")}

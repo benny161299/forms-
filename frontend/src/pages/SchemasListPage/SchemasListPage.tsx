@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Typography, Alert } from "@mui/material";
+import { CircularProgress, Typography, Alert, Button } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,7 @@ import {
   PageTitle,
   EmptyState,
   CardsGrid,
+  ErrorAlert,
 } from "./SchemasListPage.styles";
 
 export const SchemasListPage = () => {
@@ -27,6 +28,9 @@ export const SchemasListPage = () => {
     schemas,
     loading: isLoading,
     error,
+    isError,
+    hasData,
+    refetch,
   } = usePublishedSchemas();
 
   const [selectedSchema, setSelectedSchema] = useState<Ischema | null>(null);
@@ -41,11 +45,26 @@ export const SchemasListPage = () => {
     );
   }
 
-  if (error) {
+  if (isError && !hasData) {
     return (
       <PageContainer>
-        <Alert severity="error">
-          {t("errors.fetchPublishedSchemas")}
+        <HomeButton
+          startIcon={<HomeIcon />}
+          onClick={() => navigate("/")}
+          variant="outlined"
+          size="small"
+        >
+          {t("common.backToHome")}
+        </HomeButton>
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {error}
         </Alert>
       </PageContainer>
     );
@@ -61,6 +80,19 @@ export const SchemasListPage = () => {
       >
         {t("common.backToHome")}
       </HomeButton>
+
+      {isError && (
+        <ErrorAlert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {error}
+        </ErrorAlert>
+      )}
 
       <PageTitle variant="h4">
         {t("listPages.schemasTitle")}

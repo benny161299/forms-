@@ -9,13 +9,16 @@ import {
   SectionHeader,
   CarouselWrapper,
   SectionLoadingContainer,
+  SectionErrorText,
+  SectionErrorContainer,
+  RetryButton,
 } from '../HomePage.styles';
 
 export const PublishedSchemasSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schemas, loading, error } = usePublishedSchemas();
+  const { schemas, loading, error, isError, hasData, refetch } = usePublishedSchemas();
 
   return (
     <SectionPaper variant="outlined">
@@ -32,25 +35,54 @@ export const PublishedSchemasSection = () => {
         <SectionLoadingContainer>
           <CircularProgress size={32} />
         </SectionLoadingContainer>
-      ) : error ? (
-        <Typography color="error" variant="body2">
-          {error}
-        </Typography>
+      ) : isError && !hasData ? (
+        <>
+          <SectionErrorText variant="body2">
+            {error}
+          </SectionErrorText>
+          <RetryButton size="small" onClick={() => refetch()}>
+            {t('common.retry')}
+          </RetryButton>
+        </>
       ) : schemas.length === 0 ? (
-        <Typography variant="body2" color="text.secondary">
-          {t('home.emptyPublishedSchemas')}
-        </Typography>
+        <>
+          {isError && (
+            <SectionErrorContainer>
+              <SectionErrorText variant="body2">
+                {error}
+              </SectionErrorText>
+              <Button size="small" onClick={() => refetch()}>
+                {t('common.retry')}
+              </Button>
+            </SectionErrorContainer>
+          )}
+          <Typography variant="body2" color="text.secondary">
+            {t('home.emptyPublishedSchemas')}
+          </Typography>
+        </>
       ) : (
-        <CarouselWrapper>
-          {schemas.map((schema, index) => (
-            <SchemaCard
-              key={schema._id}
-              schema={schema}
-              index={index}
-              onFill={(id) => navigate(`/instances/fill/${id}`)}
-            />
-          ))}
-        </CarouselWrapper>
+        <>
+          {isError && (
+            <SectionErrorContainer>
+              <SectionErrorText variant="body2">
+                {error}
+              </SectionErrorText>
+              <Button size="small" onClick={() => refetch()}>
+                {t('common.retry')}
+              </Button>
+            </SectionErrorContainer>
+          )}
+          <CarouselWrapper>
+            {schemas.map((schema, index) => (
+              <SchemaCard
+                key={schema._id}
+                schema={schema}
+                index={index}
+                onFill={(id) => navigate(`/instances/fill/${id}`)}
+              />
+            ))}
+          </CarouselWrapper>
+        </>
       )}
     </SectionPaper>
   );

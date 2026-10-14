@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { CircularProgress, Typography } from '@mui/material';
+import { CircularProgress, Typography, Button } from '@mui/material';
 
 import { schemaApi } from '../../../api/schema.api';
 import { ConfirmDialog } from '../../../components/ConfirmDialog';
@@ -12,6 +12,9 @@ import {
   SectionPaper,
   CarouselWrapper,
   SectionLoadingContainer,
+  SectionErrorText,
+  SectionErrorContainer,
+  RetryButton,
 } from '../HomePage.styles';
 
 export const SchemaDraftsSection = () => {
@@ -22,13 +25,18 @@ export const SchemaDraftsSection = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const {
-    data: schemas = [],
+    data,
     isLoading: loading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ['draftSchemas'],
     queryFn: schemaApi.getDraftSchemas,
   });
+
+  const schemas = data ?? [];
+  const hasData = data !== undefined;
+  const isError = Boolean(error);
 
   const deleteSchemaMutation = useMutation({
     mutationFn: (id: string) => schemaApi.deleteSchema(id),
@@ -49,7 +57,7 @@ export const SchemaDraftsSection = () => {
     }
   };
 
-  const errorMessage = error ? t('errors.fetchDraftSchemas') : null;
+  const errorMessage = isError ? t('errors.fetchDraftSchemas') : null;
 
   return (
     <>
@@ -62,26 +70,55 @@ export const SchemaDraftsSection = () => {
           <SectionLoadingContainer>
             <CircularProgress size={32} />
           </SectionLoadingContainer>
-        ) : errorMessage ? (
-          <Typography color="error" variant="body2">
-            {errorMessage}
-          </Typography>
+        ) : isError && !hasData ? (
+          <>
+            <SectionErrorText variant="body2">
+              {errorMessage}
+            </SectionErrorText>
+            <RetryButton size="small" onClick={() => refetch()}>
+              {t('common.retry')}
+            </RetryButton>
+          </>
         ) : schemas.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            {t('home.emptySchemaDrafts')}
-          </Typography>
+          <>
+            {isError && (
+              <SectionErrorContainer>
+                <SectionErrorText variant="body2">
+                  {errorMessage}
+                </SectionErrorText>
+                <Button size="small" onClick={() => refetch()}>
+                  {t('common.retry')}
+                </Button>
+              </SectionErrorContainer>
+            )}
+            <Typography variant="body2" color="text.secondary">
+              {t('home.emptySchemaDrafts')}
+            </Typography>
+          </>
         ) : (
-          <CarouselWrapper>
-            {schemas.map((schema, index) => (
-              <SchemaCard
-                key={schema._id}
-                schema={schema}
-                index={index}
-                onEdit={(id) => navigate(`/schemas/edit/${id}`)}
-                onDelete={(id) => setDeleteId(id)}
-              />
-            ))}
-          </CarouselWrapper>
+          <>
+            {isError && (
+              <SectionErrorContainer>
+                <SectionErrorText variant="body2">
+                  {errorMessage}
+                </SectionErrorText>
+                <Button size="small" onClick={() => refetch()}>
+                  {t('common.retry')}
+                </Button>
+              </SectionErrorContainer>
+            )}
+            <CarouselWrapper>
+              {schemas.map((schema, index) => (
+                <SchemaCard
+                  key={schema._id}
+                  schema={schema}
+                  index={index}
+                  onEdit={(id) => navigate(`/schemas/edit/${id}`)}
+                  onDelete={(id) => setDeleteId(id)}
+                />
+              ))}
+            </CarouselWrapper>
+          </>
         )}
       </SectionPaper>
 

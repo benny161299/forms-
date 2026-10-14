@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Typography, Button } from '@mui/material';
 
 export const PageContainer = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -53,3 +53,19 @@ export const SectionLoadingContainer = styled(Box)({
   alignItems: 'center',
   minHeight: '7.5rem',
 });
+
+export const SectionErrorText = styled(Typography)(({ theme }) => ({
+  color: theme.palette.error.main,
+}));
+
+export const SectionErrorContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  marginBottom: theme.spacing(1),
+}));
+
+export const RetryButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(1),
+}));
+
