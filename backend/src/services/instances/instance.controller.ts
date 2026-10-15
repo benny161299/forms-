@@ -5,7 +5,6 @@ import {
   fetchAllInstances,
   fetchAllInstancesDrafts,
   fetchInstanceById,
-  fetchInstancesBySchemaId,
   removeInstance,
   submitInstanceManager,
   updateInstanceManager,
@@ -23,12 +22,6 @@ export const getInstances = async (_req: Request, res: Response) => {
 
 export const getInstancesDrafts = async (_req: Request, res: Response) => {
   const instances = await fetchAllInstancesDrafts();
-  res.status(StatusCodes.OK).json(instances);
-};
-
-export const getInstancesBySchemaId = async (req: Request, res: Response) => {
-  const schemaId = req.params.schemaId as string;
-  const instances = await fetchInstancesBySchemaId(schemaId);
   res.status(StatusCodes.OK).json(instances);
 };
 

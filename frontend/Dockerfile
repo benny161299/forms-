@@ -11,6 +11,7 @@ CMD ["npm", "run", "dev"]
 
 FROM nginx:alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=dev /app/dist /usr/share/nginx/html
 
 EXPOSE 80

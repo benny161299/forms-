@@ -6,7 +6,6 @@ import {
   deleteInstance,
   getInstanceById,
   getInstances,
-  getInstancesBySchemaId,
   getInstancesDrafts,
   submitInstance,
   updateInstance,
@@ -15,7 +14,6 @@ import {
   createInstanceValidation,
   deleteInstanceValidation,
   getInstanceByIdValidation,
-  getInstancesBySchemaIdValidation,
   getInstancesValidation,
   submitInstanceValidation,
   updateInstanceValidation,
@@ -26,11 +24,6 @@ const router = Router();
 router.get("/", validateRequest(getInstancesValidation), catchAsync(getInstances));
 
 router.get("/drafts", validateRequest(getInstancesValidation), catchAsync(getInstancesDrafts));
-router.get(
-  "/schema/:schemaId",
-  validateRequest(getInstancesBySchemaIdValidation),
-  catchAsync(getInstancesBySchemaId),
-);
 
 router.get("/:id", validateRequest(getInstanceByIdValidation), catchAsync(getInstanceById));
 

@@ -1,0 +1,68 @@
+import { useState } from "react";
+import type { IInstance, AnswerValue } from "../../../types/instance.types";
+import type { ISection } from "../../../types/schema.types";
+import { isAnswerMissing } from "./useInstanceValidation";
+
+export function computeInitialSectionIndex(
+  sections?: ISection[],
+  answers?: Record<string, AnswerValue>
+): number {
+  if (!sections || sections.length <= 1 || !answers || Object.keys(answers).length === 0) {
+    return 0;
+  }
+
+  let lastSectionWithAnswers = 0;
+  for (let i = 0; i < sections.length; i++) {
+    const hasAnyAnswer = sections[i].questions.some((q) => answers[q.id] !== undefined);
+    if (hasAnyAnswer) {
+      lastSectionWithAnswers = i;
+    }
+  }
+
+  const sectionQuestions = sections[lastSectionWithAnswers].questions;
+  const requiredQuestions = sectionQuestions.filter((q) => q.required);
+  const isSectionComplete =
+    requiredQuestions.length > 0 &&
+    requiredQuestions.every((q) => !isAnswerMissing(q, answers[q.id]));
+
+  if (isSectionComplete && lastSectionWithAnswers + 1 < sections.length) {
+    return lastSectionWithAnswers + 1;
+  }
+
+  return lastSectionWithAnswers;
+}
+
+export function useInstanceFill(
+  initialData?: Partial<IInstance> | null,
+  sections?: ISection[]
+) {
+  const [instanceId, setInstanceId] = useState<string | null>(initialData?._id ?? null);
+  const [answers, setAnswers] = useState<Record<string, AnswerValue>>(
+    () => initialData?.answers ?? {}
+  );
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(() =>
+    computeInitialSectionIndex(sections, initialData?.answers)
+  );
+
+  return {
+    instanceId,
+    answers,
+    currentSectionIndex,
+    isFirstSection: currentSectionIndex === 0,
+    isLastSection: Boolean(sections?.length && currentSectionIndex === sections.length - 1),
+
+    setInstanceId,
+
+    setAnswer: (questionId: string, value: AnswerValue) =>
+      setAnswers((prev) => ({
+        ...prev,
+        [questionId]: value,
+      })),
+
+    goToNextSection: () => setCurrentSectionIndex((prev) => prev + 1),
+
+    goToPrevSection: () => setCurrentSectionIndex((prev) => prev - 1),
+
+    goToSection: (index: number) => setCurrentSectionIndex(index),
+  };
+}

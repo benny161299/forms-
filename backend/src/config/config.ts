@@ -6,6 +6,7 @@ const schema = z.object({
   MONGO_URI: z.string().default("mongodb://localhost:27017/forms"),
   INSTANCE_MODEL_NAME: z.string().default("instances"),
   SCHEMA_MODEL_NAME: z.string().default("schemas"),
+  FRONTEND_ORIGIN: z.string().min(1).default("http://localhost:5173"),
 });
 type Config = z.infer<typeof schema>;
 
