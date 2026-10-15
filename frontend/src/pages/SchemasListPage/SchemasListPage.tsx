@@ -1,19 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { CircularProgress, Typography, Alert, Button } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 
 import { usePublishedSchemas } from "../../hooks/usePublishedSchemas";
 import { SchemaCard } from "../HomePage/components/SchemaCard";
 import { SchemaViewModal } from "./SchemaViewModal";
+import { BackToHomeButton } from "../../components/BackToHomeButton";
 
 import type { Ischema } from "../../types/schema.types";
 
 import {
   PageContainer,
   LoadingContainer,
-  HomeButton,
   PageTitle,
   EmptyState,
   CardsGrid,
@@ -22,7 +20,6 @@ import {
 
 export const SchemasListPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const {
     schemas,
@@ -48,14 +45,7 @@ export const SchemasListPage = () => {
   if (isError && !hasData) {
     return (
       <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
+        <BackToHomeButton />
         <Alert
           severity="error"
           action={
@@ -72,14 +62,7 @@ export const SchemasListPage = () => {
 
   return (
     <PageContainer>
-      <HomeButton
-        startIcon={<HomeIcon />}
-        onClick={() => navigate("/")}
-        variant="outlined"
-        size="small"
-      >
-        {t("common.backToHome")}
-      </HomeButton>
+      <BackToHomeButton />
 
       {isError && (
         <ErrorAlert

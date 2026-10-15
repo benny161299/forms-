@@ -1,24 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   CircularProgress,
   Typography,
   Alert,
   Button,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 
 import { useSubmittedInstances } from "../../hooks/useSubmittedInstances";
 import { InstanceCard } from "../HomePage/components/InstanceCard";
 import { InstanceViewModal } from "./InstanceViewModal";
+import { BackToHomeButton } from "../../components/BackToHomeButton";
 
 import type { IInstance } from "../../types/instance.types";
 
 import {
   CardsGrid,
   EmptyState,
-  HomeButton,
   LoadingContainer,
   PageContainer,
   PageTitle,
@@ -27,7 +25,6 @@ import {
 
 export const InstancesListPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const {
     instances,
@@ -54,14 +51,7 @@ export const InstancesListPage = () => {
   if (isError && !hasData) {
     return (
       <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
+        <BackToHomeButton />
         <Alert
           severity="error"
           action={
@@ -78,14 +68,7 @@ export const InstancesListPage = () => {
 
   return (
     <PageContainer>
-      <HomeButton
-        startIcon={<HomeIcon />}
-        onClick={() => navigate("/")}
-        variant="outlined"
-        size="small"
-      >
-        {t("common.backToHome")}
-      </HomeButton>
+      <BackToHomeButton />
 
       {isError && (
         <ErrorAlert

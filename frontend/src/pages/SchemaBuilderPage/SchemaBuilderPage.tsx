@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,11 +11,11 @@ import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
 import { SectionCard } from "./components/SectionCard";
+import { BackToHomeButton } from "../../components/BackToHomeButton";
 import {
   ActionsFooter,
   FormFieldSet,
   HeaderPaper,
-  HomeButton,
   PageContainer,
   SaveActions,
 } from "./SchemaBuilderPage.styles";
@@ -109,15 +108,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
 
   return (
     <PageContainer>
-      <HomeButton
-        startIcon={<HomeIcon />}
-        onClick={() => navigate("/")}
-        variant="outlined"
-        size="small"
-        disabled={isSaving}
-      >
-        {t("common.backToHome")}
-      </HomeButton>
+      <BackToHomeButton disabled={isSaving} />
 
       <FormFieldSet disabled={isSaving}>
         <Typography variant="h4" color="primary" gutterBottom>
@@ -230,14 +221,7 @@ export const SchemaBuilderPage = () => {
   if (isEditMode && !fetchedSchema) {
     return (
       <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
+        <BackToHomeButton />
         <Typography variant="h6" color="text.secondary" align="center">
           {t("schemaBuilder.notFoundError")}
         </Typography>

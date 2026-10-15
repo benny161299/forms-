@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,8 +12,8 @@ import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
+import { BackToHomeButton } from "../../components/BackToHomeButton";
 import {
-  HomeButton,
   PageContainer,
   SectionHeader,
 } from "./InstanceFillPage.styles";
@@ -168,14 +167,7 @@ const InstanceFillContent = ({
   if (!currentSection) {
     return (
       <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
+        <BackToHomeButton />
         <Typography variant="h6" color="text.secondary" align="center">
           {t("instanceFill.notFoundError")}
         </Typography>
@@ -185,15 +177,7 @@ const InstanceFillContent = ({
 
   return (
     <PageContainer>
-      <HomeButton
-        startIcon={<HomeIcon />}
-        onClick={() => navigate("/")}
-        variant="outlined"
-        size="small"
-        disabled={isSaving}
-      >
-        {t("common.backToHome")}
-      </HomeButton>
+      <BackToHomeButton disabled={isSaving} />
 
       <Typography variant="h4" color="primary" gutterBottom>
         {schema.title}
@@ -279,12 +263,17 @@ export const InstanceFillPage = () => {
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
+  const initialFetchChecked = useRef(false);
   useEffect(() => {
+    if (!isInstanceFetchedAfterMount) return;
+    if (initialFetchChecked.current) return;
+    initialFetchChecked.current = true;
+
     if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
       toast.error(t("instanceFill.alreadySubmitted"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedInstance, navigate, t]);
+  }, [isEditMode, isInstanceFetchedAfterMount, fetchedInstance, navigate, t]);
 
   if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
     return null;
@@ -306,14 +295,7 @@ export const InstanceFillPage = () => {
   if (!schema) {
     return (
       <PageContainer>
-        <HomeButton
-          startIcon={<HomeIcon />}
-          onClick={() => navigate("/")}
-          variant="outlined"
-          size="small"
-        >
-          {t("common.backToHome")}
-        </HomeButton>
+        <BackToHomeButton />
         <Typography variant="h6" color="text.secondary" align="center">
           {t("instanceFill.notFoundError")}
         </Typography>
