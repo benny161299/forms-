@@ -8,6 +8,7 @@ interface InstanceFillFooterProps {
   isFirstSection: boolean;
   isLastSection: boolean;
   isSaving: boolean;
+  isSubmitting?: boolean;
   onPrev: () => void;
   onNext: () => void;
   onSaveDraft: () => void;
@@ -18,6 +19,7 @@ export const InstanceFillFooter = ({
   isFirstSection,
   isLastSection,
   isSaving,
+  isSubmitting = false,
   onPrev,
   onNext,
   onSaveDraft,
@@ -51,7 +53,7 @@ export const InstanceFillFooter = ({
             onClick={onSubmit}
             disabled={isSaving}
           >
-            {isSaving ? t("instanceFill.submitting") : t("instanceFill.submit")}
+            {isSubmitting ? t("instanceFill.submitting") : t("instanceFill.submit")}
           </Button>
         ) : (
           <Button
@@ -66,4 +68,4 @@ export const InstanceFillFooter = ({
       </RightActions>
     </ActionsFooter>
   );
-}
+};

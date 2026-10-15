@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -34,6 +34,8 @@ const InstanceFillContent = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const createMutation = useMutation({
     mutationFn: (schemaIdToCreate: string) =>
       instanceApi.createInstance({ schemaId: schemaIdToCreate }),
@@ -41,6 +43,9 @@ const InstanceFillContent = ({
       queryClient.invalidateQueries({ queryKey: ["instances"] });
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
       queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
+    },
+    onError: () => {
+      setIsSubmitting(false);
     },
   });
 
@@ -93,6 +98,9 @@ const InstanceFillContent = ({
     onError: () => {
       toast.error(t("instanceFill.saveError"));
     },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
   });
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
@@ -135,6 +143,8 @@ const InstanceFillContent = ({
       }
     }
 
+    setIsSubmitting(submit);
+
     try {
       let targetInstanceId = stateInstanceId;
 
@@ -147,12 +157,14 @@ const InstanceFillContent = ({
       }
 
       if (!targetInstanceId) {
+        setIsSubmitting(false);
         toast.error(t("instanceFill.saveError"));
         return;
       }
 
       updateMutation.mutate({ id: targetInstanceId, answers, submit });
     } catch {
+      setIsSubmitting(false);
       toast.error(t("instanceFill.saveError"));
     }
   };
@@ -220,6 +232,7 @@ const InstanceFillContent = ({
         isFirstSection={isFirstSection}
         isLastSection={isLastSection}
         isSaving={isSaving}
+        isSubmitting={isSaving && isSubmitting}
         onPrev={handlePrev}
         onNext={handleNext}
         onSaveDraft={() => handleSave(false)}
