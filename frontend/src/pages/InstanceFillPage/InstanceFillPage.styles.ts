@@ -16,13 +16,6 @@ export const PageContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const ProgressWrapper = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  gap: theme.spacing(0.5),
-  marginBottom: theme.spacing(3),
-}));
-
 export const SectionHeader = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),

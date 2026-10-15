@@ -42,7 +42,6 @@ export const InstanceDraftsSection = () => {
     mutationFn: (id: string) => instanceApi.deleteInstance(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['draftInstances'] });
-      queryClient.invalidateQueries({ queryKey: ['instances'] });
       toast.success(t('home.instanceDeleteSuccess'));
     },
     onError: () => {

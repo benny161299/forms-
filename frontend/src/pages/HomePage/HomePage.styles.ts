@@ -9,13 +9,6 @@ export const PageContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
 }));
 
-export const LoadingContainer = styled(PageContainer)({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '50vh',
-});
-
 export const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',

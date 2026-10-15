@@ -42,7 +42,6 @@ export const SchemaDraftsSection = () => {
     mutationFn: (id: string) => schemaApi.deleteSchema(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['draftSchemas'] });
-      queryClient.invalidateQueries({ queryKey: ['schemas'] });
       toast.success(t('home.schemaDeleteSuccess'));
     },
     onError: () => {

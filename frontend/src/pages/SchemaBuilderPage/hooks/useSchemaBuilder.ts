@@ -4,7 +4,6 @@ import type { Ischema, ISection, IQuestion } from "../../../types/schema.types";
 import { QUESTION_TYPES } from "../../../types/schema.types";
 
 export type SchemaAction =
-  | { type: "SET_SCHEMA"; payload: Ischema }
   | { type: "SET_TITLE"; payload: string }
   | { type: "SET_DESCRIPTION"; payload: string }
   | { type: "ADD_SECTION" }
@@ -36,8 +35,6 @@ const initialSchemaState: Ischema = {
 
 function schemaReducer(draft: Ischema, action: SchemaAction) {
   switch (action.type) {
-    case "SET_SCHEMA":
-      return action.payload;
     case "SET_TITLE":
       draft.title = action.payload;
       break;

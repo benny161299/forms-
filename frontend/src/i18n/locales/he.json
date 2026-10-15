@@ -18,7 +18,6 @@
     "fill": "מלא טופס",
     "continueFill": "המשך מילוי",
     "viewAnswers": "צפה בתשובות",
-    "loading": "טוען נתונים...",
     "confirmDeleteSchema": "האם אתה בטוח שברצונך למחוק טופס זה?",
     "confirmDeleteInstance": "האם אתה בטוח שברצונך למחוק מופע זה?",
     "confirmDeleteTitle": "אישור מחיקה",
@@ -39,7 +38,6 @@
     "delete": "מחק",
     "confirm": "אישור",
     "cancel": "ביטול",
-    "confirmTitle": "אישור פעולה",
     "backToHome": "חזרה לדף הבית",
     "retry": "נסה שוב"
   },
@@ -56,7 +54,6 @@
     "addQuestion": "הוסף שאלה",
     "deleteSection": "מחק סקשן",
     "cannotDeleteOnlySection": "לא ניתן למחוק את הסקשן היחיד בטופס",
-    "deleteQuestion": "מחק שאלה",
     "required": "שדה חובה",
     "saveDraft": "שמור כטיוטה",
     "publish": "פרסם טופס",
@@ -87,7 +84,6 @@
     "types": {
       "short_answer": "תשובה מילולית קצרה",
       "paragraph": "תשובה מילולית ארוכה (פסקה)",
-      "multiple_choice": "בחירה יחידה",
       "checkbox": "בחירה מרובה",
       "dropdown": "רשימה נפתחת",
       "linear_scale": "בחירה לינארית",
@@ -99,7 +95,6 @@
     }
   },
   "instanceFill": {
-    "pageTitle": "מילוי טופס",
     "submitSuccess": "הטופס נשלח בהצלחה!",
     "draftSaveSuccess": "הטיוטה נשמרה בהצלחה",
     "saveError": "אירעה שגיאה בשמירת התשובות",
@@ -121,7 +116,6 @@
     "schemasEmpty": "אין טפסים זמינים כרגע",
     "instancesTitle": "כל הטפסים שמילאתי",
     "instancesEmpty": "לא הוגשו טפסים עדיין",
-    "close": "סגור",
     "view": "צפייה"
   }
 }

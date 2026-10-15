@@ -40,7 +40,6 @@ const InstanceFillContent = ({
     mutationFn: (schemaIdToCreate: string) =>
       instanceApi.createInstance({ schemaId: schemaIdToCreate }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["instances"] });
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
       queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
     },
@@ -86,9 +85,6 @@ const InstanceFillContent = ({
       });
       queryClient.invalidateQueries({
         queryKey: ["submittedInstances"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["instances"],
       });
       toast.success(
         t(variables.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
