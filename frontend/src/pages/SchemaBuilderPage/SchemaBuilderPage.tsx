@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -23,14 +23,9 @@ import {
 interface SchemaBuilderContentProps {
   id?: string;
   initialData?: Ischema | null;
-  onPublishSuccess?: (publishedId?: string) => void;
 }
 
-const SchemaBuilderContent = ({
-  id,
-  initialData,
-  onPublishSuccess,
-}: SchemaBuilderContentProps) => {
+const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -76,13 +71,13 @@ const SchemaBuilderContent = ({
         toast.error(t("schemaBuilder.publishFailedDraftSaved"));
         return;
       }
-      if (data.publish) {
-        onPublishSuccess?.(data.id);
-      }
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
       queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
       if (data.id) {
-        queryClient.invalidateQueries({ queryKey: ["schema", data.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["schema", data.id],
+          refetchType: "none",
+        });
       }
       toast.success(
         t(data.publish ? "schemaBuilder.publishSuccess" : "schemaBuilder.saveSuccess")
@@ -202,20 +197,12 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
-  const publishedSchemaIdRef = useRef<string | null>(null);
-
   useEffect(() => {
-    publishedSchemaIdRef.current = null;
-  }, [id]);
-
-  useEffect(() => {
-    if (id && publishedSchemaIdRef.current === id) return;
-
     if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
       toast.error(t("schemaBuilder.alreadyPublished"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedSchema, id, navigate, t]);
+  }, [isEditMode, fetchedSchema, navigate, t]);
 
   if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
     return null;
@@ -245,11 +232,6 @@ export const SchemaBuilderPage = () => {
       key={id || "new"}
       id={id}
       initialData={isEditMode ? fetchedSchema : null}
-      onPublishSuccess={(publishedId) => {
-        if (publishedId) {
-          publishedSchemaIdRef.current = publishedId;
-        }
-      }}
     />
   );
 };

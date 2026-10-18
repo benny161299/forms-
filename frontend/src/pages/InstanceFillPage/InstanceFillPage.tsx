@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -22,14 +22,12 @@ interface InstanceFillContentProps {
   schema: Ischema;
   initialInstance?: IInstance | null;
   schemaId?: string;
-  onSubmitSuccess?: (submittedId: string) => void;
 }
 
 const InstanceFillContent = ({
   schema,
   initialInstance,
   schemaId,
-  onSubmitSuccess,
 }: InstanceFillContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -78,11 +76,9 @@ const InstanceFillContent = ({
         toast.error(t("instanceFill.submitFailedDraftSaved"));
         return;
       }
-      if (variables.submit) {
-        onSubmitSuccess?.(variables.id);
-      }
       queryClient.invalidateQueries({
         queryKey: ["instance", variables.id],
+        refetchType: "none",
       });
       queryClient.invalidateQueries({
         queryKey: ["draftInstances"],
@@ -268,20 +264,12 @@ export const InstanceFillPage = () => {
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
-  const submittedInstanceIdRef = useRef<string | null>(null);
-
   useEffect(() => {
-    submittedInstanceIdRef.current = null;
-  }, [instanceId]);
-
-  useEffect(() => {
-    if (instanceId && submittedInstanceIdRef.current === instanceId) return;
-
     if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
       toast.error(t("instanceFill.alreadySubmitted"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedInstance, instanceId, navigate, t]);
+  }, [isEditMode, fetchedInstance, navigate, t]);
 
   if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
     return null;
@@ -317,9 +305,6 @@ export const InstanceFillPage = () => {
       schema={schema}
       initialInstance={isEditMode ? fetchedInstance : null}
       schemaId={schemaIdToFetch}
-      onSubmitSuccess={(submittedId) => {
-        submittedInstanceIdRef.current = submittedId;
-      }}
     />
   );
 };
