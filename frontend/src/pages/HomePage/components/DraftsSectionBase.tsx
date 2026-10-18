@@ -15,7 +15,7 @@ import {
   RetryButton,
 } from "../HomePage.styles";
 
-interface DraftsSectionBaseProps<T> {
+interface DraftsSectionBaseProps<T extends { _id?: string }> {
   title: string;
   queryKey: readonly string[];
   queryFn: () => Promise<T[]>;
@@ -29,7 +29,7 @@ interface DraftsSectionBaseProps<T> {
   renderItem: (item: T, index: number, requestDelete: (id: string) => void) => ReactNode;
 }
 
-export const DraftsSectionBase = <T,>({
+export const DraftsSectionBase = <T extends { _id?: string }>({
   title,
   queryKey,
   queryFn,
@@ -63,12 +63,25 @@ export const DraftsSectionBase = <T,>({
 
   const deleteMutation = useMutation({
     mutationFn: deleteFn,
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previousData = queryClient.getQueryData<T[]>(queryKey);
+      queryClient.setQueryData<T[]>(queryKey, (old) =>
+        old ? old.filter((item) => item._id !== id) : []
+      );
+      return { previousData };
+    },
+    onError: (_err, _id, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(queryKey, context.previousData);
+      }
+      toast.error(deleteErrorMessage);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
       toast.success(deleteSuccessMessage);
     },
-    onError: () => {
-      toast.error(deleteErrorMessage);
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 
