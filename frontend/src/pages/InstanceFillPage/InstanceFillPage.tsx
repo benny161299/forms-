@@ -13,6 +13,7 @@ import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
 import { BackToHomeButton } from "../../components/BackToHomeButton";
+import { useRedirectIfFinalized } from "../../hooks/useRedirectIfFinalized";
 import {
   PageContainer,
   SectionHeader,
@@ -267,14 +268,10 @@ export const InstanceFillPage = () => {
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
-  useEffect(() => {
-    if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
-      toast.error(t("instanceFill.alreadySubmitted"));
-      navigate("/", { replace: true });
-    }
-  }, [isEditMode, fetchedInstance, navigate, t]);
+  const isAlreadySubmitted = Boolean(isEditMode && fetchedInstance && !fetchedInstance.isDraft);
+  useRedirectIfFinalized(isAlreadySubmitted, "instanceFill.alreadySubmitted");
 
-  if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
+  if (isAlreadySubmitted) {
     return null;
   }
 

@@ -12,6 +12,7 @@ import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
 import { SectionCard } from "./components/SectionCard";
 import { BackToHomeButton } from "../../components/BackToHomeButton";
+import { useRedirectIfFinalized } from "../../hooks/useRedirectIfFinalized";
 import {
   ActionsFooter,
   FormFieldSet,
@@ -201,14 +202,10 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
-  useEffect(() => {
-    if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
-      toast.error(t("schemaBuilder.alreadyPublished"));
-      navigate("/", { replace: true });
-    }
-  }, [isEditMode, fetchedSchema, navigate, t]);
+  const isAlreadyPublished = Boolean(isEditMode && fetchedSchema && !fetchedSchema.isDraft);
+  useRedirectIfFinalized(isAlreadyPublished, "schemaBuilder.alreadyPublished");
 
-  if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
+  if (isAlreadyPublished) {
     return null;
   }
 
