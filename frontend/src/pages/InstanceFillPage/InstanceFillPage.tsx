@@ -22,12 +22,14 @@ interface InstanceFillContentProps {
   schema: Ischema;
   initialInstance?: IInstance | null;
   schemaId?: string;
+  onSubmitSuccess?: () => void;
 }
 
 const InstanceFillContent = ({
   schema,
   initialInstance,
   schemaId,
+  onSubmitSuccess,
 }: InstanceFillContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -75,6 +77,9 @@ const InstanceFillContent = ({
       if (data.submitFailed) {
         toast.error(t("instanceFill.submitFailedDraftSaved"));
         return;
+      }
+      if (variables.submit) {
+        onSubmitSuccess?.();
       }
       queryClient.invalidateQueries({
         queryKey: ["instance", variables.id],
@@ -259,21 +264,19 @@ export const InstanceFillPage = () => {
 
     if (isInstanceFailed || isSchemaFailed) {
       toast.error(t("instanceFill.notFoundError"));
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
-  const initialFetchChecked = useRef(false);
+  const hasSubmittedRef = useRef(false);
   useEffect(() => {
-    if (!isInstanceFetchedAfterMount) return;
-    if (initialFetchChecked.current) return;
-    initialFetchChecked.current = true;
+    if (hasSubmittedRef.current) return;
 
     if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
       toast.error(t("instanceFill.alreadySubmitted"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, isInstanceFetchedAfterMount, fetchedInstance, navigate, t]);
+  }, [isEditMode, fetchedInstance, navigate, t]);
 
   if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
     return null;
@@ -309,6 +312,9 @@ export const InstanceFillPage = () => {
       schema={schema}
       initialInstance={isEditMode ? fetchedInstance : null}
       schemaId={schemaIdToFetch}
+      onSubmitSuccess={() => {
+        hasSubmittedRef.current = true;
+      }}
     />
   );
 };

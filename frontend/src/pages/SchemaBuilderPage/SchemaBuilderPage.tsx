@@ -23,9 +23,14 @@ import {
 interface SchemaBuilderContentProps {
   id?: string;
   initialData?: Ischema | null;
+  onPublishSuccess?: () => void;
 }
 
-const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) => {
+const SchemaBuilderContent = ({
+  id,
+  initialData,
+  onPublishSuccess,
+}: SchemaBuilderContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -70,6 +75,9 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
       if (data.publishFailed) {
         toast.error(t("schemaBuilder.publishFailedDraftSaved"));
         return;
+      }
+      if (data.publish) {
+        onPublishSuccess?.();
       }
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
       queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
@@ -190,21 +198,19 @@ export const SchemaBuilderPage = () => {
   useEffect(() => {
     if (isEditMode && fetchError && !fetchedSchema) {
       toast.error(t("schemaBuilder.notFoundError"));
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
-  const initialFetchChecked = useRef(false);
+  const hasPublishedRef = useRef(false);
   useEffect(() => {
-    if (!isFetchedAfterMount) return;
-    if (initialFetchChecked.current) return;
-    initialFetchChecked.current = true;
+    if (hasPublishedRef.current) return;
 
     if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
       toast.error(t("schemaBuilder.alreadyPublished"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, isFetchedAfterMount, fetchedSchema, navigate, t]);
+  }, [isEditMode, fetchedSchema, navigate, t]);
 
   if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
     return null;
@@ -234,6 +240,9 @@ export const SchemaBuilderPage = () => {
       key={id || "new"}
       id={id}
       initialData={isEditMode ? fetchedSchema : null}
+      onPublishSuccess={() => {
+        hasPublishedRef.current = true;
+      }}
     />
   );
 };
