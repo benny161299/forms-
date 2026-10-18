@@ -57,29 +57,32 @@ const InstanceFillContent = ({
       answers: Record<string, AnswerValue>;
       submit: boolean;
     }) => {
-      const updatedInstance = await instanceApi.updateInstance(id, { answers });
-      queryClient.setQueryData(["instance", id], updatedInstance);
-
+      let instance = await instanceApi.updateInstance(id, { answers });
       let submitFailed = false;
+
       if (submit) {
         try {
-          await instanceApi.submitInstance(id);
+          instance = await instanceApi.submitInstance(id);
         } catch {
           submitFailed = true;
         }
       }
 
-      return { updatedInstance, submit, submitFailed };
+      return { instance, submit, submitFailed };
     },
     onSuccess: (data, variables) => {
       if (data.submitFailed) {
+        queryClient.setQueryData(["instance", variables.id], data.instance);
         toast.error(t("instanceFill.submitFailedDraftSaved"));
         return;
       }
-      queryClient.invalidateQueries({
-        queryKey: ["instance", variables.id],
-        refetchType: "none",
-      });
+
+      if (!variables.submit) {
+        queryClient.setQueryData(["instance", variables.id], data.instance);
+      } else {
+        queryClient.removeQueries({ queryKey: ["instance", variables.id] });
+      }
+
       queryClient.invalidateQueries({
         queryKey: ["draftInstances"],
       });
