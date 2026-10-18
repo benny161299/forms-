@@ -3,17 +3,11 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { CircularProgress, Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
-import {
-  SectionPaper,
-  CarouselWrapper,
-  SectionLoadingContainer,
-  SectionErrorText,
-  SectionErrorContainer,
-  RetryButton,
-} from "../HomePage.styles";
+import { SectionPaper } from "../HomePage.styles";
+import { SectionBody } from "./SectionBody";
 
 interface DraftsSectionBaseProps<T extends { _id?: string }> {
   title: string;
@@ -99,52 +93,17 @@ export const DraftsSectionBase = <T extends { _id?: string }>({
           {title}
         </Typography>
 
-        {loading ? (
-          <SectionLoadingContainer>
-            <CircularProgress size={32} />
-          </SectionLoadingContainer>
-        ) : isError && !hasData ? (
-          <>
-            <SectionErrorText variant="body2">
-              {errorMessage}
-            </SectionErrorText>
-            <RetryButton size="small" onClick={() => refetch()}>
-              {t("common.retry")}
-            </RetryButton>
-          </>
-        ) : items.length === 0 ? (
-          <>
-            {isError && (
-              <SectionErrorContainer>
-                <SectionErrorText variant="body2">
-                  {errorMessage}
-                </SectionErrorText>
-                <Button size="small" onClick={() => refetch()}>
-                  {t("common.retry")}
-                </Button>
-              </SectionErrorContainer>
-            )}
-            <Typography variant="body2" color="text.secondary">
-              {emptyMessage}
-            </Typography>
-          </>
-        ) : (
-          <>
-            {isError && (
-              <SectionErrorContainer>
-                <SectionErrorText variant="body2">
-                  {errorMessage}
-                </SectionErrorText>
-                <Button size="small" onClick={() => refetch()}>
-                  {t("common.retry")}
-                </Button>
-              </SectionErrorContainer>
-            )}
-            <CarouselWrapper>
-              {items.map((item, index) => renderItem(item, index, setDeleteId))}
-            </CarouselWrapper>
-          </>
-        )}
+        <SectionBody
+          loading={loading}
+          isError={isError}
+          hasData={hasData}
+          errorMessage={errorMessage}
+          emptyMessage={emptyMessage}
+          isEmpty={items.length === 0}
+          onRetry={() => refetch()}
+        >
+          {items.map((item, index) => renderItem(item, index, setDeleteId))}
+        </SectionBody>
       </SectionPaper>
 
       <ConfirmDialog

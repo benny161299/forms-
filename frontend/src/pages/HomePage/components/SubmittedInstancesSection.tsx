@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CircularProgress, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 
 import { useSubmittedInstances } from '../../../hooks/useSubmittedInstances';
 import { InstanceCard } from './InstanceCard';
@@ -10,12 +10,8 @@ import type { IInstance } from '../../../types/instance.types';
 import {
   SectionPaper,
   SectionHeader,
-  CarouselWrapper,
-  SectionLoadingContainer,
-  SectionErrorText,
-  SectionErrorContainer,
-  RetryButton,
 } from '../HomePage.styles';
+import { SectionBody } from './SectionBody';
 
 export const SubmittedInstancesSection = () => {
   const { t } = useTranslation();
@@ -36,59 +32,24 @@ export const SubmittedInstancesSection = () => {
           </Button>
         </SectionHeader>
 
-        {loading ? (
-          <SectionLoadingContainer>
-            <CircularProgress size={32} />
-          </SectionLoadingContainer>
-        ) : isError && !hasData ? (
-          <>
-            <SectionErrorText variant="body2">
-              {error}
-            </SectionErrorText>
-            <RetryButton size="small" onClick={() => refetch()}>
-              {t('common.retry')}
-            </RetryButton>
-          </>
-        ) : instances.length === 0 ? (
-          <>
-            {isError && (
-              <SectionErrorContainer>
-                <SectionErrorText variant="body2">
-                  {error}
-                </SectionErrorText>
-                <Button size="small" onClick={() => refetch()}>
-                  {t('common.retry')}
-                </Button>
-              </SectionErrorContainer>
-            )}
-            <Typography variant="body2" color="text.secondary">
-              {t('home.emptySubmittedInstances')}
-            </Typography>
-          </>
-        ) : (
-          <>
-            {isError && (
-              <SectionErrorContainer>
-                <SectionErrorText variant="body2">
-                  {error}
-                </SectionErrorText>
-                <Button size="small" onClick={() => refetch()}>
-                  {t('common.retry')}
-                </Button>
-              </SectionErrorContainer>
-            )}
-            <CarouselWrapper>
-              {instances.map((instance, index) => (
-                <InstanceCard
-                  key={instance._id}
-                  instance={instance}
-                  index={index}
-                  onView={() => setSelectedInstance(instance)}
-                />
-              ))}
-            </CarouselWrapper>
-          </>
-        )}
+        <SectionBody
+          loading={loading}
+          isError={isError}
+          hasData={hasData}
+          errorMessage={error}
+          emptyMessage={t('home.emptySubmittedInstances')}
+          isEmpty={instances.length === 0}
+          onRetry={() => refetch()}
+        >
+          {instances.map((instance, index) => (
+            <InstanceCard
+              key={instance._id}
+              instance={instance}
+              index={index}
+              onView={() => setSelectedInstance(instance)}
+            />
+          ))}
+        </SectionBody>
       </SectionPaper>
 
       <InstanceViewModal

@@ -1,18 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CircularProgress, Typography, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 
 import { usePublishedSchemas } from '../../../hooks/usePublishedSchemas';
 import { SchemaCard } from './SchemaCard';
 import {
   SectionPaper,
   SectionHeader,
-  CarouselWrapper,
-  SectionLoadingContainer,
-  SectionErrorText,
-  SectionErrorContainer,
-  RetryButton,
 } from '../HomePage.styles';
+import { SectionBody } from './SectionBody';
 
 export const PublishedSchemasSection = () => {
   const { t } = useTranslation();
@@ -31,59 +27,24 @@ export const PublishedSchemasSection = () => {
         </Button>
       </SectionHeader>
 
-      {loading ? (
-        <SectionLoadingContainer>
-          <CircularProgress size={32} />
-        </SectionLoadingContainer>
-      ) : isError && !hasData ? (
-        <>
-          <SectionErrorText variant="body2">
-            {error}
-          </SectionErrorText>
-          <RetryButton size="small" onClick={() => refetch()}>
-            {t('common.retry')}
-          </RetryButton>
-        </>
-      ) : schemas.length === 0 ? (
-        <>
-          {isError && (
-            <SectionErrorContainer>
-              <SectionErrorText variant="body2">
-                {error}
-              </SectionErrorText>
-              <Button size="small" onClick={() => refetch()}>
-                {t('common.retry')}
-              </Button>
-            </SectionErrorContainer>
-          )}
-          <Typography variant="body2" color="text.secondary">
-            {t('home.emptyPublishedSchemas')}
-          </Typography>
-        </>
-      ) : (
-        <>
-          {isError && (
-            <SectionErrorContainer>
-              <SectionErrorText variant="body2">
-                {error}
-              </SectionErrorText>
-              <Button size="small" onClick={() => refetch()}>
-                {t('common.retry')}
-              </Button>
-            </SectionErrorContainer>
-          )}
-          <CarouselWrapper>
-            {schemas.map((schema, index) => (
-              <SchemaCard
-                key={schema._id}
-                schema={schema}
-                index={index}
-                onFill={(id) => navigate(`/instances/fill/${id}`)}
-              />
-            ))}
-          </CarouselWrapper>
-        </>
-      )}
+      <SectionBody
+        loading={loading}
+        isError={isError}
+        hasData={hasData}
+        errorMessage={error}
+        emptyMessage={t('home.emptyPublishedSchemas')}
+        isEmpty={schemas.length === 0}
+        onRetry={() => refetch()}
+      >
+        {schemas.map((schema, index) => (
+          <SchemaCard
+            key={schema._id}
+            schema={schema}
+            index={index}
+            onFill={(id) => navigate(`/instances/fill/${id}`)}
+          />
+        ))}
+      </SectionBody>
     </SectionPaper>
   );
 };
