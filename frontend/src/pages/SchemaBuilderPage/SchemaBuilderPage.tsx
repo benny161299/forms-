@@ -76,7 +76,9 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
         return;
       }
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
-      queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
+      if (data.publish) {
+        queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
+      }
       if (data.id) {
         if (!data.publish) {
           queryClient.setQueryData(["schema", data.id], data.savedSchema);

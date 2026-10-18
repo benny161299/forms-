@@ -41,7 +41,6 @@ const InstanceFillContent = ({
       instanceApi.createInstance({ schemaId: schemaIdToCreate }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
-      queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
     },
     onError: () => {
       setIsSubmitting(false);
@@ -82,13 +81,13 @@ const InstanceFillContent = ({
         queryClient.setQueryData(["instance", variables.id], data.instance);
       } else {
         queryClient.removeQueries({ queryKey: ["instance", variables.id] });
+        queryClient.invalidateQueries({
+          queryKey: ["submittedInstances"],
+        });
       }
 
       queryClient.invalidateQueries({
         queryKey: ["draftInstances"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["submittedInstances"],
       });
       toast.success(
         t(variables.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
