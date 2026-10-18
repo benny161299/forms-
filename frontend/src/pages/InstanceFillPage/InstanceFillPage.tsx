@@ -22,7 +22,7 @@ interface InstanceFillContentProps {
   schema: Ischema;
   initialInstance?: IInstance | null;
   schemaId?: string;
-  onSubmitSuccess?: () => void;
+  onSubmitSuccess?: (submittedId: string) => void;
 }
 
 const InstanceFillContent = ({
@@ -79,7 +79,7 @@ const InstanceFillContent = ({
         return;
       }
       if (variables.submit) {
-        onSubmitSuccess?.();
+        onSubmitSuccess?.(variables.id);
       }
       queryClient.invalidateQueries({
         queryKey: ["instance", variables.id],
@@ -268,15 +268,20 @@ export const InstanceFillPage = () => {
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
 
-  const hasSubmittedRef = useRef(false);
+  const submittedInstanceIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (hasSubmittedRef.current) return;
+    submittedInstanceIdRef.current = null;
+  }, [instanceId]);
+
+  useEffect(() => {
+    if (instanceId && submittedInstanceIdRef.current === instanceId) return;
 
     if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
       toast.error(t("instanceFill.alreadySubmitted"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedInstance, navigate, t]);
+  }, [isEditMode, fetchedInstance, instanceId, navigate, t]);
 
   if (isEditMode && fetchedInstance && !fetchedInstance.isDraft) {
     return null;
@@ -312,8 +317,8 @@ export const InstanceFillPage = () => {
       schema={schema}
       initialInstance={isEditMode ? fetchedInstance : null}
       schemaId={schemaIdToFetch}
-      onSubmitSuccess={() => {
-        hasSubmittedRef.current = true;
+      onSubmitSuccess={(submittedId) => {
+        submittedInstanceIdRef.current = submittedId;
       }}
     />
   );

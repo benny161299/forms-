@@ -23,7 +23,7 @@ import {
 interface SchemaBuilderContentProps {
   id?: string;
   initialData?: Ischema | null;
-  onPublishSuccess?: () => void;
+  onPublishSuccess?: (publishedId?: string) => void;
 }
 
 const SchemaBuilderContent = ({
@@ -77,7 +77,7 @@ const SchemaBuilderContent = ({
         return;
       }
       if (data.publish) {
-        onPublishSuccess?.();
+        onPublishSuccess?.(data.id);
       }
       queryClient.invalidateQueries({ queryKey: ["draftSchemas"] });
       queryClient.invalidateQueries({ queryKey: ["publishedSchemas"] });
@@ -202,15 +202,20 @@ export const SchemaBuilderPage = () => {
     }
   }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
 
-  const hasPublishedRef = useRef(false);
+  const publishedSchemaIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (hasPublishedRef.current) return;
+    publishedSchemaIdRef.current = null;
+  }, [id]);
+
+  useEffect(() => {
+    if (id && publishedSchemaIdRef.current === id) return;
 
     if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
       toast.error(t("schemaBuilder.alreadyPublished"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchedSchema, navigate, t]);
+  }, [isEditMode, fetchedSchema, id, navigate, t]);
 
   if (isEditMode && fetchedSchema && !fetchedSchema.isDraft) {
     return null;
@@ -240,8 +245,10 @@ export const SchemaBuilderPage = () => {
       key={id || "new"}
       id={id}
       initialData={isEditMode ? fetchedSchema : null}
-      onPublishSuccess={() => {
-        hasPublishedRef.current = true;
+      onPublishSuccess={(publishedId) => {
+        if (publishedId) {
+          publishedSchemaIdRef.current = publishedId;
+        }
       }}
     />
   );
