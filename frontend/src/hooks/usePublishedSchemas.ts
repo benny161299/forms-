@@ -1,23 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-
 import { schemaApi } from "../api/schema.api";
-export function usePublishedSchemas() {
-  const { t } = useTranslation();
+import { useSectionQuery } from "./useSectionQuery";
 
-  const { data, isLoading, error, refetch } = useQuery({
+export function usePublishedSchemas() {
+  const query = useSectionQuery({
     queryKey: ["publishedSchemas"],
     queryFn: schemaApi.getAllSchemas,
+    errorKey: "errors.fetchPublishedSchemas",
   });
 
-  const errorMessage = error ? t("errors.fetchPublishedSchemas") : null;
-
   return {
-    schemas: data ?? [],
-    loading: isLoading,
-    error: errorMessage,
-    isError: Boolean(error),
-    hasData: data !== undefined,
-    refetch,
+    ...query,
+    schemas: query.items,
   };
 }

@@ -1,13 +1,14 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Typography } from "@mui/material";
 
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { SectionPaper } from "../HomePage.styles";
 import { SectionBody } from "./SectionBody";
+import { useSectionQuery } from "../../../hooks/useSectionQuery";
 
 interface DraftsSectionBaseProps<T extends { _id?: string }> {
   title: string;
@@ -42,18 +43,16 @@ export const DraftsSectionBase = <T extends { _id?: string }>({
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const {
-    data,
-    isLoading: loading,
-    error,
+    items,
+    loading,
+    hasData,
+    isError,
     refetch,
-  } = useQuery({
+  } = useSectionQuery<T>({
     queryKey,
     queryFn,
+    errorMessage,
   });
-
-  const items = data ?? [];
-  const hasData = data !== undefined;
-  const isError = Boolean(error);
 
   const deleteMutation = useMutation({
     mutationFn: deleteFn,

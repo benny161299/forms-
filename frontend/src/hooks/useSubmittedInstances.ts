@@ -1,23 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-
 import { instanceApi } from "../api/instance.api";
-export function useSubmittedInstances() {
-  const { t } = useTranslation();
+import { useSectionQuery } from "./useSectionQuery";
 
-  const { data, isLoading, error, refetch } = useQuery({
+export function useSubmittedInstances() {
+  const query = useSectionQuery({
     queryKey: ["submittedInstances"],
     queryFn: instanceApi.getAllInstances,
+    errorKey: "errors.fetchSubmittedInstances",
   });
 
-  const errorMessage = error ? t("errors.fetchSubmittedInstances") : null;
-
   return {
-    instances: data ?? [],
-    loading: isLoading,
-    error: errorMessage,
-    isError: Boolean(error),
-    hasData: data !== undefined,
-    refetch,
+    ...query,
+    instances: query.items,
   };
 }
