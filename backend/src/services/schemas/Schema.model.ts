@@ -5,7 +5,7 @@ import type { IQuestion, ISection, Ischema } from "./schema.types.js";
 const QuestionMongooseSchema = new Schema<IQuestion>(
   {
     id: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String, required: true, trim: true },
     type: {
       type: String,
       required: true,
@@ -18,8 +18,8 @@ const QuestionMongooseSchema = new Schema<IQuestion>(
 
 const SectionMongooseSchema = new Schema<ISection>(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
+    title: { type: String, required: true, trim: true },
+    description: { type: String, default: "", trim: true },
     questions: [QuestionMongooseSchema],
   },
   { _id: false },
@@ -27,7 +27,8 @@ const SectionMongooseSchema = new Schema<ISection>(
 
 const SchemaMongooseSchema = new Schema<Ischema>(
   {
-    title: { type: String, required: true },
+    title: { type: String, required: true, trim: true },
+    description: { type: String, default: "", trim: true },
     isDraft: { type: Boolean, default: true },
     sections: [SectionMongooseSchema],
   },
@@ -35,5 +36,4 @@ const SchemaMongooseSchema = new Schema<Ischema>(
     timestamps: true,
   },
 );
-
 export const SchemaModel = mongoose.model<Ischema>(config.SCHEMA_MODEL_NAME, SchemaMongooseSchema);

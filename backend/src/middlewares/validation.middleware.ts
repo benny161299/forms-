@@ -1,5 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { type ZodType, z } from "zod";
+import { AppError, type ValidationErrorDetails } from "./error.middleware.js";
 
 interface RequestValidationSchemas {
   body: ZodType;
@@ -22,9 +24,18 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
     });
 
     if (!result.success) {
-      return next(result.error);
+      const errors: ValidationErrorDetails = {};
+      for (const issue of result.error.issues) {
+        const path = issue.path.join(".") || "root";
+        if (!errors[path]) {
+          errors[path] = [];
+        }
+        errors[path].push(issue.message);
+      }
+
+      return next(new AppError("Validation failed", StatusCodes.BAD_REQUEST, errors));
     }
-    req.body = result.data.body;
+    req.body = result.data.body ?? {};
 
     return next();
   };

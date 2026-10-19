@@ -26,14 +26,6 @@ export const fetchAllInstancesDrafts = async () => {
   return InstanceModel.find({ isDraft: true }).lean();
 };
 
-export const fetchInstancesBySchemaId = async (schemaId: string) => {
-  await SchemaModel.findById(schemaId)
-    .lean()
-    .orFail(() => new AppError("The requested schema does not exist", StatusCodes.NOT_FOUND));
-
-  return InstanceModel.find({ schemaId }).lean();
-};
-
 export const fetchInstanceById = async (id: string) => {
   return InstanceModel.findById(id)
     .lean()

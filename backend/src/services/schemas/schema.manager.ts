@@ -4,10 +4,11 @@ import { SchemaModel } from "./Schema.model.js";
 import type { SchemaInput } from "./schema.types.js";
 
 export const createNewSchema = async (schemaData: SchemaInput) => {
-  const { title, sections } = schemaData;
+  const { title, description, sections } = schemaData;
 
   return SchemaModel.create({
     title,
+    description,
     sections,
     isDraft: true,
   });
@@ -27,11 +28,11 @@ export const fetchSchemaById = async (id: string) => {
 };
 
 export const updateSchemaManager = async (id: string, updateData: SchemaInput) => {
-  const { title, sections } = updateData;
+  const { title, description, sections } = updateData;
 
   return SchemaModel.findOneAndUpdate(
     { _id: id, isDraft: true },
-    { title, sections },
+    { title, description, sections },
     { returnDocument: "after" },
   ).orFail(() => new AppError("Schema not found, or it is not a draft", StatusCodes.NOT_FOUND));
 };
