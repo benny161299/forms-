@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { isNotFoundError } from "../../api/axiosClient";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { instanceApi } from "../../api/instance.api";
 import type { AnswerValue, IInstance } from "../../types/instance.types";
@@ -254,14 +255,24 @@ export const InstanceFillPage = () => {
 
   useEffect(() => {
     if (isEditMode && instanceError && !fetchedInstance) {
-      const is404 = (instanceError as any)?.response?.status === 404;
-      toast.error(t(is404 ? "instanceFill.notFoundError" : "instanceFill.fetchError"));
+      toast.error(
+        t(
+          isNotFoundError(instanceError)
+            ? "instanceFill.notFoundError"
+            : "instanceFill.fetchError"
+        )
+      );
       navigate("/", { replace: true });
       return;
     }
     if (schemaIdToFetch && schemaError && !schema) {
-      const is404 = (schemaError as any)?.response?.status === 404;
-      toast.error(t(is404 ? "instanceFill.notFoundError" : "instanceFill.fetchError"));
+      toast.error(
+        t(
+          isNotFoundError(schemaError)
+            ? "instanceFill.notFoundError"
+            : "instanceFill.fetchError"
+        )
+      );
       navigate("/", { replace: true });
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
@@ -269,7 +280,10 @@ export const InstanceFillPage = () => {
   const isAlreadySubmitted = Boolean(isEditMode && fetchedInstance && !fetchedInstance.isDraft);
   useRedirectIfFinalized(isAlreadySubmitted, "instanceFill.alreadySubmitted");
 
-  if (isAlreadySubmitted) {
+  const isSchemaDraft = Boolean(schema?.isDraft);
+  useRedirectIfFinalized(isSchemaDraft, "instanceFill.schemaNotPublished");
+
+  if (isAlreadySubmitted || isSchemaDraft) {
     return null;
   }
 

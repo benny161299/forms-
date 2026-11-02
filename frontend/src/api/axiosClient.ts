@@ -5,3 +5,8 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
+
+export const isAxiosError = axios.isAxiosError;
+
+export const isNotFoundError = (error: unknown): boolean =>
+  axios.isAxiosError(error) && error.response?.status === 404;
