@@ -6,8 +6,6 @@ export function useSchemaById(id?: string) {
     queryKey: ["schema", id],
     queryFn: () => (id ? schemaApi.getSchemaById(id) : null),
     enabled: Boolean(id),
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
 
   return {
