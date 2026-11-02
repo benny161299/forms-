@@ -114,4 +114,31 @@ export const schemaSchema = z.object({
 
 export type Ischema = z.infer<typeof schemaSchema>;
 
-export type SchemaInput = Pick<Ischema, "title" | "description" | "sections">;
+export const draftQuestionSchema = z.object({
+  id: z.string(),
+  title: z.string().trim().default(""),
+  type: z.enum(Object.values(QUESTION_TYPES) as [QuestionType, ...QuestionType[]]),
+  required: z.boolean().default(false),
+  options: z.any().optional(),
+});
+
+export const draftSectionSchema = z.object({
+  title: z.string().trim().default(""),
+  description: z.string().trim().default(""),
+  questions: z.array(draftQuestionSchema).default([]),
+});
+
+export const draftSchema = z.object({
+  _id: z
+    .string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .optional(),
+  title: z.string().trim().min(1, "Schema title is required"),
+  description: z.string().trim().default(""),
+  isDraft: z.boolean().default(true),
+  sections: z.array(draftSectionSchema).default([]),
+});
+
+export type DraftSchema = z.infer<typeof draftSchema>;
+export type DraftSchemaInput = Pick<DraftSchema, "title" | "description" | "sections">;
+export type SchemaInput = DraftSchemaInput;

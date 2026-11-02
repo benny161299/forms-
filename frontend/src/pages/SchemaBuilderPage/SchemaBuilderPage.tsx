@@ -101,10 +101,10 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
 
   const actions = useSchemaBuilder(initialData);
   const { schema } = actions;
-  const { validate } = useSchemaValidation(schema);
+  const { validateDraft, validatePublish } = useSchemaValidation(schema);
 
   const saveSchema = (publish: boolean) => {
-    const validationError = validate();
+    const validationError = publish ? validatePublish() : validateDraft();
     if (validationError) {
       toast.error(validationError);
       return;

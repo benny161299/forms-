@@ -5,7 +5,7 @@ import type { IQuestion, ISection, Ischema } from "./schema.types.js";
 const QuestionMongooseSchema = new Schema<IQuestion>(
   {
     id: { type: String, required: true },
-    title: { type: String, required: true, trim: true },
+    title: { type: String, default: "", trim: true },
     type: {
       type: String,
       required: true,
@@ -18,7 +18,7 @@ const QuestionMongooseSchema = new Schema<IQuestion>(
 
 const SectionMongooseSchema = new Schema<ISection>(
   {
-    title: { type: String, required: true, trim: true },
+    title: { type: String, default: "", trim: true },
     description: { type: String, default: "", trim: true },
     questions: [QuestionMongooseSchema],
   },

@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "./Schema.model.js";
-import type { SchemaInput } from "./schema.types.js";
+import { type SchemaInput, schemaSchema } from "./schema.types.js";
 
 export const createNewSchema = async (schemaData: SchemaInput) => {
   const { title, description, sections } = schemaData;
@@ -38,6 +38,21 @@ export const updateSchemaManager = async (id: string, updateData: SchemaInput) =
 };
 
 export const publishSchemaManager = async (id: string) => {
+  const schema = await SchemaModel.findOne({ _id: id, isDraft: true })
+    .lean()
+    .orFail(() => new AppError("Schema not found, or it is not a draft", StatusCodes.NOT_FOUND));
+
+  const validationResult = schemaSchema.safeParse({
+    ...schema,
+    _id: schema._id ? String(schema._id) : undefined,
+  });
+
+  if (!validationResult.success) {
+    const firstIssue =
+      validationResult.error.issues[0]?.message || "Schema is incomplete or invalid for publishing";
+    throw new AppError(firstIssue, StatusCodes.BAD_REQUEST);
+  }
+
   return SchemaModel.findOneAndUpdate(
     { _id: id, isDraft: true },
     { isDraft: false },

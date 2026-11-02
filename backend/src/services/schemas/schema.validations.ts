@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { emptyObj, mongoIdSchema } from "../../utils/validation.utils.js";
-import { schemaSchema } from "./schema.types.js";
+import { draftSchema } from "./schema.types.js";
 
 export const createSchemaValidation = {
-  body: schemaSchema.pick({ title: true, description: true, sections: true }),
+  body: draftSchema.pick({ title: true, description: true, sections: true }),
   query: emptyObj,
   params: emptyObj,
 };
@@ -21,7 +21,7 @@ export const getSchemaByIdValidation = {
 };
 
 export const updateSchemaValidation = {
-  body: schemaSchema.pick({ title: true, description: true, sections: true }),
+  body: draftSchema.pick({ title: true, description: true, sections: true }),
   query: emptyObj,
   params: z.object({ id: mongoIdSchema }),
 };
