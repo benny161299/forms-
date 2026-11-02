@@ -114,17 +114,12 @@ const InstanceFillContent = ({
   } = actions;
 
   const currentSection = schema.sections[currentSectionIndex];
-  const { validateSection, validateAll } = useInstanceValidation(
+  const { validateAll } = useInstanceValidation(
     schema.sections,
     answers
   );
 
   const handleNext = () => {
-    const error = validateSection(currentSection);
-    if (error) {
-      toast.error(error);
-      return;
-    }
     actions.goToNextSection();
   };
 
