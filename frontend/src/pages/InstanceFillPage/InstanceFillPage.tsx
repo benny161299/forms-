@@ -258,11 +258,15 @@ export const InstanceFillPage = () => {
   } = useSchemaById(schemaIdToFetch);
 
   useEffect(() => {
-    const isInstanceFailed = Boolean(isEditMode && instanceError && !fetchedInstance);
-    const isSchemaFailed = Boolean(schemaIdToFetch && schemaError && !schema);
-
-    if (isInstanceFailed || isSchemaFailed) {
-      toast.error(t("instanceFill.notFoundError"));
+    if (isEditMode && instanceError && !fetchedInstance) {
+      const is404 = (instanceError as any)?.response?.status === 404;
+      toast.error(t(is404 ? "instanceFill.notFoundError" : "instanceFill.fetchError"));
+      navigate("/", { replace: true });
+      return;
+    }
+    if (schemaIdToFetch && schemaError && !schema) {
+      const is404 = (schemaError as any)?.response?.status === 404;
+      toast.error(t(is404 ? "instanceFill.notFoundError" : "instanceFill.fetchError"));
       navigate("/", { replace: true });
     }
   }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);

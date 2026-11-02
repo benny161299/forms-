@@ -6,12 +6,6 @@ import type { CreateInstanceInput, IInstance, UpdateInstanceInput, AnswerValue }
 import { QUESTION_TYPES } from "../schemas/schema.types.js";
 import type { IQuestion } from "../schemas/schema.types.js";
 
-// --- Server-side validation helpers ---
-
-/**
- * Checks whether a required question's answer is missing or empty.
- * Mirrors the frontend logic in useInstanceValidation.ts.
- */
 const isAnswerMissing = (question: IQuestion, value: AnswerValue | undefined): boolean => {
   if (value === undefined || value === null) {
     return true;
@@ -60,10 +54,6 @@ const isAnswerMissing = (question: IQuestion, value: AnswerValue | undefined): b
   }
 };
 
-/**
- * Validates that an answer value's type is compatible with the question type,
- * and that choice-based answers reference valid options.
- */
 const validateAnswerValue = (question: IQuestion, value: AnswerValue): string | null => {
   switch (question.type) {
     case QUESTION_TYPES.SHORT_ANSWER:
@@ -152,8 +142,6 @@ const validateAnswerValue = (question: IQuestion, value: AnswerValue): string | 
   }
 };
 
-// --- Managers ---
-
 export const createNewInstance = async (instanceData: CreateInstanceInput) => {
   const { schemaId } = instanceData;
 
@@ -183,17 +171,14 @@ export const fetchInstanceById = async (id: string) => {
 };
 
 export const updateInstanceManager = async (id: string, updateData: UpdateInstanceInput) => {
-  // 1. Load the instance (must be a draft)
   const instance = await InstanceModel.findOne({ _id: id, isDraft: true })
     .lean()
     .orFail(() => new AppError("Instance not found, or it is not a draft", StatusCodes.NOT_FOUND));
 
-  // 2. Load the schema to get valid question IDs and types
   const schema = await SchemaModel.findOne({ _id: instance.schemaId, isDraft: false })
     .lean()
     .orFail(() => new AppError("Schema not found or is still a draft", StatusCodes.NOT_FOUND));
 
-  // 3. Build a map of valid question IDs → question definitions
   const questionMap = new Map<string, IQuestion>();
   for (const section of schema.sections) {
     for (const question of section.questions) {
@@ -201,7 +186,6 @@ export const updateInstanceManager = async (id: string, updateData: UpdateInstan
     }
   }
 
-  // 4. Validate every submitted answer
   for (const [questionId, answerValue] of Object.entries(updateData.answers)) {
     const question = questionMap.get(questionId);
     if (!question) {
@@ -217,7 +201,6 @@ export const updateInstanceManager = async (id: string, updateData: UpdateInstan
     }
   }
 
-  // 5. Apply the update
   return InstanceModel.findOneAndUpdate({ _id: id, isDraft: true }, updateData, {
     returnDocument: "after",
   })
@@ -226,20 +209,16 @@ export const updateInstanceManager = async (id: string, updateData: UpdateInstan
 };
 
 export const submitInstanceManager = async (id: string) => {
-  // 1. Load the instance (must be a draft)
   const instance = await InstanceModel.findOne({ _id: id, isDraft: true })
     .lean()
     .orFail(() => new AppError("Instance not found, or it is not a draft", StatusCodes.NOT_FOUND));
 
-  // 2. Load the schema (must be published)
   const schema = await SchemaModel.findOne({ _id: instance.schemaId, isDraft: false })
     .lean()
     .orFail(() => new AppError("Schema not found or is still a draft", StatusCodes.NOT_FOUND));
 
-  // 3. Validate all required questions have valid answers
   const allQuestions = schema.sections.flatMap((s) => s.questions);
   for (const question of allQuestions) {
-    // Validate answer type for every answered question (required or not)
     const answer = instance.answers[question.id];
     if (answer !== undefined) {
       const typeError = validateAnswerValue(question, answer);
@@ -248,7 +227,6 @@ export const submitInstanceManager = async (id: string) => {
       }
     }
 
-    // Check required questions are answered
     if (question.required && isAnswerMissing(question, answer)) {
       throw new AppError(
         `Required question "${question.title}" is not answered`,
@@ -257,7 +235,6 @@ export const submitInstanceManager = async (id: string) => {
     }
   }
 
-  // 4. Reject answers with unknown question IDs
   const validQuestionIds = new Set(allQuestions.map((q) => q.id));
   for (const answerId of Object.keys(instance.answers)) {
     if (!validQuestionIds.has(answerId)) {
@@ -268,7 +245,6 @@ export const submitInstanceManager = async (id: string) => {
     }
   }
 
-  // 5. All valid — mark as submitted
   return InstanceModel.findOneAndUpdate(
     { _id: id, isDraft: true },
     { isDraft: false },

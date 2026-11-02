@@ -101,6 +101,7 @@
     "submitFailedDraftSaved": "התשובות נשמרו כטיוטה, אך ההגשה נכשלה",
     "alreadySubmitted": "הטופס כבר הוגש ולא ניתן לעריכה נוספת",
     "notFoundError": "הטופס המבוקש לא נמצא",
+    "fetchError": "אירעה שגיאה בטעינת הטופס, נסה שוב מאוחר יותר",
     "requiredField": "שדה חובה *",
     "next": "הבא",
     "back": "הקודם",
