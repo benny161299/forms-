@@ -10,13 +10,13 @@ interface RequestValidationSchemas {
 }
 
 export const validateRequest = (schemas: RequestValidationSchemas) => {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    const validateSchema = z.object({
-      body: schemas.body,
-      query: schemas.query,
-      params: schemas.params,
-    });
+  const validateSchema = z.object({
+    body: schemas.body,
+    query: schemas.query,
+    params: schemas.params,
+  });
 
+  return (req: Request, _res: Response, next: NextFunction) => {
     const result = validateSchema.safeParse({
       body: req.body,
       query: req.query,
