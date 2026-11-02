@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Typography, CircularProgress } from "@mui/material";
+import { Typography, CircularProgress, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { isNotFoundError } from "../../api/axiosClient";
@@ -237,6 +237,7 @@ export const InstanceFillPage = () => {
     isFetchedAfterMount: isInstanceFetchedAfterMount,
     isPaused: isInstancePaused,
     error: instanceError,
+    refetch: refetchInstance,
   } = useQuery({
     queryKey: ["instance", instanceId],
     queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
@@ -251,31 +252,20 @@ export const InstanceFillPage = () => {
     isFetchedAfterMount: isSchemaFetchedAfterMount,
     isPaused: isSchemaPaused,
     error: schemaError,
+    refetch: refetchSchema,
   } = useSchemaById(schemaIdToFetch);
 
   useEffect(() => {
-    if (isEditMode && instanceError && (isNotFoundError(instanceError) || !fetchedInstance)) {
-      toast.error(
-        t(
-          isNotFoundError(instanceError)
-            ? "instanceFill.notFoundError"
-            : "instanceFill.fetchError"
-        )
-      );
+    if (isEditMode && instanceError && isNotFoundError(instanceError)) {
+      toast.error(t("instanceFill.notFoundError"));
       navigate("/", { replace: true });
       return;
     }
-    if (schemaIdToFetch && schemaError && (isNotFoundError(schemaError) || !schema)) {
-      toast.error(
-        t(
-          isNotFoundError(schemaError)
-            ? "instanceFill.notFoundError"
-            : "instanceFill.fetchError"
-        )
-      );
+    if (schemaIdToFetch && schemaError && isNotFoundError(schemaError)) {
+      toast.error(t("instanceFill.notFoundError"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, schemaIdToFetch, instanceError, schemaError, fetchedInstance, schema, navigate, t]);
+  }, [isEditMode, schemaIdToFetch, instanceError, schemaError, navigate, t]);
 
   const isAlreadySubmitted = Boolean(isEditMode && fetchedInstance && !fetchedInstance.isDraft);
   useRedirectIfFinalized(isAlreadySubmitted, "instanceFill.alreadySubmitted");
@@ -288,6 +278,34 @@ export const InstanceFillPage = () => {
 
   if (isAlreadySubmitted || isSchemaDraft || isInstanceNotFound || isSchemaNotFound) {
     return null;
+  }
+
+  const isInstanceOtherError = Boolean(isEditMode && instanceError && !isNotFoundError(instanceError));
+  const isSchemaOtherError = Boolean(schemaIdToFetch && schemaError && !isNotFoundError(schemaError));
+
+  if (isInstanceOtherError || isSchemaOtherError) {
+    return (
+      <PageContainer>
+        <BackToHomeButton />
+        <Alert
+          severity="error"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                if (isInstanceOtherError) refetchInstance();
+                if (isSchemaOtherError) refetchSchema();
+              }}
+            >
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {t("instanceFill.fetchError")}
+        </Alert>
+      </PageContainer>
+    );
   }
 
   const isWaitingInstance =

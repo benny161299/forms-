@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { TextField, Button, Typography, CircularProgress } from "@mui/material";
+import { TextField, Button, Typography, CircularProgress, Alert } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -196,14 +196,15 @@ export const SchemaBuilderPage = () => {
     isFetchedAfterMount,
     isPaused,
     error: fetchError,
+    refetch,
   } = useSchemaById(id);
 
   useEffect(() => {
-    if (isEditMode && fetchError && (isNotFoundError(fetchError) || !fetchedSchema)) {
+    if (isEditMode && fetchError && isNotFoundError(fetchError)) {
       toast.error(t("schemaBuilder.notFoundError"));
       navigate("/", { replace: true });
     }
-  }, [isEditMode, fetchError, fetchedSchema, navigate, t]);
+  }, [isEditMode, fetchError, navigate, t]);
 
   const isAlreadyPublished = Boolean(isEditMode && fetchedSchema && !fetchedSchema.isDraft);
   useRedirectIfFinalized(isAlreadyPublished, "schemaBuilder.alreadyPublished");
@@ -212,6 +213,24 @@ export const SchemaBuilderPage = () => {
 
   if (isAlreadyPublished || isNotFound) {
     return null;
+  }
+
+  if (isEditMode && fetchError && !isNotFoundError(fetchError)) {
+    return (
+      <PageContainer>
+        <BackToHomeButton />
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              {t("common.retry")}
+            </Button>
+          }
+        >
+          {t("errors.fetchSchema")}
+        </Alert>
+      </PageContainer>
+    );
   }
 
   if (isEditMode && !fetchError && !isPaused && !isFetchedAfterMount) {
