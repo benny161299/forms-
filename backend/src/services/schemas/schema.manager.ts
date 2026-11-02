@@ -46,7 +46,7 @@ export const publishSchemaManager = async (id: string) => {
 };
 
 export const removeSchema = async (id: string) => {
-  return SchemaModel.findByIdAndDelete(id)
+  return SchemaModel.findOneAndDelete({ _id: id, isDraft: true })
     .lean()
-    .orFail(() => new AppError("Schema not found", StatusCodes.NOT_FOUND));
+    .orFail(() => new AppError("Schema not found, or it is not a draft", StatusCodes.NOT_FOUND));
 };

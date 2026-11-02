@@ -53,7 +53,7 @@ export const submitInstanceManager = async (id: string) => {
 };
 
 export const removeInstance = async (id: string): Promise<IInstance> => {
-  return InstanceModel.findByIdAndDelete(id)
+  return InstanceModel.findOneAndDelete({ _id: id, isDraft: true })
     .lean()
-    .orFail(() => new AppError("Instance not found", StatusCodes.NOT_FOUND));
+    .orFail(() => new AppError("Instance not found, or it is not a draft", StatusCodes.NOT_FOUND));
 };
