@@ -56,24 +56,11 @@ export const DraftsSectionBase = <T extends { _id?: string }>({
 
   const deleteMutation = useMutation({
     mutationFn: deleteFn,
-    onMutate: async (id: string) => {
-      await queryClient.cancelQueries({ queryKey });
-      const previousData = queryClient.getQueryData<T[]>(queryKey);
-      queryClient.setQueryData<T[]>(queryKey, (old) =>
-        old ? old.filter((item) => item._id !== id) : []
-      );
-      return { previousData };
-    },
-    onError: (_err, _id, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(queryKey, context.previousData);
-      }
+    onError: () => {
       toast.error(deleteErrorMessage);
     },
     onSuccess: () => {
       toast.success(deleteSuccessMessage);
-    },
-    onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
     },
   });
