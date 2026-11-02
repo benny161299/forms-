@@ -254,7 +254,7 @@ export const InstanceFillPage = () => {
   } = useSchemaById(schemaIdToFetch);
 
   useEffect(() => {
-    if (isEditMode && instanceError && !fetchedInstance) {
+    if (isEditMode && instanceError && (isNotFoundError(instanceError) || !fetchedInstance)) {
       toast.error(
         t(
           isNotFoundError(instanceError)
@@ -265,7 +265,7 @@ export const InstanceFillPage = () => {
       navigate("/", { replace: true });
       return;
     }
-    if (schemaIdToFetch && schemaError && !schema) {
+    if (schemaIdToFetch && schemaError && (isNotFoundError(schemaError) || !schema)) {
       toast.error(
         t(
           isNotFoundError(schemaError)
@@ -283,7 +283,10 @@ export const InstanceFillPage = () => {
   const isSchemaDraft = Boolean(schema?.isDraft);
   useRedirectIfFinalized(isSchemaDraft, "instanceFill.schemaNotPublished");
 
-  if (isAlreadySubmitted || isSchemaDraft) {
+  const isInstanceNotFound = Boolean(isEditMode && instanceError && isNotFoundError(instanceError));
+  const isSchemaNotFound = Boolean(schemaIdToFetch && schemaError && isNotFoundError(schemaError));
+
+  if (isAlreadySubmitted || isSchemaDraft || isInstanceNotFound || isSchemaNotFound) {
     return null;
   }
 

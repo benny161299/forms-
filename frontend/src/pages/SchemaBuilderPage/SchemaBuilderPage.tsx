@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { schemaApi } from "../../api/schema.api";
+import { isNotFoundError } from "../../api/axiosClient";
 import type { Ischema } from "../../types/schema.types";
 import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
@@ -198,7 +199,7 @@ export const SchemaBuilderPage = () => {
   } = useSchemaById(id);
 
   useEffect(() => {
-    if (isEditMode && fetchError && !fetchedSchema) {
+    if (isEditMode && fetchError && (isNotFoundError(fetchError) || !fetchedSchema)) {
       toast.error(t("schemaBuilder.notFoundError"));
       navigate("/", { replace: true });
     }
@@ -207,7 +208,9 @@ export const SchemaBuilderPage = () => {
   const isAlreadyPublished = Boolean(isEditMode && fetchedSchema && !fetchedSchema.isDraft);
   useRedirectIfFinalized(isAlreadyPublished, "schemaBuilder.alreadyPublished");
 
-  if (isAlreadyPublished) {
+  const isNotFound = Boolean(isEditMode && fetchError && isNotFoundError(fetchError));
+
+  if (isAlreadyPublished || isNotFound) {
     return null;
   }
 
