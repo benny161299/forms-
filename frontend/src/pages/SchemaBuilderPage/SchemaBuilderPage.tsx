@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress, Alert } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -33,6 +33,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
   const queryClient = useQueryClient();
 
   const [schemaId, setSchemaId] = useState<string | undefined>(id);
+  const isSavingRef = useRef(false);
   const isEditMode = Boolean(schemaId);
 
   const saveMutation = useMutation({
@@ -95,6 +96,9 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
     onError: () => {
       toast.error(t("schemaBuilder.saveError"));
     },
+    onSettled: () => {
+      isSavingRef.current = false;
+    },
   });
 
   const isSaving = saveMutation.isPending;
@@ -104,12 +108,15 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
   const { validateDraft, validatePublish } = useSchemaValidation(schema);
 
   const saveSchema = (publish: boolean) => {
+    if (isSavingRef.current) return;
+
     const validationError = publish ? validatePublish() : validateDraft();
     if (validationError) {
       toast.error(validationError);
       return;
     }
 
+    isSavingRef.current = true;
     const payload: Ischema = { ...schema, isDraft: !publish };
     saveMutation.mutate({ targetId: schemaId, payload, publish });
   };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -36,6 +36,7 @@ const InstanceFillContent = ({
   const queryClient = useQueryClient();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSavingRef = useRef(false);
 
   const createMutation = useMutation({
     mutationFn: (schemaIdToCreate: string) =>
@@ -44,6 +45,7 @@ const InstanceFillContent = ({
       queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
     },
     onError: () => {
+      isSavingRef.current = false;
       setIsSubmitting(false);
     },
   });
@@ -99,6 +101,7 @@ const InstanceFillContent = ({
       toast.error(t("instanceFill.saveError"));
     },
     onSettled: () => {
+      isSavingRef.current = false;
       setIsSubmitting(false);
     },
   });
@@ -129,6 +132,8 @@ const InstanceFillContent = ({
   };
 
   const handleSave = async (submit: boolean) => {
+    if (isSavingRef.current) return;
+
     if (submit) {
       const error = validateAll();
       if (error) {
@@ -138,6 +143,7 @@ const InstanceFillContent = ({
       }
     }
 
+    isSavingRef.current = true;
     setIsSubmitting(submit);
 
     try {
@@ -152,6 +158,7 @@ const InstanceFillContent = ({
       }
 
       if (!targetInstanceId) {
+        isSavingRef.current = false;
         setIsSubmitting(false);
         toast.error(t("instanceFill.saveError"));
         return;
@@ -159,6 +166,7 @@ const InstanceFillContent = ({
 
       updateMutation.mutate({ id: targetInstanceId, answers, submit });
     } catch {
+      isSavingRef.current = false;
       setIsSubmitting(false);
       toast.error(t("instanceFill.saveError"));
     }
