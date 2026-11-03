@@ -105,6 +105,28 @@ export const sectionSchema = z.object({
 
 export type ISection = z.infer<typeof sectionSchema>;
 
+export const validateUniqueQuestionIds = (
+  sections: Array<{ questions?: Array<{ id: string }> }>,
+  ctx: z.RefinementCtx
+) => {
+  const seenIds = new Set<string>();
+
+  sections.forEach((section, sectionIndex) => {
+    (section.questions ?? []).forEach((question, questionIndex) => {
+      if (!question.id) return;
+      if (seenIds.has(question.id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "schemaBuilder.validationDuplicateQuestionId",
+          path: [sectionIndex, "questions", questionIndex, "id"],
+        });
+      } else {
+        seenIds.add(question.id);
+      }
+    });
+  });
+};
+
 export const schemaSchema = z.object({
   _id: z
     .string()
@@ -115,7 +137,8 @@ export const schemaSchema = z.object({
   isDraft: z.boolean(),
   sections: z
     .array(sectionSchema)
-    .min(1, "schemaBuilder.validationNoSections"),
+    .min(1, "schemaBuilder.validationNoSections")
+    .superRefine(validateUniqueQuestionIds),
 });
 
 export type Ischema = z.infer<typeof schemaSchema>;
@@ -144,7 +167,10 @@ export const draftSchema = z.object({
   title: z.string().trim().min(1, "schemaBuilder.validationNoTitle"),
   description: z.string().trim().default(""),
   isDraft: z.boolean().default(true),
-  sections: z.array(draftSectionSchema).default([]),
+  sections: z
+    .array(draftSectionSchema)
+    .default([])
+    .superRefine(validateUniqueQuestionIds),
 });
 
 export type DraftSchema = z.infer<typeof draftSchema>;
