@@ -24,7 +24,7 @@ export const schemaApi = {
 
   updateSchema: async (
     id: string,
-    schemaData: Partial<SchemaInput>
+    schemaData: SchemaInput
   ): Promise<Ischema> => {
     const { data } = await axiosClient.put<Ischema>(
       `/schemas/${id}`,
