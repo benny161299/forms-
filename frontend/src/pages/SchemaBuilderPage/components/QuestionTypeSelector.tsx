@@ -1,6 +1,7 @@
+import { useId } from "react";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import type { QuestionType  } from "../../../types/schema.types";
+import type { QuestionType } from "../../../types/schema.types";
 import { questionTypes } from "../../../types/schema.types";
 import { QuestionTypeFormControl } from "./SchemaBuilder.styles";
 
@@ -11,14 +12,15 @@ interface QuestionTypeSelectorProps {
 
 export const QuestionTypeSelector = ({ value, onChange }: QuestionTypeSelectorProps) => {
   const { t } = useTranslation();
+  const labelId = useId();
 
   return (
     <QuestionTypeFormControl size="small">
-      <InputLabel id="question-type-select-label">
+      <InputLabel id={labelId}>
         {t("schemaBuilder.questionType")}
       </InputLabel>
       <Select
-        labelId="question-type-select-label"
+        labelId={labelId}
         value={value}
         label={t("schemaBuilder.questionType")}
         onChange={(e) => onChange(e.target.value)}
@@ -31,4 +33,4 @@ export const QuestionTypeSelector = ({ value, onChange }: QuestionTypeSelectorPr
       </Select>
     </QuestionTypeFormControl>
   );
-}
+};
