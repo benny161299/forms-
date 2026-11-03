@@ -35,7 +35,9 @@ export const validateRequest = (schemas: RequestValidationSchemas) => {
 
       return next(new AppError("Validation failed", StatusCodes.BAD_REQUEST, errors));
     }
-    req.body = result.data.body ?? {};
+    req.body = result.data.body;
+    req.params = result.data.params as typeof req.params;
+    req.query = result.data.query as typeof req.query;
 
     return next();
   };
