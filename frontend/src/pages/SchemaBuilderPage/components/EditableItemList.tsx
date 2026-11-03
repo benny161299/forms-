@@ -1,4 +1,4 @@
-import { TextField, IconButton, Button } from "@mui/material";
+import { TextField, IconButton, Button, Typography } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ interface EditableItemListProps {
   items: string[];
   placeholderKey: string;
   addLabelKey: string;
+  titleKey?: string;
   onUpdate: (updatedItems: string[]) => void;
 }
 
@@ -15,6 +16,7 @@ export const EditableItemList = ({
   items,
   placeholderKey,
   addLabelKey,
+  titleKey,
   onUpdate,
 }: EditableItemListProps) => {
   const { t } = useTranslation();
@@ -36,6 +38,11 @@ export const EditableItemList = ({
 
   return (
     <OptionsList>
+      {titleKey && (
+        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 600 }}>
+          {t(titleKey)}
+        </Typography>
+      )}
       {items.map((item, index) => (
         <OptionItem key={index}>
           <TextField
@@ -56,4 +63,4 @@ export const EditableItemList = ({
       </Button>
     </OptionsList>
   );
-}
+};

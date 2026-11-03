@@ -82,6 +82,10 @@
     "addOption": "הוסף אפשרות",
     "gridRowPlaceholder": "שורה {{number}}",
     "addRow": "הוסף שורה",
+    "gridColPlaceholder": "עמודה {{number}}",
+    "addCol": "הוסף עמודה",
+    "gridColumns": "עמודות",
+    "gridRows": "שורות",
     "types": {
       "short_answer": "תשובה מילולית קצרה",
       "paragraph": "תשובה מילולית ארוכה (פסקה)",

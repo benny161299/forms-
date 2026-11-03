@@ -25,6 +25,10 @@ interface QuestionCardProps {
 export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps) => {
   const { t } = useTranslation();
 
+  const isGrid =
+    question.type === QUESTION_TYPES.RADIO_GRID ||
+    question.type === QUESTION_TYPES.CHECKBOX_GRID;
+
   const handleTypeChange = (newType: QuestionType) => {
     const base = {
       id: question.id,
@@ -136,9 +140,16 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
 
       {"options" in question && "choices" in question.options && (
         <EditableItemList
+          titleKey={isGrid ? "schemaBuilder.gridColumns" : undefined}
           items={question.options.choices}
-          placeholderKey="schemaBuilder.choiceOptionPlaceholder"
-          addLabelKey="schemaBuilder.addOption"
+          placeholderKey={
+            isGrid
+              ? "schemaBuilder.gridColPlaceholder"
+              : "schemaBuilder.choiceOptionPlaceholder"
+          }
+          addLabelKey={
+            isGrid ? "schemaBuilder.addCol" : "schemaBuilder.addOption"
+          }
           onUpdate={(choices) =>
             onUpdate({
               ...question,
@@ -150,6 +161,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
 
       {"options" in question && "rows" in question.options && (
         <EditableItemList
+          titleKey="schemaBuilder.gridRows"
           items={question.options.rows}
           placeholderKey="schemaBuilder.gridRowPlaceholder"
           addLabelKey="schemaBuilder.addRow"
