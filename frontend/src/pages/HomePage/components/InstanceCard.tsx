@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { Typography } from '@mui/material';
+import { usePublishedSchemas } from '../../../hooks/usePublishedSchemas';
 import type { IInstance } from '../../../types/instance.types';
 import {
   StyledCard,
@@ -13,6 +15,7 @@ import {
 interface InstanceCardProps {
   instance: IInstance;
   index: number;
+  schemaTitle?: string;
   onContinueFill?: (instanceId: string) => void;
   onView?: (instanceId: string) => void;
   onDelete?: (instanceId: string) => void;
@@ -21,11 +24,17 @@ interface InstanceCardProps {
 export const InstanceCard = ({
   instance,
   index,
+  schemaTitle,
   onContinueFill,
   onView,
   onDelete,
 }: InstanceCardProps) => {
   const { t } = useTranslation();
+  const { schemas } = usePublishedSchemas();
+
+  const title =
+    schemaTitle ??
+    schemas.find((schema) => schema._id === instance.schemaId)?.title;
 
   return (
     <StyledCard variant="outlined">
@@ -34,13 +43,19 @@ export const InstanceCard = ({
           {index + 1}
         </CardNumber>
 
-        <CardTitle variant="body1">
-          {instance.isDraft
+        <CardTitle variant="h6" noWrap>
+          {title || (instance.isDraft
             ? t('home.instanceInProcess')
-            : t('home.instanceSubmitted')}
+            : t('home.instanceSubmitted'))}
         </CardTitle>
 
-
+        {title && (
+          <Typography variant="body2" color="text.secondary" noWrap>
+            {instance.isDraft
+              ? t('home.instanceInProcess')
+              : t('home.instanceSubmitted')}
+          </Typography>
+        )}
       </Content>
 
       <ActionsContainer>
@@ -73,6 +88,6 @@ export const InstanceCard = ({
           </DeleteButton>
         )}
       </ActionsContainer>
-    </StyledCard> 
+    </StyledCard>
   );
-}
+};
