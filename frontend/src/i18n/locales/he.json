@@ -86,6 +86,8 @@
     "addCol": "הוסף עמודה",
     "gridColumns": "עמודות",
     "gridRows": "שורות",
+    "scaleMin": "מינימום",
+    "scaleMax": "מקסימום",
     "types": {
       "short_answer": "תשובה מילולית קצרה",
       "paragraph": "תשובה מילולית ארוכה (פסקה)",

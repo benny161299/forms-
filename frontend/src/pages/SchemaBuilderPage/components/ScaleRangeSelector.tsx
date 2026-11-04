@@ -1,4 +1,6 @@
+import { useId } from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { ScaleRow } from "./SchemaBuilder.styles";
 
 const MIN_OPTIONS = [0, 1] as const;
@@ -11,13 +13,20 @@ interface ScaleRangeSelectorProps {
 }
 
 export const ScaleRangeSelector = ({ min, max, onUpdate }: ScaleRangeSelectorProps) => {
+  const { t } = useTranslation();
+  const minLabelId = useId();
+  const maxLabelId = useId();
+
   return (
     <ScaleRow>
       <FormControl size="small">
-        <InputLabel>min</InputLabel>
+        <InputLabel id={minLabelId}>
+          {t("schemaBuilder.scaleMin")}
+        </InputLabel>
         <Select
+          labelId={minLabelId}
           value={min}
-          label="min"
+          label={t("schemaBuilder.scaleMin")}
           onChange={(e) => onUpdate(Number(e.target.value), max)}
         >
           {MIN_OPTIONS.map((val) => (
@@ -29,10 +38,13 @@ export const ScaleRangeSelector = ({ min, max, onUpdate }: ScaleRangeSelectorPro
       </FormControl>
 
       <FormControl size="small">
-        <InputLabel>max</InputLabel>
+        <InputLabel id={maxLabelId}>
+          {t("schemaBuilder.scaleMax")}
+        </InputLabel>
         <Select
+          labelId={maxLabelId}
           value={max}
-          label="max"
+          label={t("schemaBuilder.scaleMax")}
           onChange={(e) => onUpdate(min, Number(e.target.value))}
         >
           {MAX_OPTIONS.map((val) => (
