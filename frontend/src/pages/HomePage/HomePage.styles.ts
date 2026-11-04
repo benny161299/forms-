@@ -18,7 +18,7 @@ export const HeaderContainer = styled(Box)(({ theme }) => ({
 
 export const GridContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(25rem, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(25rem, 100%), 1fr))',
   gap: theme.spacing(3),
 }));
 

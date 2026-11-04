@@ -78,6 +78,8 @@
     "validationSectionNoQuestions": "סקשן חייב להכיל לפחות שאלה אחת",
     "validationQuestionNoTitle": "לשאלה בסקשן חסרה כותרת",
     "validationDuplicateQuestionId": "קיימות שאלות בעלות מזהה כפול בטופס",
+    "validationScaleMin": "ערך המינימום בסולם חייב להיות 0 או 1",
+    "validationScaleMax": "ערך המקסימום בסולם חייב להיות בין 5 ל-10",
     "choiceOptionPlaceholder": "אפשרות {{number}}",
     "addOption": "הוסף אפשרות",
     "gridRowPlaceholder": "שורה {{number}}",

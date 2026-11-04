@@ -61,8 +61,16 @@ const choiceQuestionSchema = baseQuestionSchema.extend({
 const scaleQuestionSchema = baseQuestionSchema.extend({
   type: z.literal(QUESTION_TYPES.LINEAR_SCALE),
   options: z.object({
-    min: z.number().int().min(0).max(1),
-    max: z.number().int().min(5).max(10),
+    min: z
+      .number("schemaBuilder.validationScaleMin")
+      .int("schemaBuilder.validationScaleMin")
+      .min(0, "schemaBuilder.validationScaleMin")
+      .max(1, "schemaBuilder.validationScaleMin"),
+    max: z
+      .number("schemaBuilder.validationScaleMax")
+      .int("schemaBuilder.validationScaleMax")
+      .min(5, "schemaBuilder.validationScaleMax")
+      .max(10, "schemaBuilder.validationScaleMax"),
   }),
 });
 
