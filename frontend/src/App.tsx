@@ -55,7 +55,7 @@ export const App = () => {
           </Routes>
         </BrowserRouter>
 
-        <ToastContainer />
+        <ToastContainer rtl position="top-left" />
       </ThemeProvider>
     </CacheProvider>
   );
