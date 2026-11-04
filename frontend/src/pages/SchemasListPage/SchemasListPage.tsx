@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CircularProgress, Typography, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -20,6 +21,7 @@ import {
 
 export const SchemasListPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
     schemas,
@@ -94,6 +96,7 @@ export const SchemasListPage = () => {
               key={schema._id}
               schema={schema}
               index={index}
+              onFill={(id) => navigate(`/instances/fill/${id}`)}
               onView={() => setSelectedSchema(schema)}
             />
           ))}
