@@ -1,113 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Typography, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 import { usePublishedSchemas } from "../../hooks/usePublishedSchemas";
 import { SchemaCard } from "../HomePage/components/SchemaCard";
 import { SchemaViewModal } from "./SchemaViewModal";
-import { BackToHomeButton } from "../../components/BackToHomeButton";
+import { ListPage } from "../../components/common/ListPage";
 
 import type { Ischema } from "../../types/schema.types";
-
-import {
-  PageContainer,
-  LoadingContainer,
-  PageTitle,
-  EmptyState,
-  CardsGrid,
-  ErrorAlert,
-} from "./SchemasListPage.styles";
 
 export const SchemasListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const {
-    schemas,
-    loading: isLoading,
-    error,
-    isError,
-    hasData,
-    refetch,
-  } = usePublishedSchemas();
+  const { schemas, loading, error, isError, hasData, refetch } =
+    usePublishedSchemas();
 
   const [selectedSchema, setSelectedSchema] = useState<Ischema | null>(null);
 
-  if (isLoading) {
-    return (
-      <PageContainer>
-        <LoadingContainer>
-          <CircularProgress />
-        </LoadingContainer>
-      </PageContainer>
-    );
-  }
-
-  if (isError && !hasData) {
-    return (
-      <PageContainer>
-        <BackToHomeButton />
-        <Alert
-          severity="error"
-          action={
-            <Button color="inherit" size="small" onClick={() => refetch()}>
-              {t("common.retry")}
-            </Button>
-          }
-        >
-          {error}
-        </Alert>
-      </PageContainer>
-    );
-  }
-
   return (
-    <PageContainer>
-      <BackToHomeButton />
-
-      {isError && (
-        <ErrorAlert
-          severity="error"
-          action={
-            <Button color="inherit" size="small" onClick={() => refetch()}>
-              {t("common.retry")}
-            </Button>
-          }
-        >
-          {error}
-        </ErrorAlert>
+    <ListPage
+      title={t("listPages.schemasTitle")}
+      items={schemas}
+      loading={loading}
+      isError={isError}
+      hasData={hasData}
+      error={error}
+      emptyMessage={t("listPages.schemasEmpty")}
+      onRetry={refetch}
+      renderItem={(schema, index) => (
+        <SchemaCard
+          key={schema._id}
+          schema={schema}
+          index={index}
+          onFill={(id) => navigate(`/instances/fill/${id}`)}
+          onView={() => setSelectedSchema(schema)}
+        />
       )}
-
-      <PageTitle variant="h4">
-        {t("listPages.schemasTitle")}
-      </PageTitle>
-
-      {schemas.length === 0 ? (
-        <EmptyState elevation={0}>
-          <Typography variant="body1">
-            {t("listPages.schemasEmpty")}
-          </Typography>
-        </EmptyState>
-      ) : (
-        <CardsGrid>
-          {schemas.map((schema, index) => (
-            <SchemaCard
-              key={schema._id}
-              schema={schema}
-              index={index}
-              onFill={(id) => navigate(`/instances/fill/${id}`)}
-              onView={() => setSelectedSchema(schema)}
-            />
-          ))}
-        </CardsGrid>
-      )}
-
-      <SchemaViewModal
-        schema={selectedSchema}
-        onClose={() => setSelectedSchema(null)}
-      />
-    </PageContainer>
+      modal={
+        <SchemaViewModal
+          schema={selectedSchema}
+          onClose={() => setSelectedSchema(null)}
+        />
+      }
+    />
   );
 };
 
