@@ -35,6 +35,19 @@ export const TABLE_QUESTION_TYPES = [
 
 export const questionTypes: QuestionType[] = Object.values(QUESTION_TYPES);
 
+const uniqueNonEmptyStrings = (messages: {
+  empty: string;
+  noItems: string;
+  duplicate: string;
+}) =>
+  z
+    .array(z.string().trim().min(1, messages.empty))
+    .min(1, messages.noItems)
+    .refine(
+      (items) => new Set(items).size === items.length,
+      messages.duplicate,
+    );
+
 const baseQuestionSchema = z.object({
   id: z.uuidv4(),
   title: z.string().trim().min(1, "Question title is required"),
@@ -48,13 +61,11 @@ const textQuestionSchema = baseQuestionSchema.extend({
 const choiceQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(CHOICE_QUESTION_TYPES),
   options: z.object({
-    choices: z
-      .array(z.string().trim().min(1, "Choice option cannot be empty"))
-      .min(1, "At least one choice option is required")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "Duplicate choices are not allowed",
-      ),
+    choices: uniqueNonEmptyStrings({
+      empty: "Choice option cannot be empty",
+      noItems: "At least one choice option is required",
+      duplicate: "Duplicate choices are not allowed",
+    }),
   }),
 });
 
@@ -69,20 +80,16 @@ const scaleQuestionSchema = baseQuestionSchema.extend({
 const tableQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(TABLE_QUESTION_TYPES),
   options: z.object({
-    choices: z
-      .array(z.string().trim().min(1, "Column title cannot be empty"))
-      .min(1, "At least one column is required")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "Duplicate columns are not allowed",
-      ),
-    rows: z
-      .array(z.string().trim().min(1, "Row title cannot be empty"))
-      .min(1, "At least one row is required")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "Duplicate rows are not allowed",
-      ),
+    choices: uniqueNonEmptyStrings({
+      empty: "Column title cannot be empty",
+      noItems: "At least one column is required",
+      duplicate: "Duplicate columns are not allowed",
+    }),
+    rows: uniqueNonEmptyStrings({
+      empty: "Row title cannot be empty",
+      noItems: "At least one row is required",
+      duplicate: "Duplicate rows are not allowed",
+    }),
   }),
 });
 

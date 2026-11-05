@@ -35,6 +35,19 @@ export const TABLE_QUESTION_TYPES = [
 
 export const questionTypes: QuestionType[] = Object.values(QUESTION_TYPES);
 
+const uniqueNonEmptyStrings = (messages: {
+  empty: string;
+  noItems: string;
+  duplicate: string;
+}) =>
+  z
+    .array(z.string().trim().min(1, messages.empty))
+    .min(1, messages.noItems)
+    .refine(
+      (items) => new Set(items).size === items.length,
+      messages.duplicate
+    );
+
 const baseQuestionSchema = z.object({
   id: z.uuidv4("schemaBuilder.validationInvalidQuestionId"),
   title: z.string().trim().min(1, "schemaBuilder.validationQuestionNoTitle"),
@@ -48,13 +61,11 @@ const textQuestionSchema = baseQuestionSchema.extend({
 const choiceQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(CHOICE_QUESTION_TYPES),
   options: z.object({
-    choices: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyChoice"))
-      .min(1, "schemaBuilder.validationNoChoices")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateChoices"
-      ),
+    choices: uniqueNonEmptyStrings({
+      empty: "schemaBuilder.validationEmptyChoice",
+      noItems: "schemaBuilder.validationNoChoices",
+      duplicate: "schemaBuilder.validationDuplicateChoices",
+    }),
   }),
 });
 
@@ -77,20 +88,16 @@ const scaleQuestionSchema = baseQuestionSchema.extend({
 const tableQuestionSchema = baseQuestionSchema.extend({
   type: z.enum(TABLE_QUESTION_TYPES),
   options: z.object({
-    choices: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridCol"))
-      .min(1, "schemaBuilder.validationNoGridCols")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateGridCols"
-      ),
-    rows: z
-      .array(z.string().trim().min(1, "schemaBuilder.validationEmptyGridRow"))
-      .min(1, "schemaBuilder.validationNoGridRows")
-      .refine(
-        (items) => new Set(items.map((i) => i.trim())).size === items.length,
-        "schemaBuilder.validationDuplicateGridRows"
-      ),
+    choices: uniqueNonEmptyStrings({
+      empty: "schemaBuilder.validationEmptyGridCol",
+      noItems: "schemaBuilder.validationNoGridCols",
+      duplicate: "schemaBuilder.validationDuplicateGridCols",
+    }),
+    rows: uniqueNonEmptyStrings({
+      empty: "schemaBuilder.validationEmptyGridRow",
+      noItems: "schemaBuilder.validationNoGridRows",
+      duplicate: "schemaBuilder.validationDuplicateGridRows",
+    }),
   }),
 });
 
