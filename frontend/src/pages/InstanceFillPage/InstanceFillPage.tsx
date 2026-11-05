@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -35,78 +35,7 @@ const InstanceFillContent = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const isSavingRef = useRef(false);
-
-  const createMutation = useMutation({
-    mutationFn: (schemaIdToCreate: string) =>
-      instanceApi.createInstance({ schemaId: schemaIdToCreate }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
-    },
-    onError: () => {
-      isSavingRef.current = false;
-      setIsSubmitting(false);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async ({
-      id,
-      answers,
-      submit,
-    }: {
-      id: string;
-      answers: Record<string, AnswerValue>;
-      submit: boolean;
-    }) => {
-      let instance = await instanceApi.updateInstance(id, { answers });
-      let submitFailed = false;
-
-      if (submit) {
-        try {
-          instance = await instanceApi.submitInstance(id);
-        } catch {
-          submitFailed = true;
-        }
-      }
-
-      return { instance, submit, submitFailed };
-    },
-    onSuccess: (data, variables) => {
-      if (data.submitFailed) {
-        queryClient.setQueryData(["instance", variables.id], data.instance);
-        toast.error(t("instanceFill.submitFailedDraftSaved"));
-        return;
-      }
-
-      if (!variables.submit) {
-        queryClient.setQueryData(["instance", variables.id], data.instance);
-      } else {
-        queryClient.removeQueries({ queryKey: ["instance", variables.id] });
-        queryClient.invalidateQueries({
-          queryKey: ["submittedInstances"],
-        });
-      }
-
-      queryClient.invalidateQueries({
-        queryKey: ["draftInstances"],
-      });
-      toast.success(
-        t(variables.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
-      );
-      navigate("/", { replace: true });
-    },
-    onError: () => {
-      toast.error(t("instanceFill.saveError"));
-    },
-    onSettled: () => {
-      isSavingRef.current = false;
-      setIsSubmitting(false);
-    },
-  });
-
-  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   const actions = useInstanceFill(initialInstance, schema.sections);
   const {
@@ -116,6 +45,69 @@ const InstanceFillContent = ({
     isFirstSection,
     isLastSection,
   } = actions;
+
+  const saveMutation = useMutation({
+    mutationFn: async ({
+      answers,
+      submit,
+    }: {
+      answers: Record<string, AnswerValue>;
+      submit: boolean;
+    }) => {
+      // שלב 1: צור instance אם לא קיים עדיין
+      let targetId = stateInstanceId;
+      if (!targetId && schemaId) {
+        const created = await instanceApi.createInstance({ schemaId });
+        targetId = created._id;
+        if (targetId) actions.setInstanceId(targetId);
+      }
+      if (!targetId) throw new Error("No instance id");
+
+      // שלב 2: שמור תשובות
+      let instance = await instanceApi.updateInstance(targetId, { answers });
+      let submitFailed = false;
+
+      // שלב 3: submit אם נדרש
+      if (submit) {
+        try {
+          instance = await instanceApi.submitInstance(targetId);
+        } catch {
+          submitFailed = true;
+        }
+      }
+
+      return { instance, submit, submitFailed, id: targetId };
+    },
+    onSuccess: (data) => {
+      if (data.submitFailed) {
+        queryClient.setQueryData(["instance", data.id], data.instance);
+        toast.error(t("instanceFill.submitFailedDraftSaved"));
+        return;
+      }
+
+      if (!data.submit) {
+        queryClient.setQueryData(["instance", data.id], data.instance);
+      } else {
+        queryClient.removeQueries({ queryKey: ["instance", data.id] });
+        queryClient.invalidateQueries({ queryKey: ["submittedInstances"] });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["draftInstances"] });
+      toast.success(
+        t(data.submit ? "instanceFill.submitSuccess" : "instanceFill.draftSaveSuccess")
+      );
+      navigate("/", { replace: true });
+    },
+    onError: () => {
+      toast.error(t("instanceFill.saveError"));
+    },
+    onSettled: () => {
+      isSavingRef.current = false;
+    },
+  });
+
+  const isSaving = saveMutation.isPending;
+  const isSubmitting = saveMutation.isPending && saveMutation.variables?.submit === true;
 
   const currentSection = schema.sections[currentSectionIndex];
   const { validateAll } = useInstanceValidation(
@@ -131,7 +123,7 @@ const InstanceFillContent = ({
     actions.goToPrevSection();
   };
 
-  const handleSave = async (submit: boolean) => {
+  const handleSave = (submit: boolean) => {
     if (isSavingRef.current) return;
 
     if (submit) {
@@ -144,32 +136,7 @@ const InstanceFillContent = ({
     }
 
     isSavingRef.current = true;
-    setIsSubmitting(submit);
-
-    try {
-      let targetInstanceId = stateInstanceId;
-
-      if (!targetInstanceId && schemaId) {
-        const created = await createMutation.mutateAsync(schemaId);
-        targetInstanceId = created._id;
-        if (targetInstanceId) {
-          actions.setInstanceId(targetInstanceId);
-        }
-      }
-
-      if (!targetInstanceId) {
-        isSavingRef.current = false;
-        setIsSubmitting(false);
-        toast.error(t("instanceFill.saveError"));
-        return;
-      }
-
-      updateMutation.mutate({ id: targetInstanceId, answers, submit });
-    } catch {
-      isSavingRef.current = false;
-      setIsSubmitting(false);
-      toast.error(t("instanceFill.saveError"));
-    }
+    saveMutation.mutate({ answers, submit });
   };
 
   if (!currentSection) {
