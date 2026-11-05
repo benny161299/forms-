@@ -6,10 +6,13 @@ export function useSchemaValidation(schema: Ischema) {
   const { t, i18n } = useTranslation();
 
   const getErrorMessage = (error: ZodError): string => {
-    const errorKey = error.issues[0]?.message;
-    return errorKey && i18n.exists(errorKey)
-      ? t(errorKey)
-      : t("schemaBuilder.saveError");
+    const firstIssue = error.issues[0];
+    if (!firstIssue) return t("schemaBuilder.saveError");
+    const errorKey = firstIssue.message;
+    if (errorKey && i18n.exists(errorKey)) {
+      return t(errorKey);
+    }
+    return errorKey || t("schemaBuilder.saveError");
   };
 
   const validateDraft = (): string | null => {

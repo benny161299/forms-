@@ -77,6 +77,7 @@
     "validationNoSections": "לא ניתן לשמור טופס ללא סקשנים",
     "validationSectionNoQuestions": "סקשן חייב להכיל לפחות שאלה אחת",
     "validationQuestionNoTitle": "לשאלה בסקשן חסרה כותרת",
+    "validationInvalidQuestionId": "מזהה השאלה אינו תקין",
     "validationDuplicateQuestionId": "קיימות שאלות בעלות מזהה כפול בטופס",
     "validationScaleMin": "ערך המינימום בסולם חייב להיות 0 או 1",
     "validationScaleMax": "ערך המקסימום בסולם חייב להיות בין 5 ל-10",

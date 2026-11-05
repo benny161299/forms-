@@ -1,10 +1,15 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "../schemas/Schema.model.js";
-import { InstanceModel } from "./Instance.model.js";
-import type { CreateInstanceInput, IInstance, UpdateInstanceInput, AnswerValue } from "./instance.types.js";
-import { QUESTION_TYPES } from "../schemas/schema.types.js";
 import type { IQuestion } from "../schemas/schema.types.js";
+import { QUESTION_TYPES } from "../schemas/schema.types.js";
+import { InstanceModel } from "./Instance.model.js";
+import type {
+  AnswerValue,
+  CreateInstanceInput,
+  IInstance,
+  UpdateInstanceInput,
+} from "./instance.types.js";
 
 const isAnswerMissing = (question: IQuestion, value: AnswerValue | undefined): boolean => {
   if (value === undefined || value === null) {
@@ -43,9 +48,7 @@ const isAnswerMissing = (question: IQuestion, value: AnswerValue | undefined): b
       const record = value as Record<string, number[]>;
       return question.options.rows.some(
         (row) =>
-          !Object.hasOwn(record, row) ||
-          !Array.isArray(record[row]) ||
-          record[row].length === 0,
+          !Object.hasOwn(record, row) || !Array.isArray(record[row]) || record[row].length === 0,
       );
     }
 
@@ -92,7 +95,11 @@ const validateAnswerValue = (question: IQuestion, value: AnswerValue): string | 
       if (typeof value !== "number") {
         return `Answer for "${question.title}" must be a number`;
       }
-      if (!Number.isInteger(value) || value < question.options.min || value > question.options.max) {
+      if (
+        !Number.isInteger(value) ||
+        value < question.options.min ||
+        value > question.options.max
+      ) {
         return `Answer for "${question.title}" is out of range (${question.options.min}-${question.options.max})`;
       }
       return null;
@@ -108,7 +115,12 @@ const validateAnswerValue = (question: IQuestion, value: AnswerValue): string | 
         if (!validRows.has(key)) {
           return `Answer for "${question.title}" contains an unknown row: "${key}"`;
         }
-        if (typeof record[key] !== "number" || !Number.isInteger(record[key]) || record[key] < 0 || record[key] >= question.options.choices.length) {
+        if (
+          typeof record[key] !== "number" ||
+          !Number.isInteger(record[key]) ||
+          record[key] < 0 ||
+          record[key] >= question.options.choices.length
+        ) {
           return `Answer for "${question.title}" has an invalid column index for row "${key}"`;
         }
       }
@@ -129,7 +141,12 @@ const validateAnswerValue = (question: IQuestion, value: AnswerValue): string | 
           return `Answer for "${question.title}" has an invalid value for row "${key}"`;
         }
         for (const idx of record[key]) {
-          if (typeof idx !== "number" || !Number.isInteger(idx) || idx < 0 || idx >= question.options.choices.length) {
+          if (
+            typeof idx !== "number" ||
+            !Number.isInteger(idx) ||
+            idx < 0 ||
+            idx >= question.options.choices.length
+          ) {
             return `Answer for "${question.title}" has an invalid column index for row "${key}"`;
           }
         }

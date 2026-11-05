@@ -33,6 +33,8 @@ export const TABLE_QUESTION_TYPES = [
   QUESTION_TYPES.CHECKBOX_GRID,
 ] as const;
 
+export const questionTypes: QuestionType[] = Object.values(QUESTION_TYPES);
+
 const baseQuestionSchema = z.object({
   id: z.uuidv4(),
   title: z.string().trim().min(1, "Question title is required"),
@@ -142,7 +144,7 @@ export type Ischema = z.infer<typeof schemaSchema>;
 export const draftQuestionSchema = z.object({
   id: z.string(),
   title: z.string().trim().default(""),
-  type: z.enum(Object.values(QUESTION_TYPES) as [QuestionType, ...QuestionType[]]),
+  type: z.enum(questionTypes as [QuestionType, ...QuestionType[]]),
   required: z.boolean().default(false),
   options: z.any().optional(),
 });
@@ -166,4 +168,4 @@ export const draftSchema = z.object({
 
 export type DraftSchema = z.infer<typeof draftSchema>;
 export type DraftSchemaInput = Pick<DraftSchema, "title" | "description" | "sections">;
-export type SchemaInput = DraftSchemaInput;
+export type SchemaInput = Pick<Ischema, "title" | "description" | "sections">;

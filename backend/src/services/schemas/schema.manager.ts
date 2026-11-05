@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../../middlewares/error.middleware.js";
 import { SchemaModel } from "./Schema.model.js";
-import { type SchemaInput, schemaSchema } from "./schema.types.js";
+import { type DraftSchemaInput, schemaSchema } from "./schema.types.js";
 
-export const createNewSchema = async (schemaData: SchemaInput) => {
+export const createNewSchema = async (schemaData: DraftSchemaInput) => {
   const { title, description, sections } = schemaData;
 
   return SchemaModel.create({
@@ -27,7 +27,7 @@ export const fetchSchemaById = async (id: string) => {
     .orFail(() => new AppError("Schema not found", StatusCodes.NOT_FOUND));
 };
 
-export const updateSchemaManager = async (id: string, updateData: SchemaInput) => {
+export const updateSchemaManager = async (id: string, updateData: DraftSchemaInput) => {
   const { title, description, sections } = updateData;
 
   return SchemaModel.findOneAndUpdate(

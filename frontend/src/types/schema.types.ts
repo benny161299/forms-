@@ -36,7 +36,7 @@ export const TABLE_QUESTION_TYPES = [
 export const questionTypes: QuestionType[] = Object.values(QUESTION_TYPES);
 
 const baseQuestionSchema = z.object({
-  id: z.string(),
+  id: z.uuidv4("schemaBuilder.validationInvalidQuestionId"),
   title: z.string().trim().min(1, "schemaBuilder.validationQuestionNoTitle"),
   required: z.boolean().default(false),
 });
