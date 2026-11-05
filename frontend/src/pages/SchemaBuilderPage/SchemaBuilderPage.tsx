@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, Button, Typography, CircularProgress, Alert } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -6,14 +6,13 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { schemaApi } from "../../api/schema.api";
-import { isNotFoundError } from "../../api/axiosClient";
 import type { Ischema } from "../../types/schema.types";
-import { useSchemaById } from "./hooks/useSchemaById";
 import { useSchemaValidation } from "./hooks/useSchemaValidation";
 import { useSchemaBuilder } from "./hooks/useSchemaBuilder";
 import { SectionCard } from "./components/SectionCard";
 import { BackToHomeButton } from "../../components/BackToHomeButton";
 import { useRedirectIfFinalized } from "../../hooks/useRedirectIfFinalized";
+import { useEntityPageGate } from "../../hooks/useEntityPageGate";
 import {
   ActionsFooter,
   FormFieldSet,
@@ -196,33 +195,28 @@ export const SchemaBuilderPage = () => {
   const isEditMode = Boolean(id);
 
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const {
-    schema: fetchedSchema,
-    isFetchedAfterMount,
-    isPaused,
-    error: fetchError,
+    data: fetchedSchema,
+    isLoading,
+    isNotFound,
+    isOtherError,
     refetch,
-  } = useSchemaById(id);
-
-  useEffect(() => {
-    if (isEditMode && fetchError && isNotFoundError(fetchError)) {
-      toast.error(t("schemaBuilder.notFoundError"));
-      navigate("/", { replace: true });
-    }
-  }, [isEditMode, fetchError, navigate, t]);
+  } = useEntityPageGate<Ischema>({
+    queryKey: ["schema", id],
+    queryFn: () => (id ? schemaApi.getSchemaById(id) : null),
+    enabled: isEditMode,
+    notFoundMessageKey: "schemaBuilder.notFoundError",
+  });
 
   const isAlreadyPublished = Boolean(isEditMode && fetchedSchema && !fetchedSchema.isDraft);
   useRedirectIfFinalized(isAlreadyPublished, "schemaBuilder.alreadyPublished");
-
-  const isNotFound = Boolean(isEditMode && fetchError && isNotFoundError(fetchError));
 
   if (isAlreadyPublished || isNotFound) {
     return null;
   }
 
-  if (isEditMode && fetchError && !isNotFoundError(fetchError)) {
+  if (isOtherError) {
     return (
       <PageContainer>
         <BackToHomeButton />
@@ -240,7 +234,7 @@ export const SchemaBuilderPage = () => {
     );
   }
 
-  if (isEditMode && !fetchError && !isPaused && !isFetchedAfterMount) {
+  if (isLoading) {
     return (
       <PageContainer>
         <CircularProgress />

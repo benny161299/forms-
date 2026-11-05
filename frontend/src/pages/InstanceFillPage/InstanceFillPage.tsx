@@ -1,20 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress, Alert, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { isNotFoundError } from "../../api/axiosClient";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { instanceApi } from "../../api/instance.api";
+import { schemaApi } from "../../api/schema.api";
 import type { AnswerValue, IInstance } from "../../types/instance.types";
 import type { Ischema } from "../../types/schema.types";
-import { useSchemaById } from "../SchemaBuilderPage/hooks/useSchemaById";
 import { useInstanceFill } from "./hooks/useInstanceFill";
 import { useInstanceValidation } from "./hooks/useInstanceValidation";
 import { QuestionAnswerField } from "./components/QuestionAnswerField";
 import { InstanceFillFooter } from "./components/InstanceFillFooter";
 import { BackToHomeButton } from "../../components/BackToHomeButton";
 import { useRedirectIfFinalized } from "../../hooks/useRedirectIfFinalized";
+import { useEntityPageGate } from "../../hooks/useEntityPageGate";
 import {
   PageContainer,
   SectionHeader,
@@ -54,7 +54,6 @@ const InstanceFillContent = ({
       answers: Record<string, AnswerValue>;
       submit: boolean;
     }) => {
-      // שלב 1: צור instance אם לא קיים עדיין
       let targetId = stateInstanceId;
       if (!targetId && schemaId) {
         const created = await instanceApi.createInstance({ schemaId });
@@ -63,11 +62,9 @@ const InstanceFillContent = ({
       }
       if (!targetId) throw new Error("No instance id");
 
-      // שלב 2: שמור תשובות
       let instance = await instanceApi.updateInstance(targetId, { answers });
       let submitFailed = false;
 
-      // שלב 3: submit אם נדרש
       if (submit) {
         try {
           instance = await instanceApi.submitInstance(targetId);
@@ -205,42 +202,34 @@ export const InstanceFillPage = () => {
   const isEditMode = Boolean(instanceId);
 
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const {
     data: fetchedInstance,
-    isFetchedAfterMount: isInstanceFetchedAfterMount,
-    isPaused: isInstancePaused,
-    error: instanceError,
+    isLoading: isInstanceLoading,
+    isNotFound: isInstanceNotFound,
+    isOtherError: isInstanceOtherError,
     refetch: refetchInstance,
-  } = useQuery({
+  } = useEntityPageGate<IInstance>({
     queryKey: ["instance", instanceId],
     queryFn: () => (instanceId ? instanceApi.getInstanceById(instanceId) : null),
-    enabled: Boolean(instanceId),
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    enabled: isEditMode,
+    notFoundMessageKey: "instanceFill.notFoundError",
   });
 
   const schemaIdToFetch = isEditMode ? fetchedInstance?.schemaId : schemaId;
-  const {
-    schema,
-    isFetchedAfterMount: isSchemaFetchedAfterMount,
-    isPaused: isSchemaPaused,
-    error: schemaError,
-    refetch: refetchSchema,
-  } = useSchemaById(schemaIdToFetch);
 
-  useEffect(() => {
-    if (isEditMode && instanceError && isNotFoundError(instanceError)) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/", { replace: true });
-      return;
-    }
-    if (schemaIdToFetch && schemaError && isNotFoundError(schemaError)) {
-      toast.error(t("instanceFill.notFoundError"));
-      navigate("/", { replace: true });
-    }
-  }, [isEditMode, schemaIdToFetch, instanceError, schemaError, navigate, t]);
+  const {
+    data: schema,
+    isLoading: isSchemaLoading,
+    isNotFound: isSchemaNotFound,
+    isOtherError: isSchemaOtherError,
+    refetch: refetchSchema,
+  } = useEntityPageGate<Ischema>({
+    queryKey: ["schema", schemaIdToFetch],
+    queryFn: () => (schemaIdToFetch ? schemaApi.getSchemaById(schemaIdToFetch) : null),
+    enabled: Boolean(schemaIdToFetch),
+    notFoundMessageKey: "instanceFill.notFoundError",
+  });
 
   const isAlreadySubmitted = Boolean(isEditMode && fetchedInstance && !fetchedInstance.isDraft);
   useRedirectIfFinalized(isAlreadySubmitted, "instanceFill.alreadySubmitted");
@@ -248,15 +237,9 @@ export const InstanceFillPage = () => {
   const isSchemaDraft = Boolean(schema?.isDraft);
   useRedirectIfFinalized(isSchemaDraft, "instanceFill.schemaNotPublished");
 
-  const isInstanceNotFound = Boolean(isEditMode && instanceError && isNotFoundError(instanceError));
-  const isSchemaNotFound = Boolean(schemaIdToFetch && schemaError && isNotFoundError(schemaError));
-
   if (isAlreadySubmitted || isSchemaDraft || isInstanceNotFound || isSchemaNotFound) {
     return null;
   }
-
-  const isInstanceOtherError = Boolean(isEditMode && instanceError && !isNotFoundError(instanceError));
-  const isSchemaOtherError = Boolean(schemaIdToFetch && schemaError && !isNotFoundError(schemaError));
 
   if (isInstanceOtherError || isSchemaOtherError) {
     return (
@@ -283,12 +266,7 @@ export const InstanceFillPage = () => {
     );
   }
 
-  const isWaitingInstance =
-    isEditMode && !instanceError && !isInstancePaused && !isInstanceFetchedAfterMount;
-  const isWaitingSchema =
-    Boolean(schemaIdToFetch) && !schemaError && !isSchemaPaused && !isSchemaFetchedAfterMount;
-
-  if (isWaitingInstance || isWaitingSchema) {
+  if (isInstanceLoading || isSchemaLoading) {
     return (
       <PageContainer>
         <CircularProgress />
