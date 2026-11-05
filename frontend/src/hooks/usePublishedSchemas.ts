@@ -1,15 +1,13 @@
+import { useTranslation } from "react-i18next";
 import { schemaApi } from "../api/schema.api";
 import { useSectionQuery } from "./useSectionQuery";
 
 export function usePublishedSchemas() {
-  const query = useSectionQuery({
+  const { t } = useTranslation();
+
+  return useSectionQuery({
     queryKey: ["publishedSchemas"],
     queryFn: schemaApi.getAllSchemas,
-    errorKey: "errors.fetchPublishedSchemas",
+    errorMessage: t("errors.fetchPublishedSchemas"),
   });
-
-  return {
-    ...query,
-    schemas: query.items,
-  };
 }

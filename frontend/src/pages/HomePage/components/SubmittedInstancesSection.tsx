@@ -17,7 +17,7 @@ export const SubmittedInstancesSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { instances, loading, error, isError, hasData, refetch } = useSubmittedInstances();
+  const { items: instances, loading, error, isError, hasData, refetch } = useSubmittedInstances();
   const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(null);
 
   return (

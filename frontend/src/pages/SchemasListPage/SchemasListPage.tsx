@@ -13,7 +13,7 @@ export const SchemasListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schemas, loading, error, isError, hasData, refetch } =
+  const { items: schemas, loading, error, isError, hasData, refetch } =
     usePublishedSchemas();
 
   const [selectedSchema, setSelectedSchema] = useState<Ischema | null>(null);

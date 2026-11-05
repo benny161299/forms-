@@ -11,7 +11,7 @@ import type { IInstance } from "../../types/instance.types";
 export const InstancesListPage = () => {
   const { t } = useTranslation();
 
-  const { instances, loading, error, isError, hasData, refetch } =
+  const { items: instances, loading, error, isError, hasData, refetch } =
     useSubmittedInstances();
 
   const [selectedInstance, setSelectedInstance] = useState<IInstance | null>(

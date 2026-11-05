@@ -30,7 +30,7 @@ export const InstanceCard = ({
   onDelete,
 }: InstanceCardProps) => {
   const { t } = useTranslation();
-  const { schemas } = usePublishedSchemas();
+  const { items: schemas } = usePublishedSchemas();
 
   const title =
     schemaTitle ??

@@ -14,7 +14,7 @@ export const PublishedSchemasSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { schemas, loading, error, isError, hasData, refetch } = usePublishedSchemas();
+  const { items: schemas, loading, error, isError, hasData, refetch } = usePublishedSchemas();
 
   return (
     <SectionPaper variant="outlined">

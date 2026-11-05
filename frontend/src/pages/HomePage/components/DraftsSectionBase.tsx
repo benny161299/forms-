@@ -47,6 +47,7 @@ export const DraftsSectionBase = <T extends { _id?: string }>({
     loading,
     hasData,
     isError,
+    error,
     refetch,
   } = useSectionQuery<T>({
     queryKey,
@@ -101,7 +102,7 @@ export const DraftsSectionBase = <T extends { _id?: string }>({
           loading={loading}
           isError={isError}
           hasData={hasData}
-          errorMessage={errorMessage}
+          errorMessage={error}
           emptyMessage={emptyMessage}
           isEmpty={items.length === 0}
           onRetry={() => refetch()}
