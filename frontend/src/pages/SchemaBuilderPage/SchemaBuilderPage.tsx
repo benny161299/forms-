@@ -103,7 +103,17 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
   const isSaving = saveMutation.isPending;
 
   const actions = useSchemaBuilder(initialData);
-  const { schema } = actions;
+  const {
+    schema,
+    setTitle,
+    setDescription,
+    addSection,
+    updateSection,
+    deleteSection,
+    addQuestion,
+    updateQuestion,
+    deleteQuestion,
+  } = actions;
   const { validateDraft, validatePublish } = useSchemaValidation(schema);
 
   const saveSchema = (publish: boolean) => {
@@ -138,7 +148,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
             variant="standard"
             placeholder={t("schemaBuilder.schemaTitlePlaceholder")}
             value={schema.title}
-            onChange={(e) => actions.setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             disabled={isSaving}
           />
           <TextField
@@ -147,7 +157,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
             rows={2}
             placeholder={t("schemaBuilder.schemaDescPlaceholder")}
             value={schema.description || ""}
-            onChange={(e) => actions.setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             disabled={isSaving}
           />
         </HeaderPaper>
@@ -158,11 +168,11 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
             section={section}
             sectionIndex={sIdx}
             isOnlySection={schema.sections.length <= 1}
-            onUpdateSection={(data) => actions.updateSection(sIdx, data)}
-            onDeleteSection={() => actions.deleteSection(sIdx)}
-            onAddQuestion={() => actions.addQuestion(sIdx)}
-            onUpdateQuestion={(qIdx, q) => actions.updateQuestion(sIdx, qIdx, q)}
-            onDeleteQuestion={(qIdx) => actions.deleteQuestion(sIdx, qIdx)}
+            onUpdateSection={updateSection}
+            onDeleteSection={deleteSection}
+            onAddQuestion={addQuestion}
+            onUpdateQuestion={updateQuestion}
+            onDeleteQuestion={deleteQuestion}
           />
         ))}
 
@@ -170,7 +180,7 @@ const SchemaBuilderContent = ({ id, initialData }: SchemaBuilderContentProps) =>
           <Button
             variant="outlined"
             startIcon={<AddIcon />}
-            onClick={actions.addSection}
+            onClick={addSection}
             disabled={isSaving}
           >
             {t("schemaBuilder.addSection")}

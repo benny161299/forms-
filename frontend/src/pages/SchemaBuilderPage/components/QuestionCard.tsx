@@ -1,8 +1,10 @@
+import React, { useCallback } from "react";
 import { TextField, FormControlLabel, Switch } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import { useTranslation } from "react-i18next";
 import type { IQuestion, QuestionType } from "../../../types/schema.types";
 import { QUESTION_TYPES } from "../../../types/schema.types";
+import type { QuestionUpdateData } from "../hooks/useSchemaBuilder";
 import { QuestionTypeSelector } from "./QuestionTypeSelector";
 import { EditableItemList } from "./EditableItemList";
 import { ScaleRangeSelector } from "./ScaleRangeSelector";
@@ -13,88 +15,78 @@ import {
   RightControls,
 } from "./SchemaBuilder.styles";
 
-const DEFAULT_SCALE_MIN = 1;
-const DEFAULT_SCALE_MAX = 5;
-
 interface QuestionCardProps {
   question: IQuestion;
-  onUpdate: (updated: IQuestion) => void;
-  onDelete: () => void;
+  sectionIndex: number;
+  questionIndex: number;
+  onUpdateQuestion: (
+    sectionIndex: number,
+    questionIndex: number,
+    updated: QuestionUpdateData
+  ) => void;
+  onDeleteQuestion: (sectionIndex: number, questionIndex: number) => void;
 }
 
-export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps) => {
+export const QuestionCard = React.memo(({
+  question,
+  sectionIndex,
+  questionIndex,
+  onUpdateQuestion,
+  onDeleteQuestion,
+}: QuestionCardProps) => {
   const { t } = useTranslation();
 
   const isGrid =
     question.type === QUESTION_TYPES.RADIO_GRID ||
     question.type === QUESTION_TYPES.CHECKBOX_GRID;
 
-  const handleTypeChange = (newType: QuestionType) => {
-    const base = {
-      id: question.id,
-      title: question.title,
-      required: question.required,
-    };
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onUpdateQuestion(sectionIndex, questionIndex, { title: e.target.value });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
-    const existingChoices =
-      "options" in question && "choices" in question.options
-        ? question.options.choices
-        : undefined;
+  const handleTypeChange = useCallback(
+    (newType: QuestionType) => {
+      onUpdateQuestion(sectionIndex, questionIndex, { type: newType });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
-    const existingRows =
-      "options" in question && "rows" in question.options
-        ? question.options.rows
-        : undefined;
+  const handleRequiredChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onUpdateQuestion(sectionIndex, questionIndex, {
+        required: e.target.checked,
+      });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
-    const choices =
-      existingChoices && existingChoices.length > 0 ? existingChoices : [""];
-    const rows = existingRows && existingRows.length > 0 ? existingRows : [""];
+  const handleDelete = useCallback(() => {
+    onDeleteQuestion(sectionIndex, questionIndex);
+  }, [onDeleteQuestion, sectionIndex, questionIndex]);
 
-    switch (newType) {
-      case QUESTION_TYPES.SHORT_ANSWER:
-      case QUESTION_TYPES.PARAGRAPH:
-      case QUESTION_TYPES.TIME:
-      case QUESTION_TYPES.DATE:
-        onUpdate({ ...base, type: newType });
-        break;
+  const handleScaleUpdate = useCallback(
+    (min: number, max: number) => {
+      onUpdateQuestion(sectionIndex, questionIndex, { options: { min, max } });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
-      case QUESTION_TYPES.RADIO:
-      case QUESTION_TYPES.CHECKBOX:
-      case QUESTION_TYPES.DROPDOWN:
-        onUpdate({
-          ...base,
-          type: newType,
-          options: { choices },
-        });
-        break;
+  const handleChoicesUpdate = useCallback(
+    (choices: string[]) => {
+      onUpdateQuestion(sectionIndex, questionIndex, { options: { choices } });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
-      case QUESTION_TYPES.LINEAR_SCALE:
-        onUpdate({
-          ...base,
-          type: newType,
-          options: {
-            min:
-              "options" in question && "min" in question.options
-                ? question.options.min
-                : DEFAULT_SCALE_MIN,
-            max:
-              "options" in question && "max" in question.options
-                ? question.options.max
-                : DEFAULT_SCALE_MAX,
-          },
-        });
-        break;
-
-      case QUESTION_TYPES.RADIO_GRID:
-      case QUESTION_TYPES.CHECKBOX_GRID:
-        onUpdate({
-          ...base,
-          type: newType,
-          options: { choices, rows },
-        });
-        break;
-    }
-  };
+  const handleRowsUpdate = useCallback(
+    (rows: string[]) => {
+      onUpdateQuestion(sectionIndex, questionIndex, { options: { rows } });
+    },
+    [onUpdateQuestion, sectionIndex, questionIndex]
+  );
 
   return (
     <CardContainer variant="outlined">
@@ -103,7 +95,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         size="small"
         placeholder={t("schemaBuilder.questionTitlePlaceholder")}
         value={question.title}
-        onChange={(e) => onUpdate({ ...question, title: e.target.value } as IQuestion)}
+        onChange={handleTitleChange}
       />
 
       <ControlsRow>
@@ -115,14 +107,12 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
               <Switch
                 size="small"
                 checked={question.required}
-                onChange={(e) =>
-                  onUpdate({ ...question, required: e.target.checked } as IQuestion)
-                }
+                onChange={handleRequiredChange}
               />
             }
             label={t("schemaBuilder.required")}
           />
-          <DeleteButton onClick={onDelete} size="small">
+          <DeleteButton onClick={handleDelete} size="small">
             <DeleteOutlineIcon fontSize="small" />
           </DeleteButton>
         </RightControls>
@@ -132,9 +122,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
         <ScaleRangeSelector
           min={question.options.min}
           max={question.options.max}
-          onUpdate={(min, max) =>
-            onUpdate({ ...question, options: { min, max } })
-          }
+          onUpdate={handleScaleUpdate}
         />
       )}
 
@@ -150,12 +138,7 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
           addLabelKey={
             isGrid ? "schemaBuilder.addCol" : "schemaBuilder.addOption"
           }
-          onUpdate={(choices) =>
-            onUpdate({
-              ...question,
-              options: { ...question.options, choices },
-            } as IQuestion)
-          }
+          onUpdate={handleChoicesUpdate}
         />
       )}
 
@@ -165,14 +148,9 @@ export const QuestionCard = ({ question, onUpdate, onDelete }: QuestionCardProps
           items={question.options.rows}
           placeholderKey="schemaBuilder.gridRowPlaceholder"
           addLabelKey="schemaBuilder.addRow"
-          onUpdate={(rows) =>
-            onUpdate({
-              ...question,
-              options: { ...question.options, rows },
-            } as IQuestion)
-          }
+          onUpdate={handleRowsUpdate}
         />
       )}
     </CardContainer>
   );
-};
+});

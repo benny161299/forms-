@@ -1,8 +1,10 @@
+import React, { useCallback } from "react";
 import { TextField, Button, Typography, Tooltip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import { useTranslation } from "react-i18next";
-import type { ISection, IQuestion } from "../../../types/schema.types";
+import type { ISection } from "../../../types/schema.types";
+import type { QuestionUpdateData } from "../hooks/useSchemaBuilder";
 import { QuestionCard } from "./QuestionCard";
 import {
   InputsContainer,
@@ -15,14 +17,18 @@ interface SectionCardProps {
   section: ISection;
   sectionIndex: number;
   isOnlySection?: boolean;
-  onUpdateSection: (updated: Partial<ISection>) => void;
-  onDeleteSection: () => void;
-  onAddQuestion: () => void;
-  onUpdateQuestion: (questionIndex: number, updated: IQuestion) => void;
-  onDeleteQuestion: (questionIndex: number) => void;
+  onUpdateSection: (sectionIndex: number, updated: Partial<ISection>) => void;
+  onDeleteSection: (sectionIndex: number) => void;
+  onAddQuestion: (sectionIndex: number) => void;
+  onUpdateQuestion: (
+    sectionIndex: number,
+    questionIndex: number,
+    updated: QuestionUpdateData
+  ) => void;
+  onDeleteQuestion: (sectionIndex: number, questionIndex: number) => void;
 }
 
-export const SectionCard = ({
+export const SectionCard = React.memo(({
   section,
   sectionIndex,
   isOnlySection,
@@ -33,6 +39,28 @@ export const SectionCard = ({
   onDeleteQuestion,
 }: SectionCardProps) => {
   const { t } = useTranslation();
+
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onUpdateSection(sectionIndex, { title: e.target.value });
+    },
+    [onUpdateSection, sectionIndex]
+  );
+
+  const handleDescChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onUpdateSection(sectionIndex, { description: e.target.value });
+    },
+    [onUpdateSection, sectionIndex]
+  );
+
+  const handleDeleteSection = useCallback(() => {
+    onDeleteSection(sectionIndex);
+  }, [onDeleteSection, sectionIndex]);
+
+  const handleAddQuestion = useCallback(() => {
+    onAddQuestion(sectionIndex);
+  }, [onAddQuestion, sectionIndex]);
 
   return (
     <SectionPaper variant="outlined">
@@ -45,7 +73,7 @@ export const SectionCard = ({
             fullWidth
             placeholder={t("schemaBuilder.sectionTitlePlaceholder")}
             value={section.title}
-            onChange={(e) => onUpdateSection({ title: e.target.value })}
+            onChange={handleTitleChange}
           />
           <TextField
             fullWidth
@@ -53,7 +81,7 @@ export const SectionCard = ({
             rows={2}
             placeholder={t("schemaBuilder.sectionDescPlaceholder")}
             value={section.description}
-            onChange={(e) => onUpdateSection({ description: e.target.value })}
+            onChange={handleDescChange}
           />
         </InputsContainer>
         <Tooltip title={isOnlySection ? t("schemaBuilder.cannotDeleteOnlySection") : ""}>
@@ -62,7 +90,7 @@ export const SectionCard = ({
               color="error"
               variant="text"
               startIcon={<DeleteOutlineIcon />}
-              onClick={onDeleteSection}
+              onClick={handleDeleteSection}
               disabled={isOnlySection}
             >
               {t("schemaBuilder.deleteSection")}
@@ -76,18 +104,20 @@ export const SectionCard = ({
           <QuestionCard
             key={question.id}
             question={question}
-            onUpdate={(updated) => onUpdateQuestion(qIdx, updated)}
-            onDelete={() => onDeleteQuestion(qIdx)}
+            sectionIndex={sectionIndex}
+            questionIndex={qIdx}
+            onUpdateQuestion={onUpdateQuestion}
+            onDeleteQuestion={onDeleteQuestion}
           />
         ))}
         <Button
           variant="outlined"
           startIcon={<AddIcon />}
-          onClick={onAddQuestion}
+          onClick={handleAddQuestion}
         >
           {t("schemaBuilder.addQuestion")}
         </Button>
       </QuestionsWrapper>
     </SectionPaper>
   );
-}
+});

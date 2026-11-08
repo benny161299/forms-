@@ -1,4 +1,4 @@
-import { useId } from "react";
+import React, { useId } from "react";
 import { Select, MenuItem, InputLabel } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import type { QuestionType } from "../../../types/schema.types";
@@ -10,7 +10,7 @@ interface QuestionTypeSelectorProps {
   onChange: (type: QuestionType) => void;
 }
 
-export const QuestionTypeSelector = ({ value, onChange }: QuestionTypeSelectorProps) => {
+export const QuestionTypeSelector = React.memo(({ value, onChange }: QuestionTypeSelectorProps) => {
   const { t } = useTranslation();
   const labelId = useId();
 
@@ -33,4 +33,4 @@ export const QuestionTypeSelector = ({ value, onChange }: QuestionTypeSelectorPr
       </Select>
     </QuestionTypeFormControl>
   );
-};
+});

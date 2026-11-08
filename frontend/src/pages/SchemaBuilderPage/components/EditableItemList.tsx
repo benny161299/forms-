@@ -1,3 +1,4 @@
+import React from "react";
 import { TextField, IconButton, Button, Typography } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/Add";
@@ -12,7 +13,7 @@ interface EditableItemListProps {
   onUpdate: (updatedItems: string[]) => void;
 }
 
-export const EditableItemList = ({
+export const EditableItemList = React.memo(({
   items,
   placeholderKey,
   addLabelKey,
@@ -63,4 +64,4 @@ export const EditableItemList = ({
       </Button>
     </OptionsList>
   );
-};
+});

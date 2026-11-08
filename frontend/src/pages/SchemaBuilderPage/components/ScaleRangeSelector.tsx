@@ -1,4 +1,4 @@
-import { useId } from "react";
+import React, { useId } from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { ScaleRow } from "./SchemaBuilder.styles";
@@ -12,7 +12,7 @@ interface ScaleRangeSelectorProps {
   onUpdate: (min: number, max: number) => void;
 }
 
-export const ScaleRangeSelector = ({ min, max, onUpdate }: ScaleRangeSelectorProps) => {
+export const ScaleRangeSelector = React.memo(({ min, max, onUpdate }: ScaleRangeSelectorProps) => {
   const { t } = useTranslation();
   const minLabelId = useId();
   const maxLabelId = useId();
@@ -56,4 +56,4 @@ export const ScaleRangeSelector = ({ min, max, onUpdate }: ScaleRangeSelectorPro
       </FormControl>
     </ScaleRow>
   );
-};
+});
